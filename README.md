@@ -19,3 +19,7 @@ Cloudflare Workers Static Assets:
 - `/downloads/` — offline downloads
 
 YouTube: https://www.youtube.com/@jmgrit
+
+Support: https://buymeacoffee.com/jmgrit
+
+Guide state Import/Export is browser-local only. No guide workspace configuration is stored server-side.

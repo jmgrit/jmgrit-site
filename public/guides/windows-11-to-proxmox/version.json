@@ -1,0 +1,12 @@
+{
+  "guide": "windows-11-to-proxmox",
+  "title": "Windows 11 → Proxmox",
+  "version": "1.2.22",
+  "stepCount": 36,
+  "phaseCount": 8,
+  "publishedAt": "2026-10-02",
+  "sourcePackage": "P2VWindows11-v1.2.22-Docs.zip",
+  "offlineDownload": "/downloads/files/p2v-windows-11-offline-v1.2.22.zip",
+  "stateStorage": "browser-local-only",
+  "stateImportExport": true
+}

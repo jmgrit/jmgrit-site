@@ -1,1 +1,13 @@
-(()=>{const r=document.documentElement,s=localStorage.getItem("jmgrit-theme");if(s==="light"||s==="dark")r.dataset.theme=s;function u(){const b=document.querySelector("[data-theme-toggle]");if(!b)return;const d=r.dataset.theme==="dark"||(!r.dataset.theme&&matchMedia("(prefers-color-scheme: dark)").matches);b.textContent=d?"Light mode":"Dark mode";b.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode")}addEventListener("DOMContentLoaded",()=>{u();document.querySelector("[data-theme-toggle]")?.addEventListener("click",()=>{const d=r.dataset.theme==="dark"||(!r.dataset.theme&&matchMedia("(prefers-color-scheme: dark)").matches);r.dataset.theme=d?"light":"dark";localStorage.setItem("jmgrit-theme",r.dataset.theme);u()});const m=document.querySelector("[data-nav-links]");document.querySelector("[data-mobile-toggle]")?.addEventListener("click",e=>{const o=m?.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",String(Boolean(o)))});document.querySelectorAll("[data-year]").forEach(e=>e.textContent=String(new Date().getFullYear()))})})();
+
+(()=>{
+ const root=document.documentElement, THEME='jmgrit-theme';
+ const stored=localStorage.getItem(THEME); if(stored==='light'||stored==='dark') root.dataset.theme=stored;
+ function isDark(){return root.dataset.theme==='dark'||(!root.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches)}
+ function themeLabel(){document.querySelectorAll('[data-theme-toggle]').forEach(b=>{const d=isDark();b.textContent=d?'Light mode':'Dark mode';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode')})}
+ addEventListener('DOMContentLoaded',()=>{
+  themeLabel();
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>b.addEventListener('click',()=>{root.dataset.theme=isDark()?'light':'dark';localStorage.setItem(THEME,root.dataset.theme);themeLabel()}));
+  const nav=document.querySelector('[data-nav-links]'); document.querySelector('[data-mobile-toggle]')?.addEventListener('click',e=>{const open=nav?.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',String(!!open))});
+  document.querySelectorAll('[data-year]').forEach(e=>e.textContent=String(new Date().getFullYear()));
+ });
+})();

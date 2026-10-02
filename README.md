@@ -2,20 +2,20 @@
 
 Static source for **jmgrit.com** — practical IT projects and living documentation.
 
-## Deploy to Cloudflare Pages
+## Deployment
+
+Cloudflare Workers Static Assets:
 
 - Production branch: `main`
-- Framework preset: `None`
-- Build command: `exit 0`
-- Build output directory: `.`
-- Root directory: leave blank
+- Static assets directory: `./public`
+- Configuration: `wrangler.jsonc`
 
-Then add `jmgrit.com` under the Pages project's **Custom domains**.
+## Public routes
 
-## Structure
-
-- `/` — homepage
+- `/` — home
 - `/guides/` — living guides
-- `/projects/` — project index
-- `/downloads/` — downloads/releases
-- `/guides/windows-11-to-proxmox/` — P2V guide landing page
+- `/guides/windows-11-to-proxmox/` — full P2V living guide
+- `/projects/` — projects
+- `/downloads/` — offline downloads
+
+YouTube: https://www.youtube.com/@jmgrit

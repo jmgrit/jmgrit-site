@@ -1,1 +1,630 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Windows 11 → Proxmox P2V Guide — JMGRIT</title><meta name="description" content="A living Windows 11 to Proxmox physical-to-virtual migration guide."><link rel="canonical" href="https://jmgrit.com/guides/windows-11-to-proxmox/"><link rel="stylesheet" href="/assets/css/site.css"><script src="/assets/js/site.js" defer></script><meta property="og:title" content="Windows 11 → Proxmox — JMGRIT"><meta property="og:description" content="A repeatable P2V migration workflow with verification and rollback built in."><meta property="og:type" content="article"><meta property="og:url" content="https://jmgrit.com/guides/windows-11-to-proxmox/"></head><body><header class="site-header"><nav class="nav wrap" aria-label="Primary navigation"><a class="brand" href="/"><span class="brand-mark">JM</span><span>JMGRIT</span></a><button class="theme-toggle mobile-toggle" type="button" data-mobile-toggle aria-expanded="false">Menu</button><div class="nav-links" data-nav-links><a href="/guides/" aria-current="page">Guides</a><a href="/projects/">Projects</a><a href="/downloads/">Downloads</a><button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button></div></nav></header><main><section class="page-hero"><div class="wrap"><p class="eyebrow">Living guide</p><h1>Windows 11 → Proxmox</h1><p>A physical-to-virtual migration workflow designed to preserve a recoverable path while moving an existing Windows installation into Proxmox VE.</p><div class="guide-meta"><span class="pill">Windows 11</span><span class="pill">Proxmox VE</span><span class="pill">P2V</span><span class="pill">Offline-friendly</span></div><div class="actions" style="margin-top:24px"><a class="button primary" href="/downloads/">Downloads</a><a class="button" href="/guides/">All guides</a></div></div></section><section class="section"><div class="wrap prose"><h2>What this guide covers</h2><p>The complete guide will walk through preparation on the source Windows computer, creation and verification of a VHDX image, Proxmox installation, VM import and configuration, validation, cleanup, and backup.</p><h2>Safety-first migration</h2><p>The intended workflow favors a second SSD or NVMe for Proxmox when practical, allowing the original Windows disk to remain intact as a physical fallback while the virtualized installation is validated.</p><h2>Living documentation</h2><p>This page is the permanent home for the guide. The detailed generated documentation will be published here as the web-export workflow is connected to JMGRIT. Video descriptions can continue linking to this URL even as the written procedure improves.</p><div class="empty"><strong>v0.1 site milestone:</strong> guide landing page is live-ready. Full generated step documentation will be connected next.</div></div></section></main><footer class="site-footer"><div class="wrap footer-row"><span>© <span data-year></span> JMGRIT</span><span>Practical IT projects &amp; living documentation.</span></div></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Windows 11 → Proxmox P2V Guide — JMGRIT</title><meta name="description" content="Complete Windows 11 to Proxmox P2V living guide: 36 steps across 8 phases with checks, commands, rollback, and optional Intel HD 530 passthrough."><link rel="canonical" href="https://jmgrit.com/guides/windows-11-to-proxmox/"><meta name="theme-color" content="#23201d"><link rel="icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/assets/css/site.css"><script src="/assets/js/site.js" defer></script><meta property="og:title" content="Windows 11 → Proxmox P2V Guide — JMGRIT"><meta property="og:description" content="Complete Windows 11 to Proxmox P2V living guide: 36 steps across 8 phases with checks, commands, rollback, and optional Intel HD 530 passthrough."><meta property="og:type" content="article"><meta property="og:url" content="https://jmgrit.com/guides/windows-11-to-proxmox/"><meta property="og:image" content="https://jmgrit.com/assets/images/jmgrit-logo-256.png"><script src="/assets/js/guide.js" defer></script></head><body><header class="site-header"><nav class="nav wrap" aria-label="Primary navigation"><a class="brand" href="/"><img src="/assets/images/jmgrit-logo-256.png" alt=""><span class="brand-word">JMGRIT<small>BUILD · DOCUMENT · IMPROVE</small></span></a><button class="nav-button mobile-toggle" type="button" data-mobile-toggle aria-expanded="false">Menu</button><div class="nav-links" data-nav-links><a href="/guides/" aria-current="page">Guides</a><a href="/projects/">Projects</a><a href="/downloads/">Downloads</a><a class="youtube-link" href="https://www.youtube.com/@jmgrit" target="_blank" rel="noopener noreferrer">YouTube</a><button class="nav-button" type="button" data-theme-toggle>Dark mode</button></div></nav></header><main><section class="page-hero"><div class="wrap"><p class="eyebrow">Living guide · v1.2.9</p><h1>Windows 11 → Proxmox</h1><p>A physical-to-virtual migration workflow with explicit stop checks, rollback points, VHDX verification, and an optional EliteDesk 800 G3 / Intel HD 530 physical-console path.</p><div class="status-line"><span class="pill"><span class="dot"></span>36 steps</span><span class="pill">8 phases</span><span class="pill">Proxmox VE 9.2</span><span class="pill">Offline-friendly</span></div><div class="guide-tools"><a class="button primary" href="#phase-0">Start guide</a><a class="button" href="#hardware">Required hardware</a><a class="button" href="/downloads/files/p2v-windows-11-offline-v1.2.9.zip">Download offline guide</a><a class="button youtube" href="https://www.youtube.com/@jmgrit" target="_blank" rel="noopener noreferrer">YouTube @jmgrit</a></div></div></section><div class="guide-progress"><div class="wrap progress-row"><div class="progress-track"><div class="progress-fill" data-progress-fill></div></div><div class="progress-label" data-progress-label>0 / 36 steps</div></div></div><section class="section"><div class="wrap guide-shell"><aside class="guide-sidebar"><strong>Guide navigation</strong><a class="phase-link" href="#overview">Overview</a><a class="phase-link" href="#hardware">Required hardware</a><a class="phase-link" href="#architecture">Architecture</a><a class="phase-link" href="#phase-0">Phase 0 · Start on the source PC</a><a href="#step-000">000 · Put the guide on the migration drive</a><a class="phase-link" href="#phase-1">Phase 1 · Record the source PC</a><a href="#step-001">001 · Make sure a local admin works</a><a href="#step-002">002 · Record the PC name and network</a><a class="phase-link" href="#phase-2">Phase 2 · Prepare Windows</a><a href="#step-003">003 · Update and back up Windows</a><a href="#step-004">004 · Check Windows, activation, and firmware</a><a href="#step-005">005 · Decrypt BitLocker</a><a href="#step-006">006 · Clean Windows</a><a href="#step-007">007 · Shrink C:</a><a href="#step-008">008 · Install VirtIO drivers</a><a href="#step-009">009 · Final Windows check</a><a class="phase-link" href="#phase-3">Phase 3 · Create the VHDX</a><a href="#step-010">010 · Choose the Proxmox IP</a><a href="#step-011">011 · Confirm the migration drive</a><a href="#step-012">012 · Create the VHDX</a><a href="#step-013">013 · Hash the VHDX</a><a class="phase-link" href="#phase-4">Phase 4 · Install Proxmox VE 9.2</a><a href="#step-014">014 · Create the Proxmox installer USB</a><a href="#step-015">015 · Prepare the Proxmox target and boot installer</a><a href="#step-016">016 · Install Proxmox</a><a href="#step-017">017 · Move to the second PC</a><a href="#step-018">018 · Check Proxmox and VM storage</a><a href="#step-019">019 · Confirm the Windows fallback disk</a><a class="phase-link" href="#phase-5">Phase 5 · Import Windows</a><a href="#step-020">020 · Mount and verify the migration VHDX</a><a href="#step-021">021 · Create the Windows VM</a><a href="#step-022">022 · Import the VHDX</a><a href="#step-023">023 · Attach the disk and boot Windows</a><a class="phase-link" href="#phase-6">Phase 6 · Finish and back up</a><a href="#step-024">024 · Check VirtIO and Guest Agent</a><a href="#step-025">025 · Check the Windows VM network</a><a href="#step-026">026 · Remove the temporary admin and finish Windows</a><a href="#step-027">027 · Back up the VM</a><a class="phase-link" href="#phase-7">Phase 7 · Optional: EliteDesk 800 G3 / Intel HD 530 physical console</a><a href="#step-028">028 · Prove remote access and save rollback</a><a href="#step-029">029 · Verify IOMMU and identify the HD 530</a><a href="#step-030">030 · Get the Skylake IGD ROM</a><a href="#step-031">031 · Switch the VM to legacy Intel IGD mode</a><a href="#step-032">032 · Test the iGPU before changing host drivers</a><a href="#step-033">033 · Pass through only the keyboard and mouse USB ports</a><a href="#step-034">034 · Verify the physical Windows console</a><a href="#step-035">035 · Diagnose, use the VFIO fallback only if needed, or recover</a><a class="phase-link" href="#sources">Sources</a></aside><div class="guide-main" data-guide-content><section id="overview" class="guide-summary"><p class="eyebrow">Before you start</p><blockquote class="hard-stop">
+<p><strong>IMPORTANT:</strong> Use two different external devices. The <strong>migration drive</strong> keeps this guide, saved state, and the VHDX. The <strong>Proxmox installer USB</strong> is separate and will be erased.</p>
+</blockquote>
+<blockquote class="save-state">
+<p><strong>WORKFLOW:</strong> Do everything in Windows on the <strong>source PC</strong>. Use the <strong>second PC only after Proxmox is installed</strong>.</p>
+</blockquote>
+<blockquote class="hard-stop">
+<p><strong>RECOMMENDED STORAGE:</strong> Install Proxmox on a <strong>second internal SSD/NVMe</strong> and leave the original Windows drive intact. This gives you a firmware-level fallback/dual-boot path and avoids erasing the original Windows installation.</p>
+</blockquote>
+<blockquote class="save-state">
+<p><strong>SAVE STATE:</strong> After every step, click <strong>Export saved state</strong>. Save it to the migration drive. After STEP 017, save it on the second PC.</p>
+</blockquote>
+<details class="workspace"><summary>Guide workspace values (saved only on this device)</summary><div class="workspace-inner"><p>Enter values as you discover them. Matching placeholders in commands and checks update automatically in this browser.</p><div class="workspace-grid"><label>Source computer name<input data-var-input="SOURCE_COMPUTER_NAME" autocomplete="off" spellcheck="false"></label><label>Windows product<input data-var-input="WINDOWS_PRODUCT_NAME" autocomplete="off" spellcheck="false"></label><label>Windows build<input data-var-input="WINDOWS_BUILD" autocomplete="off" spellcheck="false"></label><label>BIOS mode<input data-var-input="SOURCE_BIOS_MODE" autocomplete="off" spellcheck="false"></label><label>LAN / CIDR<input data-var-input="NETWORK_CIDR" autocomplete="off" spellcheck="false"></label><label>Default gateway<input data-var-input="DEFAULT_GATEWAY" autocomplete="off" spellcheck="false"></label><label>Primary DNS<input data-var-input="PRIMARY_DNS" autocomplete="off" spellcheck="false"></label><label>Dhcp Start<input data-var-input="DHCP_START" autocomplete="off" spellcheck="false"></label><label>Dhcp End<input data-var-input="DHCP_END" autocomplete="off" spellcheck="false"></label><label>Proxmox IP<input data-var-input="PROXMOX_IP" autocomplete="off" spellcheck="false"></label><label>Proxmox IP / CIDR<input data-var-input="PROXMOX_IP_CIDR" autocomplete="off" spellcheck="false"></label><label>Proxmox hostname<input data-var-input="PROXMOX_HOSTNAME" autocomplete="off" spellcheck="false"></label><label>Target C: size (GB)<input data-var-input="WINDOWS_TARGET_C_GB" autocomplete="off" spellcheck="false"></label><label>Shrink amount (MB)<input data-var-input="WINDOWS_SHRINK_AMOUNT_MB" autocomplete="off" spellcheck="false"></label><label>VirtIO ISO drive<input data-var-input="VIRTIO_ISO_DRIVE" autocomplete="off" spellcheck="false"></label><label>Migration drive letter<input data-var-input="VHDX_USB_DRIVE" autocomplete="off" spellcheck="false"></label><label>Windows VHDX path<input data-var-input="VHDX_WINDOWS_PATH" autocomplete="off" spellcheck="false"></label><label>VHDX SHA-256<input data-var-input="VHDX_SHA256" autocomplete="off" spellcheck="false"></label><label>Migration partition on PVE<input data-var-input="PVE_EXTERNAL_PARTITION" autocomplete="off" spellcheck="false"></label><label>VHDX path on PVE<input data-var-input="PVE_VHDX_PATH" autocomplete="off" spellcheck="false"></label><label>VM ID<input data-var-input="VM_ID" autocomplete="off" spellcheck="false"></label><label>VM name<input data-var-input="VM_NAME" autocomplete="off" spellcheck="false"></label><label>Windows VM IPv4<input data-var-input="WINDOWS_VM_IP" autocomplete="off" spellcheck="false"></label><label>iGPU PCI address<input data-var-input="IGPU_PCI" autocomplete="off" spellcheck="false"></label><label>iGPU vendor:device ID<input data-var-input="IGPU_PCI_ID" autocomplete="off" spellcheck="false"></label><label>Keyboard USB port<input data-var-input="USB_KEYBOARD_PORT" autocomplete="off" spellcheck="false"></label><label>Mouse USB port<input data-var-input="USB_MOUSE_PORT" autocomplete="off" spellcheck="false"></label></div><div class="workspace-actions"><button class="small-button" type="button" data-clear-values>Clear saved values</button><button class="small-button" type="button" data-reset-progress>Reset step progress</button></div></div></details></section><section id="hardware" class="guide-content"><p class="eyebrow">Required hardware</p><h2>What you need</h2><div class="hardware-grid"><article class="hardware-card"><span class="phase-number">PART 01</span><h3>Source PC</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Windows 11 Pro x86-64 PC.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><strong>UEFI/GPT required for this guide.</strong></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Hardware virtualization available.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Wired Ethernet.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><strong>Strongly recommended:</strong> second internal SSD/NVMe large enough for Proxmox and the imported Windows VM. Keeping the original Windows disk intact provides a firmware-level fallback/dual-boot path and avoids erasing it.</li>
+</ul>
+</article><article class="hardware-card"><span class="phase-number">PART 02</span><h3>Migration drive</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>External USB SSD/HDD large enough for the VHDX.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Holds the guide, saved state, and VHDX.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>NTFS or exFAT.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><strong>Never used as the Proxmox installer.</strong></li>
+</ul>
+</article><article class="hardware-card"><span class="phase-number">PART 03</span><h3>Proxmox installer USB</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Separate 8 GB+ USB flash drive.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Erased when the Proxmox ISO is written.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><strong>Must not be the migration drive.</strong></li>
+</ul>
+</article><article class="hardware-card"><span class="phase-number">PART 04</span><h3>Second PC</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>On the same LAN.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Used <strong>only after Proxmox is installed</strong>.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Opens this guide and the Proxmox web UI.</li>
+</ul>
+</article><article class="hardware-card"><span class="phase-number">PART 05</span><h3>Wired network</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Ethernet cable and router/switch port.</li>
+</ul>
+</article><article class="hardware-card"><span class="phase-number">PART 06</span><h3>Local console</h3><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Monitor, keyboard, and mouse for firmware and Proxmox installation.</li>
+</ul>
+</article></div></section><section id="architecture" class="guide-content"><p class="eyebrow">Architecture</p><h1>Architecture</h1>
+<pre><code class="language-text">BEFORE
+Source Windows 11 PC
+  ├── guide + saved state → migration drive
+  └── VHDX               → migration drive
+
+SEPARATE DEVICE
+Proxmox installer USB → erased and used only for installation
+
+AFTER — RECOMMENDED TWO-DISK LAYOUT
+Original Windows SSD/NVMe ── left intact for firmware boot-menu fallback
+Second SSD/NVMe ──────────── Proxmox VE 9.2
+Second PC ──HTTPS───────────&gt; Proxmox VE 9.2
+                               └── Windows 11 VM
+                          ├── OVMF / UEFI
+                          ├── TPM 2.0
+                          ├── VirtIO SCSI
+                          ├── VirtIO NIC
+                          └── QEMU Guest Agent
+</code></pre>
+<h2>Network</h2>
+<pre><code class="language-text">LAN:        {{NETWORK_CIDR}}
+Gateway:    {{DEFAULT_GATEWAY}}
+DHCP pool:  {{DHCP_START}} - {{DHCP_END}}
+Proxmox:    {{PROXMOX_IP_CIDR}}
+Windows VM: {{WINDOWS_VM_IP}}
+</code></pre>
+<p>Proxmox and Windows must use different IP addresses.</p>
+<h2>Storage</h2>
+<pre><code class="language-text">Original Windows disk
+  → left intact on the recommended two-disk path
+
+Windows volume
+  → Disk2vhd
+  → migration-drive VHDX
+  → SHA-256 verified again on Proxmox
+  → qm importdisk
+  → secondary Proxmox disk / local-lvm
+  → VirtIO SCSI boot
+</code></pre>
+<p>Keep the VHDX until a tested Proxmox backup exists. On the recommended two-disk path, also keep the original Windows disk untouched until the VM and backup have both been tested.</p>
+</section><section class="phase-block"><div class="guide-phase" id="phase-0"><span class="phase-number">PHASE 0 · 1 step</span><h2>Start on the source PC</h2></div><article class="guide-step" id="step-000"><div class="step-head"><input class="step-check" type="checkbox" data-step="000" aria-label="Mark step 000 complete"><h3 class="step-title"><span class="step-number">STEP 000</span>Put the guide on the migration drive</h3></div><div class="step-body"><p><strong>DO:</strong> On the source PC:</p>
+<ol>
+<li>Plug in the external migration drive.</li>
+<li>Copy the documentation ZIP to it.</li>
+<li>Extract the ZIP on the migration drive.</li>
+<li>Open <code>p2v-windows-11\docs\index.html</code>.</li>
+<li>Keep the ZIP as a fallback copy.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> The guide is open from the migration drive.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-1"><span class="phase-number">PHASE 1 · 2 steps</span><h2>Record the source PC</h2></div><article class="guide-step" id="step-001"><div class="step-head"><input class="step-check" type="checkbox" data-step="001" aria-label="Mark step 001 complete"><h3 class="step-title"><span class="step-number">STEP 001</span>Make sure a local admin works</h3></div><div class="step-body"><p><strong>DO:</strong> If you already have a local administrator with a known password, use it and skip the commands below.</p>
+<p>Otherwise open <strong>Terminal (Admin)</strong> and run:</p>
+<pre><code class="language-powershell">net user P2VAdmin * /add
+net localgroup Administrators P2VAdmin /add
+</code></pre>
+<p>Sign out once. Confirm <code>P2VAdmin</code> can sign in. Then return to your normal account.</p>
+<p><strong>STOP CHECK:</strong> A local administrator with a known password works.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-002"><div class="step-head"><input class="step-check" type="checkbox" data-step="002" aria-label="Mark step 002 complete"><h3 class="step-title"><span class="step-number">STEP 002</span>Record the PC name and network</h3></div><div class="step-body"><p><strong>DO:</strong> Open PowerShell and run:</p>
+<pre><code class="language-powershell">$o = ipconfig /all | Out-String
+$o
+$o | Set-Clipboard
+</code></pre>
+<details class="scratchpad"><summary>Source network configuration — optional local scratchpad</summary><textarea data-scratch-key="step-002-ipconfig" placeholder="Paste command output here. Saved only in this browser."></textarea></details>
+
+<p><strong>STOP CHECK:</strong> The source hostname, IPv4 address, gateway, and subnet are detected.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-2"><span class="phase-number">PHASE 2 · 7 steps</span><h2>Prepare Windows</h2></div><article class="guide-step" id="step-003"><div class="step-head"><input class="step-check" type="checkbox" data-step="003" aria-label="Mark step 003 complete"><h3 class="step-title"><span class="step-number">STEP 003</span>Update and back up Windows</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li>Finish Windows Update.</li>
+<li>Reboot if requested.</li>
+<li>Back up anything important to storage other than the internal disk.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> Windows is updated and important files are backed up.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-004"><div class="step-head"><input class="step-check" type="checkbox" data-step="004" aria-label="Mark step 004 complete"><h3 class="step-title"><span class="step-number">STEP 004</span>Check Windows, activation, and firmware</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li>Open <strong>Settings → System → Activation</strong>.</li>
+<li>Confirm the edition is <strong>Windows 11 Pro</strong> and Windows is activated.</li>
+<li>If activation uses a digital license, <strong>recommended:</strong> confirm it is linked to your Microsoft account before the P2V. If you use a product key instead, make sure you know how you will reactivate Windows after the virtual hardware change.</li>
+<li>Run:</li>
+</ol>
+<pre><code class="language-powershell">$o = Get-ComputerInfo | Select WindowsProductName,WindowsVersion,OsBuildNumber,OsArchitecture,BiosFirmwareType,CsManufacturer,CsModel | Format-List | Out-String
+$d = Get-Partition -DriveLetter C | Get-Disk | Select Number,FriendlyName,PartitionStyle | Format-List | Out-String
+$o = $o + &quot;`r`n&quot; + $d
+$o
+$o | Set-Clipboard
+</code></pre>
+<details class="scratchpad"><summary>Windows and firmware — optional local scratchpad</summary><textarea data-scratch-key="step-004-system" placeholder="Paste command output here. Saved only in this browser."></textarea></details>
+
+<p><strong>STOP CHECK:</strong> Windows 11 Pro is activated, <strong>UEFI</strong> is detected, and the Windows system disk uses <strong>GPT</strong>. If you rely on a digital license, it is linked to your Microsoft account or you have another known reactivation method.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-005"><div class="step-head"><input class="step-check" type="checkbox" data-step="005" aria-label="Mark step 005 complete"><h3 class="step-title"><span class="step-number">STEP 005</span>Decrypt BitLocker</h3></div><div class="step-body"><p><strong>DO:</strong> Run:</p>
+<pre><code class="language-powershell">manage-bde -status C:
+</code></pre>
+<p>If C: is encrypted, run <strong>Terminal (Admin)</strong>:</p>
+<pre><code class="language-powershell">manage-bde -off C:
+</code></pre>
+<p>Wait until C: shows <strong>Fully Decrypted / 0%</strong>.</p>
+<p><strong>STOP CHECK:</strong> C: is fully decrypted.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-006"><div class="step-head"><input class="step-check" type="checkbox" data-step="006" aria-label="Mark step 006 complete"><h3 class="step-title"><span class="step-number">STEP 006</span>Clean Windows</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li><strong>Settings → System → Storage → Temporary files</strong> → remove what you do not need.</li>
+<li>Run <strong>Terminal (Admin)</strong>:</li>
+</ol>
+<pre><code class="language-powershell">powercfg /h off
+DISM /Online /Cleanup-Image /StartComponentCleanup
+</code></pre>
+<p><strong>STOP CHECK:</strong> Cleanup is complete and hibernation is off.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-007"><div class="step-head"><input class="step-check" type="checkbox" data-step="007" aria-label="Mark step 007 complete"><h3 class="step-title"><span class="step-number">STEP 007</span>Shrink C:</h3></div><div class="step-body"><p><strong>DO:</strong> Run:</p>
+<pre><code class="language-powershell">$p = Get-Partition -DriveLetter C
+$s = Get-PartitionSupportedSize -DriveLetter C
+$v = Get-Volume C
+$o = @(
+  &quot;CurrentPartitionGB=$([math]::Round($p.Size / 1GB,1))&quot;
+  &quot;MinimumSupportedGB=$([math]::Ceiling($s.SizeMin / 1GB))&quot;
+  &quot;UsedGB=$([math]::Round(($v.Size-$v.SizeRemaining) / 1GB,1))&quot;
+  &quot;FreeGB=$([math]::Round($v.SizeRemaining / 1GB,1))&quot;
+) -join &quot;`n&quot;
+$o
+$o | Set-Clipboard
+</code></pre>
+<details class="scratchpad"><summary>C: sizing — optional local scratchpad</summary><textarea data-scratch-key="step-007-partition" placeholder="Paste command output here. Saved only in this browser."></textarea></details>
+
+<div class="variable-panel" data-user-variable-panel="">
+<h3>C: target</h3>
+<div class="variable-grid"><label class="variable-field">Target size (GB)<input type="text" data-user-variable-input="WINDOWS_TARGET_C_GB" placeholder="e.g. 256" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Shrink amount (MB)<input type="text" data-user-variable-input="WINDOWS_SHRINK_AMOUNT_MB" readonly="" aria-readonly="true" data-user-variable-derived="true" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Open <code>diskmgmt.msc</code> → right-click <strong>C:</strong> → <strong>Shrink Volume</strong> → enter <code>{{WINDOWS_SHRINK_AMOUNT_MB}}</code> MB.</p>
+<p>Do not change EFI or Recovery partitions.</p>
+<p><strong>STOP CHECK:</strong> C: is smaller and Windows still has comfortable free space.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-008"><div class="step-head"><input class="step-check" type="checkbox" data-step="008" aria-label="Mark step 008 complete"><h3 class="step-title"><span class="step-number">STEP 008</span>Install VirtIO drivers</h3></div><div class="step-body"><p><strong>DO:</strong> Mount the VirtIO Windows ISO. Enter its drive letter.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>VirtIO ISO</h3>
+<div class="variable-grid"><label class="variable-field">Drive letter<input type="text" data-user-variable-input="VIRTIO_ISO_DRIVE" placeholder="e.g. D:" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Run:</p>
+<pre><code class="language-text">{{VIRTIO_ISO_DRIVE}}\virtio-win-guest-tools.exe
+</code></pre>
+<p>Then run <strong>Terminal (Admin)</strong>:</p>
+<pre><code class="language-powershell">pnputil /add-driver {{VIRTIO_ISO_DRIVE}}\vioscsi\w11\amd64\*.inf /subdirs
+pnputil /add-driver {{VIRTIO_ISO_DRIVE}}\NetKVM\w11\amd64\*.inf /subdirs
+</code></pre>
+<p><strong>STOP CHECK:</strong> VirtIO guest tools, storage driver, and network driver are installed/staged.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-009"><div class="step-head"><input class="step-check" type="checkbox" data-step="009" aria-label="Mark step 009 complete"><h3 class="step-title"><span class="step-number">STEP 009</span>Final Windows check</h3></div><div class="step-body"><p><strong>DO:</strong> Reboot. Sign in normally. Open Device Manager and check for unexpected errors.</p>
+<p><strong>STOP CHECK:</strong> Windows boots normally.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-3"><span class="phase-number">PHASE 3 · 4 steps</span><h2>Create the VHDX</h2></div><article class="guide-step" id="step-010"><div class="step-head"><input class="step-check" type="checkbox" data-step="010" aria-label="Mark step 010 complete"><h3 class="step-title"><span class="step-number">STEP 010</span>Choose the Proxmox IP</h3></div><div class="step-body"><p><strong>DO:</strong> Open your router's DHCP settings. Enter the DHCP range and choose a free Proxmox address outside it.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Proxmox network</h3>
+<div class="variable-grid"><label class="variable-field">DHCP start<input type="text" data-user-variable-input="DHCP_START" placeholder="e.g. 192.168.1.100" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">DHCP end<input type="text" data-user-variable-input="DHCP_END" placeholder="e.g. 192.168.1.200" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Proxmox IP<input type="text" data-user-variable-input="PROXMOX_IP" placeholder="e.g. 192.168.1.10" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Proxmox hostname<input type="text" data-user-variable-input="PROXMOX_HOSTNAME" placeholder="e.g. pve01" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">IP/CIDR<input type="text" data-user-variable-input="PROXMOX_IP_CIDR" readonly="" aria-readonly="true" data-user-variable-derived="true" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Address check<input type="text" data-user-variable-input="PROXMOX_IP_STATUS" readonly="" aria-readonly="true" data-user-variable-derived="true" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p><strong>STOP CHECK:</strong> <code>{{PROXMOX_IP}}</code> is free, inside <code>{{NETWORK_CIDR}}</code>, and outside the DHCP range.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-011"><div class="step-head"><input class="step-check" type="checkbox" data-step="011" aria-label="Mark step 011 complete"><h3 class="step-title"><span class="step-number">STEP 011</span>Confirm the migration drive</h3></div><div class="step-body"><p><strong>DO:</strong> Keep the migration drive plugged into the source PC. Enter its drive letter.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>VHDX destination</h3>
+<div class="variable-grid"><label class="variable-field">Migration drive<input type="text" data-user-variable-input="VHDX_USB_DRIVE" placeholder="e.g. E:" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">VHDX path<input type="text" data-user-variable-input="VHDX_WINDOWS_PATH" readonly="" aria-readonly="true" data-user-variable-derived="true" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>The VHDX name is the source hostname in uppercase:</p>
+<pre><code class="language-text">{{VHDX_WINDOWS_PATH}}
+</code></pre>
+<p><strong>STOP CHECK:</strong> The path is the migration-drive root, for example <code>E:\SOURCE-PC.vhdx</code>.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-012"><div class="step-head"><input class="step-check" type="checkbox" data-step="012" aria-label="Mark step 012 complete"><h3 class="step-title"><span class="step-number">STEP 012</span>Create the VHDX</h3></div><div class="step-body"><p><strong>DO:</strong> Open <strong>Disk2vhd</strong> as Administrator.</p>
+<ol>
+<li>Select the Windows disk's EFI/System, C:, and Recovery volumes.</li>
+<li>Check <strong>Use Vhdx</strong>.</li>
+<li>Save to <code>{{VHDX_WINDOWS_PATH}}</code>.</li>
+<li>Click <strong>Create</strong>.</li>
+</ol>
+<p>If <strong>Volume Shadow Copy</strong> makes Disk2vhd crash, turn it off, close other apps, and run the capture again.</p>
+<p><strong>STOP CHECK:</strong> <code>{{VHDX_WINDOWS_PATH}}</code> exists and has a plausible size.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-013"><div class="step-head"><input class="step-check" type="checkbox" data-step="013" aria-label="Mark step 013 complete"><h3 class="step-title"><span class="step-number">STEP 013</span>Hash the VHDX</h3></div><div class="step-body"><p><strong>DO:</strong> Run:</p>
+<pre><code class="language-powershell">$o = Get-FileHash '{{VHDX_WINDOWS_PATH}}' -Algorithm SHA256 | Format-List Algorithm,Hash,Path | Out-String
+$o
+$o | Set-Clipboard
+</code></pre>
+<details class="scratchpad"><summary>VHDX SHA-256 — optional local scratchpad</summary><textarea data-scratch-key="step-013-vhdx-hash" placeholder="Paste command output here. Saved only in this browser."></textarea></details>
+
+<p><strong>STOP CHECK:</strong> The VHDX path and SHA-256 are saved.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-4"><span class="phase-number">PHASE 4 · 6 steps</span><h2>Install Proxmox VE 9.2</h2></div><article class="guide-step" id="step-014"><div class="step-head"><input class="step-check" type="checkbox" data-step="014" aria-label="Mark step 014 complete"><h3 class="step-title"><span class="step-number">STEP 014</span>Create the Proxmox installer USB</h3></div><div class="step-body"><p><strong>DO:</strong> On the source PC:</p>
+<ol>
+<li>Plug in a <strong>second USB flash drive</strong>.</li>
+<li>Download the Proxmox VE 9.2 ISO.</li>
+<li>Use Rufus or another ISO writer to write the ISO to the <strong>installer USB</strong>.</li>
+<li>Do <strong>not</strong> select the migration drive.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> The installer USB and migration drive are different devices.</p>
+<p><strong>SAVE STATE:</strong> Export saved state to the migration drive.</p>
+</div></article><article class="guide-step" id="step-015"><div class="step-head"><input class="step-check" type="checkbox" data-step="015" aria-label="Mark step 015 complete"><h3 class="step-title"><span class="step-number">STEP 015</span>Prepare the Proxmox target and boot installer</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li>Export saved state one more time.</li>
+<li>Safely eject and <strong>unplug the migration drive</strong>.</li>
+<li>Choose the Proxmox target-disk path:<ul>
+<li><strong>Recommended — lowest data-loss risk:</strong> shut down the PC, install a <strong>second internal SSD/NVMe</strong> large enough for Proxmox and the imported Windows VM, and leave the original Windows drive intact. For the safest install, temporarily disconnect the original Windows drive while Proxmox is being installed.</li>
+<li><strong>Single-disk fallback:</strong> reuse the original Windows disk only if you accept that it will be erased and your VHDX plus important-file backup are already safe on other storage.</li>
+</ul>
+</li>
+<li>Leave only the Proxmox installer USB attached externally.</li>
+<li>Reboot into UEFI/BIOS.</li>
+<li>Enable CPU virtualization if needed.</li>
+<li>Boot the Proxmox installer USB.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> The Proxmox installer starts, the migration drive is unplugged, and you know exactly which internal disk will receive Proxmox.</p>
+<p><strong>SAVE STATE:</strong> Already exported before reboot.</p>
+</div></article><article class="guide-step" id="step-016"><div class="step-head"><input class="step-check" type="checkbox" data-step="016" aria-label="Mark step 016 complete"><h3 class="step-title"><span class="step-number">STEP 016</span>Install Proxmox</h3></div><div class="step-body"><p><strong>DO:</strong> Install Proxmox VE 9.2 to the selected target disk.</p>
+<p><strong>Recommended two-disk path:</strong> select the <strong>new secondary SSD/NVMe</strong>. Do not select or format the original Windows disk.</p>
+<p><strong>Single-disk fallback:</strong> selecting the original Windows disk will erase the physical Windows installation.</p>
+<p>Use:</p>
+<pre><code class="language-text">Hostname:  {{PROXMOX_HOSTNAME}}
+Address:   {{PROXMOX_IP_CIDR}}
+Gateway:   {{DEFAULT_GATEWAY}}
+DNS:       {{PRIMARY_DNS}}
+</code></pre>
+<p><strong>WARNING:</strong> The disk selected in the Proxmox installer will be erased.</p>
+<p>After installation:</p>
+<ol>
+<li>Remove the installer USB and boot Proxmox.</li>
+<li>If you temporarily disconnected the original Windows drive, shut Proxmox down, reconnect that drive, and keep the <strong>Proxmox disk first in firmware boot order</strong>.</li>
+<li>Boot Proxmox again. The untouched Windows disk can remain available as a <strong>firmware boot-menu fallback</strong>. Do not add, format, or modify that physical Windows disk from Proxmox during this migration.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> The console shows <code>https://{{PROXMOX_IP}}:8006/</code>. On the recommended two-disk path, the original Windows drive is still intact and Proxmox boots from the secondary SSD/NVMe.</p>
+<p><strong>SAVE STATE:</strong> Complete this after reopening the guide in STEP 017.</p>
+</div></article><article class="guide-step" id="step-017"><div class="step-head"><input class="step-check" type="checkbox" data-step="017" aria-label="Mark step 017 complete"><h3 class="step-title"><span class="step-number">STEP 017</span>Move to the second PC</h3></div><div class="step-body"><p><strong>DO:</strong> Now use the second PC for the first time.</p>
+<ol>
+<li>Plug the migration drive into the second PC.</li>
+<li>Copy the extracted documentation folder to the second PC.</li>
+<li>Open <code>docs\index.html</code> from that local copy.</li>
+<li>Click <strong>Import saved state</strong> and load the latest JSON from the migration drive.</li>
+<li>Open <code>https://{{PROXMOX_IP}}:8006/</code> and sign in as <code>root</code>.</li>
+</ol>
+<p><strong>STOP CHECK:</strong> The guide and Proxmox web UI are open on the second PC.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-018"><div class="step-head"><input class="step-check" type="checkbox" data-step="018" aria-label="Mark step 018 complete"><h3 class="step-title"><span class="step-number">STEP 018</span>Check Proxmox and VM storage</h3></div><div class="step-body"><p><strong>DO:</strong> In <strong>Node → Shell</strong>, run:</p>
+<pre><code class="language-bash">pveversion
+ip -4 addr show vmbr0
+pvesm status
+</code></pre>
+<p>In <strong>Datacenter → Storage</strong>, confirm <code>local-lvm</code> exists and has enough free space for the imported Windows disk. Do not delete or resize the default Proxmox storage for this migration.</p>
+<p><strong>STOP CHECK:</strong> Proxmox is 9.2.x, <code>vmbr0</code> has <code>{{PROXMOX_IP_CIDR}}</code>, <code>local-lvm</code> is active, and it has enough free space for the Windows VM.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-019"><div class="step-head"><input class="step-check" type="checkbox" data-step="019" aria-label="Mark step 019 complete"><h3 class="step-title"><span class="step-number">STEP 019</span>Confirm the Windows fallback disk</h3></div><div class="step-body"><p><strong>DO:</strong> Confirm your rollback path before importing Windows.</p>
+<p>If you used the <strong>recommended second SSD/NVMe</strong>, run:</p>
+<pre><code class="language-bash">lsblk -o NAME,SIZE,MODEL,FSTYPE,MOUNTPOINTS
+</code></pre>
+<p>Identify:</p>
+<ul>
+<li>the disk that contains Proxmox;</li>
+<li>the untouched original Windows disk.</li>
+</ul>
+<p>Leave the original Windows disk alone. It is your physical fallback and can be selected from the PC's firmware boot menu if you need to return to the original installation.</p>
+<p>If you used the <strong>single-disk path</strong>, the physical Windows installation has already been erased; your rollback path is the migration-drive VHDX plus your separate file backup.</p>
+<p><strong>STOP CHECK:</strong> You can clearly identify your Proxmox disk and your rollback path. On the recommended two-disk path, the original Windows disk has not been modified.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-5"><span class="phase-number">PHASE 5 · 4 steps</span><h2>Import Windows</h2></div><article class="guide-step" id="step-020"><div class="step-head"><input class="step-check" type="checkbox" data-step="020" aria-label="Mark step 020 complete"><h3 class="step-title"><span class="step-number">STEP 020</span>Mount and verify the migration VHDX</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li>Export saved state on the second PC.</li>
+<li>Copy the documentation folder with saved state from the migration drive to the second PC local disk.</li>
+<li>Safely eject the migration drive from the second PC.</li>
+<li>Plug it into the Proxmox PC.</li>
+<li>In <strong>Node → Shell</strong>, run:</li>
+</ol>
+<pre><code class="language-bash">lsblk -f
+</code></pre>
+<p>Enter the migration-drive partition, for example <code>sdb1</code>.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Migration drive on Proxmox</h3>
+<div class="variable-grid"><label class="variable-field">Partition<input type="text" data-user-variable-input="PVE_EXTERNAL_PARTITION" placeholder="e.g. sdb1" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Mount it and find the VHDX:</p>
+<pre><code class="language-bash">mkdir -p /mnt/p2v
+mount /dev/{{PVE_EXTERNAL_PARTITION}} /mnt/p2v
+find /mnt/p2v -maxdepth 2 -type f -iname '*.vhdx'
+</code></pre>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>VHDX on Proxmox</h3>
+<div class="variable-grid"><label class="variable-field">VHDX path<input type="text" data-user-variable-input="PVE_VHDX_PATH" placeholder="e.g. /mnt/p2v/SOURCE-PC.vhdx" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Before importing the disk, verify the copy that Proxmox can actually read:</p>
+<pre><code class="language-bash">sha256sum '{{PVE_VHDX_PATH}}'
+</code></pre>
+<p>Compare that value with the SHA-256 saved in STEP 013:</p>
+<pre><code class="language-text">{{VHDX_SHA256}}
+</code></pre>
+<p><strong>HARD STOP:</strong> If the hashes do not match exactly, do not import the VHDX. Recheck the selected file and migration drive first.</p>
+<p><strong>STOP CHECK:</strong> <code>{{PVE_VHDX_PATH}}</code> points to the expected VHDX and its SHA-256 matches <code>{{VHDX_SHA256}}</code>.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-021"><div class="step-head"><input class="step-check" type="checkbox" data-step="021" aria-label="Mark step 021 complete"><h3 class="step-title"><span class="step-number">STEP 021</span>Create the Windows VM</h3></div><div class="step-body"><p><strong>DO:</strong> In Proxmox click <strong>Create VM</strong>.</p>
+<p>Use:</p>
+<ul>
+<li><strong>OS:</strong> Do not use any media</li>
+<li><strong>Machine:</strong> q35</li>
+<li><strong>BIOS:</strong> OVMF (UEFI)</li>
+<li><strong>EFI Disk:</strong> local-lvm + Pre-Enrolled Keys</li>
+<li><strong>TPM:</strong> 2.0 on local-lvm</li>
+<li><strong>SCSI Controller:</strong> VirtIO SCSI single</li>
+<li><strong>CPU:</strong> host</li>
+<li><strong>Network:</strong> VirtIO on <code>vmbr0</code></li>
+<li><strong>QEMU Guest Agent:</strong> enabled</li>
+</ul>
+<p>Remove the placeholder disk. Do not start the VM.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Windows VM</h3>
+<div class="variable-grid"><label class="variable-field">VM ID<input type="text" data-user-variable-input="VM_ID" placeholder="e.g. 100" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">VM name<input type="text" data-user-variable-input="VM_NAME" placeholder="e.g. win11-p2v" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p><strong>STOP CHECK:</strong> The empty VM exists with OVMF, TPM 2.0, VirtIO NIC, and VirtIO SCSI.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-022"><div class="step-head"><input class="step-check" type="checkbox" data-step="022" aria-label="Mark step 022 complete"><h3 class="step-title"><span class="step-number">STEP 022</span>Import the VHDX</h3></div><div class="step-body"><p><strong>DO:</strong> In <strong>Node → Shell</strong>, run:</p>
+<pre><code class="language-bash">qm importdisk {{VM_ID}} '{{PVE_VHDX_PATH}}' local-lvm
+</code></pre>
+<p>Wait for <code>100%</code> and a successful import message.</p>
+<p><strong>STOP CHECK:</strong> The Windows disk appears under the VM as <strong>Unused Disk</strong>.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-023"><div class="step-head"><input class="step-check" type="checkbox" data-step="023" aria-label="Mark step 023 complete"><h3 class="step-title"><span class="step-number">STEP 023</span>Attach the disk and boot Windows</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li><strong>VM → Hardware → Unused Disk → Edit/Add</strong> → attach as <strong>SCSI0</strong>.</li>
+<li>Put <strong>SCSI0</strong> first in <strong>Boot Order</strong>.</li>
+<li>Start the VM.</li>
+<li>Open <strong>Console</strong> and sign in.</li>
+</ol>
+<p>If Windows does not boot on SCSI, attach the Windows disk as SATA, boot once, add a small temporary SCSI disk, then move the Windows disk back to SCSI0.</p>
+<p><strong>STOP CHECK:</strong> Windows boots from SCSI0.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-6"><span class="phase-number">PHASE 6 · 4 steps</span><h2>Finish and back up</h2></div><article class="guide-step" id="step-024"><div class="step-head"><input class="step-check" type="checkbox" data-step="024" aria-label="Mark step 024 complete"><h3 class="step-title"><span class="step-number">STEP 024</span>Check VirtIO and Guest Agent</h3></div><div class="step-body"><p><strong>DO:</strong> In the Windows VM, confirm:</p>
+<ul>
+<li>VirtIO network works.</li>
+<li>Windows disk is on VirtIO SCSI.</li>
+<li><strong>QEMU Guest Agent</strong> service is running.</li>
+</ul>
+<p><strong>STOP CHECK:</strong> Network, storage, and Guest Agent work.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-025"><div class="step-head"><input class="step-check" type="checkbox" data-step="025" aria-label="Mark step 025 complete"><h3 class="step-title"><span class="step-number">STEP 025</span>Check the Windows VM network</h3></div><div class="step-body"><p><strong>DO:</strong> In the Windows VM console, run:</p>
+<pre><code class="language-powershell">ipconfig
+</code></pre>
+<p>Enter the VM IPv4 address below.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Windows VM</h3>
+<div class="variable-grid"><label class="variable-field">VM IPv4<input type="text" data-user-variable-input="WINDOWS_VM_IP" placeholder="e.g. 192.168.1.50" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p><strong>STOP CHECK:</strong> Windows and Proxmox have different IP addresses and both are reachable from the second PC.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-026"><div class="step-head"><input class="step-check" type="checkbox" data-step="026" aria-label="Mark step 026 complete"><h3 class="step-title"><span class="step-number">STEP 026</span>Remove the temporary admin and finish Windows</h3></div><div class="step-body"><p><strong>DO:</strong></p>
+<ol>
+<li>Sign in with your normal Windows account.</li>
+<li>Confirm it works and has the access you expect.</li>
+<li>Run Windows Update.</li>
+<li>Check <strong>Settings → System → Activation</strong>. If Windows is no longer activated, use <strong>Troubleshoot → I changed hardware on this device recently</strong> with the Microsoft account linked in STEP 004, or enter the valid product key for this Windows license.</li>
+<li>Check Device Manager.</li>
+</ol>
+<p>If you created <code>P2VAdmin</code> in STEP 001, open <strong>Terminal (Admin)</strong> and remove it:</p>
+<pre><code class="language-powershell">net user P2VAdmin /delete
+</code></pre>
+<p>Do not remove an administrator account that existed before this guide.</p>
+<p><strong>STOP CHECK:</strong> Windows works normally, activation is confirmed or its reactivation path is known, and the temporary <code>P2VAdmin</code> account is removed if this guide created it.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-027"><div class="step-head"><input class="step-check" type="checkbox" data-step="027" aria-label="Mark step 027 complete"><h3 class="step-title"><span class="step-number">STEP 027</span>Back up the VM</h3></div><div class="step-body"><p><strong>DO:</strong> Create a full Proxmox backup to storage outside the internal system disk.</p>
+<p>Keep the original VHDX until the backup is tested.</p>
+<p>Final record:</p>
+<table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Source PC</td>
+  <td><code>{{SOURCE_COMPUTER_NAME}}</code></td>
+</tr>
+<tr>
+  <td>Source Windows</td>
+  <td><code>{{WINDOWS_PRODUCT_NAME}}</code> build <code>{{WINDOWS_BUILD}}</code></td>
+</tr>
+<tr>
+  <td>Firmware</td>
+  <td><code>{{SOURCE_BIOS_MODE}}</code></td>
+</tr>
+<tr>
+  <td>Proxmox</td>
+  <td><code>{{PROXMOX_HOSTNAME}}</code> · <code>{{PROXMOX_IP_CIDR}}</code></td>
+</tr>
+<tr>
+  <td>VM</td>
+  <td><code>{{VM_ID}}</code> · <code>{{VM_NAME}}</code></td>
+</tr>
+<tr>
+  <td>VM IP</td>
+  <td><code>{{WINDOWS_VM_IP}}</code></td>
+</tr>
+<tr>
+  <td>VHDX</td>
+  <td><code>{{VHDX_WINDOWS_PATH}}</code></td>
+</tr>
+<tr>
+  <td>VHDX SHA-256</td>
+  <td><code>{{VHDX_SHA256}}</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>STOP CHECK:</strong> A tested external VM backup exists and the original VHDX is still available.</p>
+<p><strong>SAVE STATE:</strong> Export the final saved state on the second PC.</p>
+</div></article></section><section class="phase-block"><div class="guide-phase" id="phase-7"><span class="phase-number">PHASE 7 · 8 steps</span><h2>Optional: EliteDesk 800 G3 / Intel HD 530 physical console</h2></div><article class="guide-step" id="step-028"><div class="step-head"><input class="step-check" type="checkbox" data-step="028" aria-label="Mark step 028 complete"><h3 class="step-title"><span class="step-number">STEP 028</span>Prove remote access and save rollback</h3></div><div class="step-body"><p><strong>DO:</strong> From the <strong>second PC</strong>:</p>
+<ol>
+<li>Open <code>https://{{PROXMOX_IP}}:8006</code> and confirm the Proxmox Web UI loads.</li>
+<li>Open PowerShell and run:</li>
+</ol>
+<pre><code class="language-powershell">ssh root@{{PROXMOX_IP}}
+</code></pre>
+<ol start="3">
+<li>After SSH connects, run:</li>
+</ol>
+<pre><code class="language-bash">hostname
+qm status {{VM_ID}}
+</code></pre>
+<ol start="4">
+<li><strong>Keep this SSH window open.</strong></li>
+<li>Shut down the Windows VM cleanly.</li>
+<li>In SSH, save the current VM configuration:</li>
+</ol>
+<pre><code class="language-bash">qm stop {{VM_ID}}
+qm config {{VM_ID}} | tee /root/vm-{{VM_ID}}-before-igd.txt
+cp /etc/pve/qemu-server/{{VM_ID}}.conf /root/{{VM_ID}}.conf.before-igd
+</code></pre>
+<p><strong>STOP CHECK:</strong> The Web UI works from the second PC, SSH is connected and still available, the VM is stopped, and <code>/root/{{VM_ID}}.conf.before-igd</code> exists.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-029"><div class="step-head"><input class="step-check" type="checkbox" data-step="029" aria-label="Mark step 029 complete"><h3 class="step-title"><span class="step-number">STEP 029</span>Verify IOMMU and identify the HD 530</h3></div><div class="step-body"><p><strong>DO:</strong> In the open Proxmox SSH session, run:</p>
+<pre><code class="language-bash">dmesg | grep -Ei 'DMAR|IOMMU'
+lspci -nnk | grep -A4 -Ei 'VGA compatible controller|Display controller'
+pvesh get /nodes/$(hostname)/hardware/pci --pci-class-blacklist &quot;&quot;
+grep -R &quot;disable_vga=1&quot; /etc/modprobe.d /etc/default/grub 2&gt;/dev/null || true
+</code></pre>
+<p>Find the Intel <strong>HD Graphics 530 / Skylake</strong> entry. Record its full PCI address and vendor:device ID. Do not assume the address, even though <code>0000:00:02.0</code> is common.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Intel iGPU</h3>
+<div class="variable-grid"><label class="variable-field">PCI address<input type="text" data-user-variable-input="IGPU_PCI" placeholder="e.g. 0000:00:02.0" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Vendor:device ID<input type="text" data-user-variable-input="IGPU_PCI_ID" placeholder="e.g. 8086:1912" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Check its IOMMU group:</p>
+<pre><code class="language-bash">readlink -f /sys/bus/pci/devices/{{IGPU_PCI}}/iommu_group
+ls -l /sys/bus/pci/devices/{{IGPU_PCI}}/iommu_group/devices
+</code></pre>
+<p>On Proxmox VE 9, do <strong>not</strong> add old <code>intel_iommu=on</code> instructions by default. If no DMAR/IOMMU is active, stop and enable <strong>Intel VT-d</strong> in the EliteDesk firmware first.</p>
+<p>If the <code>grep</code> command finds <code>disable_vga=1</code>, stop and remove that setting before continuing; it conflicts with legacy IGD passthrough.</p>
+<p><strong>STOP CHECK:</strong> IOMMU is active, <code>{{IGPU_PCI}}</code> is the Intel HD 530, its IOMMU group is acceptable, and <code>disable_vga=1</code> is not configured.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-030"><div class="step-head"><input class="step-check" type="checkbox" data-step="030" aria-label="Mark step 030 complete"><h3 class="step-title"><span class="step-number">STEP 030</span>Get the Skylake IGD ROM</h3></div><div class="step-body"><p><strong>DO:</strong> This ZIP does not bundle third-party Intel firmware. On the <strong>second PC</strong>, open the community project below and use its release/checksum information:</p>
+<p><code>https://github.com/LongQT-sea/intel-igpu-passthru</code></p>
+<p>For the EliteDesk 800 G3 / Skylake HD 530, use:</p>
+<pre><code class="language-text">SKL_CML_GOPv9_igd.rom
+</code></pre>
+<p><code>Universal_noGOP_igd.rom</code> is a <strong>last-resort fallback</strong>, not the normal Skylake choice.</p>
+<p>Rename the selected Skylake ROM to <code>igd.rom</code>, then copy it to Proxmox:</p>
+<pre><code class="language-powershell">scp .\igd.rom root@{{PROXMOX_IP}}:/usr/share/kvm/igd.rom
+</code></pre>
+<p>Back in SSH, verify the file and compare its SHA-256 with the checksum published by the ROM project's release page:</p>
+<pre><code class="language-bash">ls -lh /usr/share/kvm/igd.rom
+sha256sum /usr/share/kvm/igd.rom
+</code></pre>
+<p><strong>STOP CHECK:</strong> <code>/usr/share/kvm/igd.rom</code> is the Skylake <code>SKL_CML_GOPv9_igd.rom</code> file and its checksum matches the project's published checksum.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-031"><div class="step-head"><input class="step-check" type="checkbox" data-step="031" aria-label="Mark step 031 complete"><h3 class="step-title"><span class="step-number">STEP 031</span>Switch the VM to legacy Intel IGD mode</h3></div><div class="step-body"><p><strong>DO:</strong> This guide created the VM as <strong>q35</strong> in STEP 021. QEMU legacy IGD requires the i440fx machine family, IGD at guest <code>00:02.0</code>, no competing virtual VGA device, and a valid ROM.</p>
+<p>Configure the stopped VM:</p>
+<pre><code class="language-bash">qm stop {{VM_ID}}
+qm set {{VM_ID}} --machine pc
+qm set {{VM_ID}} --vga none
+qm set {{VM_ID}} --bios ovmf
+qm set {{VM_ID}} --hostpci0 {{IGPU_PCI}},legacy-igd=1,romfile=igd.rom
+qm config {{VM_ID}}
+</code></pre>
+<p>Do <strong>not</strong> add <code>pcie=1</code> to the legacy IGD device.</p>
+<p>Do <strong>not</strong> blacklist <code>i915</code> yet. Current Proxmox/iGPU guidance does not require the old blanket VFIO preparation for this path; <code>blacklist i915</code> is kept only as a troubleshooting fallback if it is actually needed.</p>
+<p>The original q35 configuration is preserved in <code>/root/{{VM_ID}}.conf.before-igd</code>.</p>
+<p><strong>STOP CHECK:</strong> <code>qm config {{VM_ID}}</code> shows <code>machine: pc</code>, <code>bios: ovmf</code>, <code>vga: none</code>, and <code>hostpci0</code> with <code>legacy-igd=1,romfile=igd.rom</code>.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-032"><div class="step-head"><input class="step-check" type="checkbox" data-step="032" aria-label="Mark step 032 complete"><h3 class="step-title"><span class="step-number">STEP 032</span>Test the iGPU before changing host drivers</h3></div><div class="step-body"><p><strong>DO:</strong> Connect a monitor to an onboard EliteDesk DisplayPort and start Windows from SSH:</p>
+<pre><code class="language-bash">qm start {{VM_ID}}
+</code></pre>
+<p>Watch the physical monitor. With the recommended GOP ROM, display output may appear early in VM startup. If Windows loads before the display appears, wait for the Intel graphics driver to initialize.</p>
+<p>From SSH, confirm the VM remains running:</p>
+<pre><code class="language-bash">qm status {{VM_ID}}
+</code></pre>
+<p>At this point, <strong>do not blacklist <code>i915</code> just because the host driver is present</strong>. If the physical display works, leave the host configuration alone.</p>
+<p>If the VM immediately fails to start, Windows reports Code 43, or the DisplayPort remains black after Windows should be loaded, go to STEP 035 for diagnostics before changing host-driver binding.</p>
+<p>When the display test is complete, shut the VM down from SSH before assigning the physical USB ports:</p>
+<pre><code class="language-bash">qm shutdown {{VM_ID}}
+</code></pre>
+<p><strong>STOP CHECK:</strong> The iGPU passthrough starts without requiring a permanent <code>i915</code> blacklist, or you have captured the failure and will use STEP 035.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-033"><div class="step-head"><input class="step-check" type="checkbox" data-step="033" aria-label="Mark step 033 complete"><h3 class="step-title"><span class="step-number">STEP 033</span>Pass through only the keyboard and mouse USB ports</h3></div><div class="step-body"><p><strong>DO:</strong> Keep the keyboard and mouse connected to the two EliteDesk USB ports you want Windows to own. In SSH, run:</p>
+<pre><code class="language-bash">lsusb
+lsusb -t
+</code></pre>
+<p>Unplug and reconnect one device at a time to identify the <strong>physical port path</strong> for each port, such as <code>1-3</code> or <code>1-3.2</code>.</p>
+<div class="variable-panel" data-user-variable-panel="">
+<h3>Physical USB ports</h3>
+<div class="variable-grid"><label class="variable-field">Keyboard port<input type="text" data-user-variable-input="USB_KEYBOARD_PORT" placeholder="e.g. 1-3" autocomplete="off" spellcheck="false" contenteditable="false"></label><label class="variable-field">Mouse port<input type="text" data-user-variable-input="USB_MOUSE_PORT" placeholder="e.g. 1-4" autocomplete="off" spellcheck="false" contenteditable="false"></label></div>
+</div>
+
+<p>Assign only those ports:</p>
+<pre><code class="language-bash">qm set {{VM_ID}} --usb0 host={{USB_KEYBOARD_PORT}}
+qm set {{VM_ID}} --usb1 host={{USB_MOUSE_PORT}}
+qm config {{VM_ID}}
+</code></pre>
+<p>This leaves the rest of the EliteDesk USB controller available to Proxmox.</p>
+<p><strong>STOP CHECK:</strong> <code>qm config {{VM_ID}}</code> shows only the selected keyboard and mouse physical USB ports under <code>usb0</code> and <code>usb1</code>.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-034"><div class="step-head"><input class="step-check" type="checkbox" data-step="034" aria-label="Mark step 034 complete"><h3 class="step-title"><span class="step-number">STEP 034</span>Verify the physical Windows console</h3></div><div class="step-body"><p><strong>DO:</strong> Start the VM from SSH:</p>
+<pre><code class="language-bash">qm start {{VM_ID}}
+</code></pre>
+<p>Then confirm:</p>
+<ol>
+<li>Windows appears on the onboard EliteDesk DisplayPort.</li>
+<li>The keyboard and mouse work when connected to the two selected physical USB ports.</li>
+<li><strong>Device Manager → Display adapters</strong> shows <strong>Intel HD Graphics 530</strong> without Code 43.</li>
+<li>If Windows uses <strong>Microsoft Basic Display Adapter</strong>, install the appropriate Intel graphics driver or let Windows Update supply it, then reboot the VM.</li>
+<li>The Proxmox built-in VM console can be blank because <code>vga: none</code> is intentional.</li>
+</ol>
+<p>If one onboard DisplayPort remains black after Windows finishes loading, test the other onboard DisplayPort before changing the VM configuration.</p>
+<p><strong>STOP CHECK:</strong> The Windows desktop is visible on the EliteDesk DisplayPort, Intel HD 530 has no Code 43, and the selected physical keyboard/mouse ports control the VM.</p>
+<p><strong>SAVE STATE:</strong> Export saved state on the second PC.</p>
+</div></article><article class="guide-step" id="step-035"><div class="step-head"><input class="step-check" type="checkbox" data-step="035" aria-label="Mark step 035 complete"><h3 class="step-title"><span class="step-number">STEP 035</span>Diagnose, use the VFIO fallback only if needed, or recover</h3></div><div class="step-body"><p><strong>DO:</strong> If the VM will not boot correctly, Windows shows Code 43, the physical display stays black, or the iGPU is unreliable, stay on the <strong>second PC</strong> and use SSH.</p>
+<p>First collect diagnostics:</p>
+<pre><code class="language-bash">qm status {{VM_ID}}
+qm config {{VM_ID}}
+lspci -nnk -s {{IGPU_PCI}}
+journalctl -b | grep -Ei 'vfio|IOMMU|DMAR|i915'
+</code></pre>
+<h3>Optional VFIO/i915 fallback</h3>
+<p>Use this only after the normal legacy-IGD configuration has failed or the iGPU project guidance indicates the host <code>i915</code> driver is preventing reliable output/resolution. This will usually remove the Proxmox host's local video console after reboot.</p>
+<pre><code class="language-bash">qm stop {{VM_ID}}
+cat &gt;/etc/modules-load.d/p2v-igd-vfio.conf &lt;&lt;'EOF'
+vfio
+vfio_iommu_type1
+vfio_pci
+EOF
+
+cat &gt;/etc/modprobe.d/p2v-igd-vfio.conf &lt;&lt;'EOF'
+blacklist i915
+options vfio-pci ids={{IGPU_PCI_ID}}
+EOF
+
+update-initramfs -u -k all
+reboot
+</code></pre>
+<p>After Proxmox returns, reconnect with SSH and verify:</p>
+<pre><code class="language-bash">lspci -nnk -s {{IGPU_PCI}}
+</code></pre>
+<p>If you used the fallback, <code>Kernel driver in use: vfio-pci</code> is expected. Retry the VM.</p>
+<h3>Restore the original VM and host iGPU</h3>
+<p>To return the VM to its pre-passthrough q35 configuration and remove the optional host-driver fallback:</p>
+<pre><code class="language-bash">qm stop {{VM_ID}}
+cp /root/{{VM_ID}}.conf.before-igd /etc/pve/qemu-server/{{VM_ID}}.conf
+rm -f /etc/modprobe.d/p2v-igd-vfio.conf
+rm -f /etc/modules-load.d/p2v-igd-vfio.conf
+update-initramfs -u -k all
+reboot
+</code></pre>
+<p>After reboot, verify the original VM configuration is restored. If you used the VFIO fallback, <code>lspci -nnk -s {{IGPU_PCI}}</code> should show <code>i915</code> again when the host reclaims the iGPU.</p>
+<p><strong>STOP CHECK:</strong> Either the physical-console passthrough works, or the original q35 VM configuration and normal Proxmox iGPU ownership have been restored.</p>
+<p><strong>SAVE STATE:</strong> Export the final saved state on the second PC.</p>
+</div></article></section><section id="sources" class="guide-content"><h1>Sources</h1>
+<ul>
+<li><strong>Disk2vhd</strong> — Microsoft Sysinternals: https://learn.microsoft.com/sysinternals/downloads/disk2vhd</li>
+<li><strong>Windows activation after a hardware change</strong> — Microsoft Support: https://support.microsoft.com/windows/activation/reactivating-windows-after-a-hardware-change</li>
+<li><strong>Proxmox VE documentation / administration guide</strong> — Proxmox: https://pve.proxmox.com/pve-docs/</li>
+<li><strong>Proxmox VE downloads</strong> — Proxmox: https://www.proxmox.com/en/downloads/proxmox-virtual-environment</li>
+<li><strong>VirtIO Windows drivers</strong> — Fedora/Red Hat VirtIO Windows: https://github.com/virtio-win/virtio-win-pkg-scripts</li>
+<li><strong>QEMU Guest Agent</strong> — Proxmox documentation: https://pve.proxmox.com/pve-docs/</li>
+<li><strong>QEMU Intel IGD assignment / legacy mode requirements</strong> — QEMU: https://gitlab.com/qemu-project/qemu/-/blob/master/docs/igd-assign.txt</li>
+<li><strong>Intel iGPU passthrough ROM guidance and checksums</strong> — LongQT-sea: https://github.com/LongQT-sea/intel-igpu-passthru</li>
+</ul>
+</section></div></div></section></main><footer class="site-footer"><div class="wrap footer-row"><span>© <span data-year></span> JMGRIT</span><div class="footer-links"><a href="/guides/">Guides</a><a href="/projects/">Projects</a><a href="/downloads/">Downloads</a><a href="https://www.youtube.com/@jmgrit" target="_blank" rel="noopener noreferrer">YouTube @jmgrit</a></div></div></footer></body></html>

@@ -1,18 +1,20 @@
-# JMGRIT Website v0.6
+# JMGRIT site v0.7
 
-Static source for **jmgrit.com**.
+Static site for `jmgrit.com`.
 
-## Versions
+## Current P2V guide
 
-- Website package: `v0.6`
-- Windows 11 → Proxmox living guide: `v1.2.27`
+- Windows 11 → Proxmox: **v1.2.27 only**
+- 36 steps
+- 7 phases
+- Offline ZIP: `public/downloads/files/p2v-windows-11-offline-v1.2.27.zip`
 
-## v0.6
+## Visual source of truth
 
-Publishes P2V Windows 11 guide v1.2.27 as the sole current guide version. Previous P2V guide downloads and archive entries are removed. The generated guide content/runtime remains sourced from `P2VWindows11-v1.2.27-Docs.zip`, with the JMGRIT living-guide presentation layer applied on the website and offline package. Saved state remains browser-local only.
+The public website now follows the visual system embedded in the supplied P2V v1.2.27 documentation: navy/blue/teal palette, Inter/system typography, bordered white/dark surfaces, and matching light/dark modes.
 
-## Cloudflare
+The previous marketing homepage hero/profile artwork has been removed. The homepage is now a documentation-style landing page focused on the current guide.
 
-- Production branch: `main`
-- Static assets directory: `./public`
-- Custom domain: `jmgrit.com`
+## Saved state
+
+P2V progress, variables, imported state, and other custom reader state remain local to the browser/device. The website does not store custom guide state server-side.

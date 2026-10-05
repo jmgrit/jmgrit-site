@@ -1,10 +1,9 @@
 {
-  "site": "JMGRIT",
-  "sitePackageVersion": "0.6",
-  "publishedAt": "2026-10-05",
-  "guides": {
-    "windows-11-to-proxmox": "1.2.27"
-  },
-  "guideVersion": "1.2.27",
-  "notes": "Updated the Windows 11 → Proxmox living guide to v1.2.27. This is the only P2V guide version published or downloadable on the site; previous versions were removed."
+  "siteVersion": "0.7",
+  "currentGuide": {
+    "slug": "windows-11-to-proxmox",
+    "version": "1.2.27",
+    "steps": 36,
+    "phases": 7
+  }
 }

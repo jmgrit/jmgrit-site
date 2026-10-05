@@ -1,33 +1,18 @@
-# JMGRIT Website v0.4
+# JMGRIT Website v0.6
 
-Static source for **jmgrit.com** — practical IT projects and living documentation.
+Static source for **jmgrit.com**.
 
-## Current guide
+## Versions
 
-- Windows 11 → Proxmox: **v1.2.22**
-- Source: `P2VWindows11-v1.2.22-Docs.zip`
-- 36 steps / 8 phases
-- Website guide is generated directly from the supplied documentation export.
-- Saved values, pasted command output, checklist progress, and imported state remain **browser-local only**. No custom guide configuration is stored by JMGRIT servers.
-- The generated guide includes local Import saved state / Export saved state controls.
+- Website package: `v0.6`
+- Windows 11 → Proxmox living guide: `v1.2.27`
 
-## Deployment
+## v0.6
 
-Cloudflare Workers Static Assets:
+Publishes P2V Windows 11 guide v1.2.27 as the sole current guide version. Previous P2V guide downloads and archive entries are removed. The generated guide content/runtime remains sourced from `P2VWindows11-v1.2.27-Docs.zip`, with the JMGRIT living-guide presentation layer applied on the website and offline package. Saved state remains browser-local only.
+
+## Cloudflare
 
 - Production branch: `main`
-- Static asset directory: `./public` (configured by `wrangler.jsonc`)
+- Static assets directory: `./public`
 - Custom domain: `jmgrit.com`
-
-## Version manifests
-
-- `/site-version.json` — website package/current guide versions
-- `/guides/windows-11-to-proxmox/version.json` — guide-specific metadata
-
-## Structure
-
-- `/` — homepage
-- `/guides/` — living guides
-- `/guides/windows-11-to-proxmox/` — current P2V documentation
-- `/downloads/` — current and archived offline guide packages
-- `/projects/` — project index

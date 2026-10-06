@@ -41,18 +41,23 @@
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('[data-emblem-spinner]').forEach(spinner=>{
     const artwork=spinner.querySelector('img');
-    let angle=0,speed=0,hover=false,drag=null,frame=0,lastFrame=0,suppressClick=false;
+    let angle=0,hue=0,speed=0,hover=false,drag=null,frame=0,lastFrame=0,suppressClick=false;
     const clamp=v=>Math.max(-2880,Math.min(2880,v));
-    const draw=()=>{artwork.style.transform=`rotate(${angle}deg)`};
+    const draw=()=>{
+      artwork.style.transform=`rotate(${angle}deg)`;
+      artwork.style.filter=Math.abs(speed)>.3?`hue-rotate(${hue}deg) saturate(${1.2+Math.min(Math.abs(speed)/2000,.6)})`:'';
+    };
     function tick(now){
       const dt=Math.min((now-lastFrame)/1000,.05);lastFrame=now;
       if(!drag){
         const target=hover&&!reducedMotion.matches?(speed<0?-24:24):0;
         speed=target+(speed-target)*Math.exp(-.85*dt);
-        angle=(angle+speed*dt)%360;draw();
+        angle=(angle+speed*dt)%360;
+        if(Math.abs(speed)>.3)hue=(hue+Math.min(120,20+Math.abs(speed)*.12)*dt)%360;
+        draw();
       }
       if(drag||Math.abs(speed)>.3||(hover&&!reducedMotion.matches)) frame=requestAnimationFrame(tick);
-      else{speed=0;frame=0}
+      else{speed=0;frame=0;draw()}
     }
     function animate(){if(!frame){lastFrame=performance.now();frame=requestAnimationFrame(tick)}}
     function point(e){
@@ -74,10 +79,10 @@
       const delta=((p.theta-drag.theta+540)%360)-180;
       if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>3)drag.moved=true;
       if(p.radius>=p.minRadius&&dt>0){
-        angle=(angle+delta)%360;draw();
+        angle=(angle+delta)%360;hue=(hue+Math.min(Math.abs(delta)*.3,12))%360;
         // Shorter time over the same arc produces a stronger flick.
         const measured=clamp(delta/Math.max(dt,.004));
-        speed=clamp(speed*.25+measured*.75);drag.lastMove=e.timeStamp;
+        speed=clamp(speed*.25+measured*.75);drag.lastMove=e.timeStamp;draw();
       }else speed=0;
       drag.theta=p.theta;drag.time=e.timeStamp;
     });

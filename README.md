@@ -1,4 +1,4 @@
-# JMGRIT site v0.10
+# JMGRIT site v0.11
 
 Static site for `jmgrit.com`.
 
@@ -46,3 +46,7 @@ Homepage explains Build → Document → Troubleshoot anywhere, with provider-in
 ## v0.10 interactive emblem
 
 Hover for a slow rotation. Drag a petal around the center to spin in either direction; faster movement adds more momentum. Release to coast. Dragging the header emblem does not navigate; a normal click still opens home. Space spins the focused header link or homepage emblem. Reduced-motion preference disables automatic hover rotation; direct interaction remains available.
+
+## v0.11 fidget spinner presentation
+
+Homepage emblem moved to the top right and enlarged from 52px to 78px; JMGRIT.COM label removed from the intro. Spinning emblems smoothly cycle colours, with quicker colour changes at higher spin speeds. Original colours return when stopped.

@@ -1,4 +1,4 @@
-# JMGRIT site v0.8
+# JMGRIT site v0.9
 
 Static site for `jmgrit.com`.
 
@@ -25,7 +25,7 @@ Chrome trefoil emblem in the shared header and homepage title. Browser favicon (
 
 ## Push this update
 
-Extract this ZIP outside your repository. Copy the contents of its jmgrit-site-v0.8 folder into the existing repository root, merging folders and replacing matching files. Do not delete the repository or its .git folder.
+Extract this ZIP outside your repository. Copy the contents of its jmgrit-site-v0.9 folder into the existing repository root, merging folders and replacing matching files. Do not delete the repository or its .git folder.
 
 From the repository root:
 
@@ -38,3 +38,7 @@ git push
 ```
 
 The existing hosting configuration is retained. If your hosting is connected to this branch, the push triggers its usual deployment.
+
+## v0.9 project context messaging
+
+Homepage explains Build → Document → Troubleshoot anywhere, with provider-independent prompts and saved-state portability. All four online P2V guide page titles link to the website homepage. The prompt generator still reads the original project title. Reader logic, storage namespace, and offline guide ZIP remain unchanged.

@@ -1,4 +1,4 @@
-# JMGRIT site v0.11
+# JMGRIT site v0.12
 
 Static site for `jmgrit.com`.
 
@@ -50,3 +50,7 @@ Hover for a slow rotation. Drag a petal around the center to spin in either dire
 ## v0.11 fidget spinner presentation
 
 Homepage emblem moved to the top right and enlarged from 52px to 78px; JMGRIT.COM label removed from the intro. Spinning emblems smoothly cycle colours, with quicker colour changes at higher spin speeds. Original colours return when stopped.
+
+## v0.12 spinner momentum
+
+Homepage emblem enlarged another 40% (78px to 109.2px). Release boosts flick momentum, preserves fast rotation for 3.5 seconds, then gradually slows with lower friction. Near-stationary pointer events no longer erase the last flick.

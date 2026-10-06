@@ -41,8 +41,8 @@
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('[data-emblem-spinner]').forEach(spinner=>{
     const artwork=spinner.querySelector('img');
-    let angle=0,hue=0,speed=0,hover=false,drag=null,frame=0,lastFrame=0,suppressClick=false;
-    const clamp=v=>Math.max(-2880,Math.min(2880,v));
+    let angle=0,hue=0,speed=0,hover=false,drag=null,frame=0,lastFrame=0,suppressClick=false,coast=false,holdUntil=0;
+    const clamp=v=>Math.max(-3600,Math.min(3600,v));
     const draw=()=>{
       artwork.style.transform=`rotate(${angle}deg)`;
       artwork.style.filter=Math.abs(speed)>.3?`hue-rotate(${hue}deg) saturate(${1.2+Math.min(Math.abs(speed)/2000,.6)})`:'';
@@ -51,7 +51,12 @@
       const dt=Math.min((now-lastFrame)/1000,.05);lastFrame=now;
       if(!drag){
         const target=hover&&!reducedMotion.matches?(speed<0?-24:24):0;
-        speed=target+(speed-target)*Math.exp(-.85*dt);
+        // A flick keeps its launch speed briefly, then loses momentum gently.
+        if(now>=holdUntil){
+          const friction=coast?.18:.85;
+          speed=target+(speed-target)*Math.exp(-friction*dt);
+          if(coast&&Math.abs(speed)<36)coast=false;
+        }
         angle=(angle+speed*dt)%360;
         if(Math.abs(speed)>.3)hue=(hue+Math.min(120,20+Math.abs(speed)*.12)*dt)%360;
         draw();
@@ -69,8 +74,8 @@
     spinner.addEventListener('pointerdown',e=>{
       if(e.button!==0||drag)return;
       const p=point(e);if(p.radius<p.minRadius)return;
-      e.preventDefault();suppressClick=false;speed=0;
-      drag={id:e.pointerId,theta:p.theta,x:e.clientX,y:e.clientY,time:e.timeStamp,lastMove:e.timeStamp,moved:false};
+      e.preventDefault();suppressClick=false;speed=0;coast=false;holdUntil=0;
+      drag={id:e.pointerId,theta:p.theta,x:e.clientX,y:e.clientY,time:e.timeStamp,lastMove:e.timeStamp,flickSpeed:0,flickTime:e.timeStamp,moved:false};
       spinner.setPointerCapture(e.pointerId);spinner.classList.add('is-dragging');animate();
     });
     spinner.addEventListener('pointermove',e=>{
@@ -82,14 +87,20 @@
         angle=(angle+delta)%360;hue=(hue+Math.min(Math.abs(delta)*.3,12))%360;
         // Shorter time over the same arc produces a stronger flick.
         const measured=clamp(delta/Math.max(dt,.004));
-        speed=clamp(speed*.25+measured*.75);drag.lastMove=e.timeStamp;draw();
+        speed=clamp(speed*.25+measured*.75);drag.lastMove=e.timeStamp;
+        // Preserve the last useful flick through near-stationary release events.
+        if(Math.abs(measured)>40){drag.flickSpeed=speed;drag.flickTime=e.timeStamp}
+        draw();
       }else speed=0;
       drag.theta=p.theta;drag.time=e.timeStamp;
     });
     function release(e,cancelled=false){
       if(!drag||drag.id!==e.pointerId)return;
       suppressClick=drag.moved;
-      speed=cancelled?0:speed*Math.exp(-Math.max(0,e.timeStamp-drag.lastMove)/180);
+      const flick=drag.flickSpeed*Math.exp(-Math.max(0,e.timeStamp-drag.flickTime)/600);
+      speed=cancelled?0:clamp(flick*2.8);
+      coast=!cancelled&&Math.abs(speed)>36;
+      holdUntil=coast?performance.now()+3500:0;
       const id=drag.id;drag=null;spinner.classList.remove('is-dragging');
       if(spinner.hasPointerCapture(id))spinner.releasePointerCapture(id);
       animate();

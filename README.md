@@ -1,4 +1,4 @@
-# JMGRIT site v0.7
+# JMGRIT site v0.8
 
 Static site for `jmgrit.com`.
 
@@ -18,3 +18,23 @@ The previous marketing homepage hero/profile artwork has been removed. The homep
 ## Saved state
 
 P2V progress, variables, imported state, and other custom reader state remain local to the browser/device. The website does not store custom guide state server-side.
+
+## v0.8 emblem update
+
+Chrome trefoil emblem in the shared header and homepage title. Browser favicon (ICO and PNG) and Apple touch icon added across all online HTML pages. Icon and stylesheet URLs include v0.8 to refresh cached branding. P2V reader content and offline download unchanged.
+
+## Push this update
+
+Extract this ZIP outside your repository. Copy the contents of its jmgrit-site-v0.8 folder into the existing repository root, merging folders and replacing matching files. Do not delete the repository or its .git folder.
+
+From the repository root:
+
+```sh
+git status
+git add README.md public
+git diff --cached --stat
+git commit -m "Add JMGRIT trefoil branding and favicon"
+git push
+```
+
+The existing hosting configuration is retained. If your hosting is connected to this branch, the push triggers its usual deployment.

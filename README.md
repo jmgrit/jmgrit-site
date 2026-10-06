@@ -1,4 +1,4 @@
-# JMGRIT site v0.12
+# JMGRIT site v0.13
 
 Static site for `jmgrit.com`.
 
@@ -54,3 +54,7 @@ Homepage emblem moved to the top right and enlarged from 52px to 78px; JMGRIT.CO
 ## v0.12 spinner momentum
 
 Homepage emblem enlarged another 40% (78px to 109.2px). Release boosts flick momentum, preserves fast rotation for 3.5 seconds, then gradually slows with lower friction. Near-stationary pointer events no longer erase the last flick.
+
+## v0.13 replacement emblem
+
+Use the newly supplied three-petal image for website logos and tab/touch icons. Preserve its entire transparent canvas when generating asset sizes. Icon URLs refreshed to v0.13. Spinner size and physics retained.

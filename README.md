@@ -1,4 +1,4 @@
-# JMGRIT site v0.9
+# JMGRIT site v0.10
 
 Static site for `jmgrit.com`.
 
@@ -42,3 +42,7 @@ The existing hosting configuration is retained. If your hosting is connected to 
 ## v0.9 project context messaging
 
 Homepage explains Build → Document → Troubleshoot anywhere, with provider-independent prompts and saved-state portability. All four online P2V guide page titles link to the website homepage. The prompt generator still reads the original project title. Reader logic, storage namespace, and offline guide ZIP remain unchanged.
+
+## v0.10 interactive emblem
+
+Hover for a slow rotation. Drag a petal around the center to spin in either direction; faster movement adds more momentum. Release to coast. Dragging the header emblem does not navigate; a normal click still opens home. Space spins the focused header link or homepage emblem. Reduced-motion preference disables automatic hover rotation; direct interaction remains available.

@@ -114,3 +114,10 @@ html[data-theme="dark"] .list-link:hover{background:#1B3447;color:#EAF4FC}
 a:focus-visible,button:focus-visible{outline:3px solid var(--teal);outline-offset:4px}
 .topbar a:focus-visible,.topbar button:focus-visible{outline-color:#a8dfff}
 @media(max-width:700px){.context-grid{grid-template-columns:1fr}.home-slogan{font-size:2rem}.project-flow{font-size:.8rem}.project-flow li+li::before{margin:0 8px}}
+
+/* Emblem spinner: fixed hit area while the artwork rotates. */
+.emblem-spinner{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;vertical-align:middle}
+.home-brand-title .emblem-spinner{width:52px;height:52px}
+.emblem-spinner img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 50%;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.emblem-spinner.is-dragging{cursor:grabbing}
+.emblem-spinner:focus-visible{outline:3px solid var(--teal);outline-offset:5px;border-radius:50%}

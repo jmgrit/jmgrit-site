@@ -1,4 +1,4 @@
-# JMGRIT site v0.13
+# JMGRIT site v0.14
 
 Static site for `jmgrit.com`.
 
@@ -58,3 +58,7 @@ Homepage emblem enlarged another 40% (78px to 109.2px). Release boosts flick mom
 ## v0.13 replacement emblem
 
 Use the newly supplied three-petal image for website logos and tab/touch icons. Preserve its entire transparent canvas when generating asset sizes. Icon URLs refreshed to v0.13. Spinner size and physics retained.
+
+## v0.14 larger homepage spinner
+
+Double the homepage spinner from 109.2px to 218.4px. On tablet and mobile widths it sits at the top right above the slogan so the copy stays readable.

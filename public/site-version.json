@@ -1,8 +1,8 @@
 {
-  "siteVersion": "0.14",
+  "siteVersion": "0.15",
   "currentGuide": {
     "slug": "windows-11-to-proxmox",
-    "version": "1.2.27",
+    "version": "1.2.29",
     "steps": 36,
     "phases": 7
   }

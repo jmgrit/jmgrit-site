@@ -1,8 +1,8 @@
 {
-  "siteVersion": "0.17",
+  "siteVersion": "0.18",
   "currentGuide": {
     "slug": "windows-11-to-proxmox",
-    "version": "1.2.31",
+    "version": "1.2.32",
     "steps": 36,
     "phases": 7
   },
@@ -11,10 +11,10 @@
       "order": 1,
       "slug": "windows-11-to-proxmox",
       "title": "Windows 11 \u2192 Proxmox",
-      "version": "1.2.31",
+      "version": "1.2.32",
       "steps": 36,
       "phases": 7,
-      "download": "p2v-windows-11-offline-v1.2.31.zip"
+      "download": "p2v-windows-11-offline-v1.2.32.zip"
     },
     {
       "order": 2,

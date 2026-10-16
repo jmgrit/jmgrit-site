@@ -1,0 +1,1720 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="One physical WAN bridge plus separate internal Trusted and DMZ bridges."><title>Architecture · OpenWrt Virtual Router</title><link rel="icon" type="image/png" sizes="64x64" href="assets/brand/jmgrit-mark-64.png"><link rel="apple-touch-icon" sizes="192x192" href="assets/brand/jmgrit-mark-192.png"><meta name="theme-color" content="#091725"><script data-reader-config="true">window.DOCUMENTATION_READER_CONFIG={"version":"1.2.12","storageNamespace":"openwrt-virtual-router-reader"};(function(){try{var c=window.DOCUMENTATION_READER_CONFIG||{};var k=(c.storageNamespace||'documentation-reader')+'-theme';var g='documentation-generator-theme';var q=new URLSearchParams(location.search).get('theme');var inherited=window.DOCUMENTATION_GENERATOR_ORCHESTRATOR_THEME;var t=(q==='dark'||q==='light')?q:((inherited==='dark'||inherited==='light')?inherited:(localStorage.getItem(g)||localStorage.getItem(k)));if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';t=t==='dark'?'dark':'light';document.documentElement.dataset.theme=t;localStorage.setItem(k,t);localStorage.setItem(g,t)}catch(e){document.documentElement.dataset.theme='light'}})();</script><style data-reader-style="true">:root{--navy:#11263e;--navy2:#091725;--blue:#2468a9;--teal:#087b86;--green:#16794b;--amber:#9d6100;--red:#a62d26;--ink:#17212b;--muted:#5c6977;--line:#d7e0e8;--soft:#f3f7fa;--paper:#fff;--shadow:0 14px 38px rgba(18,43,68,.09);--radius:14px;--editor:#6b3fb3;--editor2:#4a257e}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.62 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#eef3f7}a{color:var(--blue)}.topbar{position:sticky;top:0;z-index:90;background:linear-gradient(100deg,var(--navy2),var(--navy));color:#fff;border-bottom:1px solid rgba(255,255,255,.12)}.topbar-inner{max-width:1600px;margin:auto;display:flex;align-items:center;gap:20px;padding:13px 24px}.brand{font-weight:850;letter-spacing:.01em}.version{font:inherit;font-size:.78rem;background:#dff4ee;color:#075f42;padding:3px 8px;border:0;border-radius:99px;font-weight:850;cursor:default}.progress-shell{flex:1;max-width:520px}.progress-label{font-size:.78rem;color:#dbe7f3;margin-bottom:4px}.progress-track{height:7px;background:rgba(255,255,255,.16);border-radius:99px;overflow:hidden}.progress-bar{height:100%;width:0;background:#51d3a5;transition:width .2s}.top-actions{display:flex;gap:8px}.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:9px;padding:8px 12px;font-weight:760;text-decoration:none;cursor:pointer;font:inherit}.button.secondary{background:#fff;color:var(--navy)}.button.ghost{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}.layout{max-width:1600px;margin:auto;display:grid;grid-template-columns:354px minmax(0,1fr);gap:24px;padding:24px}.sidebar{position:sticky;top:82px;height:calc(100vh - 106px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.search{width:100%;border:1px solid #c9d4df;border-radius:9px;padding:10px 11px;font:inherit}.nav-title{font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:850;letter-spacing:.1em;margin:18px 8px 7px}.nav a{display:block;padding:9px 10px;border-radius:8px;color:#344454;text-decoration:none;font-weight:650}.nav a:hover,.nav a.active{background:#eaf2f8;color:#123f6c}.content{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(24px,4vw,58px)}.page-kicker{color:var(--teal);font-weight:850;text-transform:uppercase;font-size:.78rem;letter-spacing:.1em}.page-description{font-size:1.08rem;color:var(--muted);max-width:900px}.content h1{font-size:clamp(2rem,4vw,3.25rem);line-height:1.12;color:var(--navy);margin:.2em 0}.content h2{color:var(--navy);margin-top:2.2em}.content h3{color:#243e59}.content table{width:100%;border-collapse:collapse;display:block;overflow:auto;margin:20px 0}.content th,.content td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}.content th{background:#edf4f8;color:#173653}.content blockquote{border-left:4px solid var(--teal);margin:20px 0;padding:10px 18px;background:#edf8f8}.content img{max-width:100%;height:auto;border-radius:11px}.step-card{border:1px solid #cedae4;border-radius:13px;margin:24px 0;background:#fff;box-shadow:0 7px 22px rgba(25,52,78,.07);overflow:hidden;scroll-margin-top:90px}.step-card.completed{border-color:#81c9aa;background:#fbfffd}.step-head{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:12px;background:linear-gradient(90deg,#edf4f9,#f9fbfd);border-bottom:1px solid #d8e2ea;padding:16px 18px}.step-head h2{margin:0;font-size:1.18rem}.step-check{width:23px;height:23px;accent-color:var(--green);cursor:pointer}.step-body{padding:18px 20px}.step-body>:first-child{margin-top:0}.step-body>:last-child{margin-bottom:0}.do-line,.stop-line,.video-line{border-radius:9px;padding:11px 13px}.do-line{background:#edf5ff;border-left:4px solid var(--blue)}.stop-line{background:#edf9f3;border-left:4px solid var(--green)}.video-line{background:#fff5e7;border-left:4px solid var(--amber)}.button.video{background:#fff5e7;color:#704500;border-color:#e6c98f}.button.video[aria-disabled=true]{background:#f1f3f5;color:#7c8792;border-color:#dfe4e8;pointer-events:none}pre{position:relative;background:#0e1a26;color:#e7f0f7;border-radius:10px;padding:18px;overflow:auto;border:1px solid #263a4e}code{font-family:"Cascadia Code","SFMono-Regular",Consolas,monospace;font-size:.91em}p code,li code,td code{background:#edf2f5;color:#17324a;padding:2px 5px;border-radius:5px}.code-wrap{position:relative;margin:18px 0}.copy-code{position:absolute;z-index:2;right:9px;top:9px;background:#fff;color:#17324a;border:0;border-radius:7px;padding:6px 10px;font-weight:800;cursor:pointer}.copy-code.copied{background:#d7f5e6;color:#0a653e}.footer{max-width:1600px;margin:0 auto 30px;padding:0 24px;color:var(--muted);font-size:.88rem}.callout{border:1px solid #c7d9e7;background:#f1f7fb;border-radius:11px;padding:14px 16px}.mobile-nav{display:none}.search-hidden{display:none!important}.resource-card{display:grid;grid-template-columns:minmax(190px,28%) 1fr;gap:0;border:1px solid #cfdae4;border-radius:14px;margin:26px 0;background:#fff;box-shadow:0 8px 24px rgba(24,49,74,.07);overflow:hidden;scroll-margin-top:96px}.resource-media{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#f4f8fb,#eaf1f6);padding:24px;min-height:260px;border-right:1px solid #d8e2e9}.resource-media img{max-height:270px;object-fit:contain;background:#fff;box-shadow:0 5px 18px rgba(0,0,0,.08)}.resource-media.empty{display:none}.resource-body{padding:24px 26px;min-width:0}.resource-body h2{margin:2px 0 12px}.resource-number{display:inline-block;font-size:.72rem;font-weight:900;letter-spacing:.1em;color:#075f69;background:#dff4f3;border-radius:99px;padding:4px 9px}.task-list-item{list-style:none;margin-left:-1.25rem}.task-list-item input{width:18px;height:18px;vertical-align:-3px;margin-right:8px;accent-color:var(--green)}.format-tools,.save-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.format-tools button{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:7px;padding:6px 9px;font:inherit;cursor:pointer}.save-tools .button{padding:7px 10px}.toast{position:fixed;z-index:120;right:22px;bottom:22px;max-width:440px;background:#11263e;color:#fff;border-radius:10px;padding:12px 15px;box-shadow:0 12px 36px rgba(0,0,0,.22);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}.toast.error{background:#8f2924}.image-pending{outline-color:#e29a2b!important}@media(max-width:900px){.layout{grid-template-columns:1fr;padding:12px}.sidebar{display:none;position:fixed;z-index:100;left:12px;right:12px;top:72px;height:calc(100vh - 84px)}.sidebar.open{display:block}.mobile-nav{display:inline-flex}.content{padding:22px}.progress-shell{display:none}.step-head{grid-template-columns:auto 1fr}.step-head .button{grid-column:1/-1}.topbar-inner{padding:10px 12px}.brand{font-size:.93rem}.top-actions .button.ghost{display:none}.resource-card{grid-template-columns:1fr}.resource-media{border-right:0;border-bottom:1px solid #d8e2e9;min-height:190px}.resource-media img{max-height:220px}.format-tools,.save-tools{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.format-tools button,.save-tools button{white-space:nowrap}}.error-description{display:block;width:100%;resize:vertical;min-height:74px;border:1px solid #cbd6df;border-radius:9px;background:#fff;padding:10px 12px;font:inherit;color:var(--ink)}.error-description:focus{outline:3px solid rgba(36,104,169,.16);border-color:#6c9cc7}.error-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px}.error-attach{display:inline-flex;align-items:center;gap:7px;border:1px solid #c7d3dd;border-radius:8px;background:#fff;padding:7px 10px;font-weight:720;color:#30465a;cursor:pointer}.error-attach input{max-width:230px;font:inherit;font-size:.82rem}.error-file-status{flex:1;min-width:220px;color:#687684;font-size:.8rem}.error-save{border:1px solid #9fc8b5;border-radius:8px;background:#e5f6ed;color:#0b6541;padding:8px 11px;font:inherit;font-weight:800;cursor:pointer}.error-save:hover{background:#d1efdf}@media(max-width:900px){.step-head .button.video{grid-column:1/-1}.error-actions{align-items:stretch}.error-file-status{flex-basis:100%}.error-save{width:100%}}.theme-toggle{display:inline-flex;align-items:center;gap:7px;min-height:38px;border:1px solid rgba(255,255,255,.32);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;padding:6px 11px;font:inherit;font-weight:780;cursor:pointer}.theme-toggle:hover{background:rgba(255,255,255,.16)}.theme-icon{font-size:1.02rem}.theme-label{font-size:.82rem}html[data-theme="dark"]{color-scheme:dark;--ink:#e5edf5;--muted:#a5b3c0;--line:#344352;--soft:#17222d;--paper:#121c26;--shadow:0 14px 38px rgba(0,0,0,.34)}html[data-theme="dark"] body{background:#091119;color:var(--ink)}html[data-theme="dark"] a{color:#8ec5ff}html[data-theme="dark"] .sidebar,html[data-theme="dark"] .content{background:#121c26;border-color:#334352}html[data-theme="dark"] .nav a{color:#bdc9d4}html[data-theme="dark"] .nav a:hover,html[data-theme="dark"] .nav a.active{background:#1c3144;color:#b9dcff}html[data-theme="dark"] .content h1,html[data-theme="dark"] .content h2,html[data-theme="dark"] .content h3,html[data-theme="dark"] .step-head h2{color:#e3effa}html[data-theme="dark"] .content th{background:#1b2b39;color:#cfe4f5}html[data-theme="dark"] .content td,html[data-theme="dark"] .content th{border-color:#354756}html[data-theme="dark"] .content blockquote,html[data-theme="dark"] .callout{background:#142b30;border-color:#31535a}html[data-theme="dark"] .step-card,html[data-theme="dark"] .resource-card{background:#14202a;border-color:#354655;box-shadow:0 9px 28px rgba(0,0,0,.25)}html[data-theme="dark"] .step-card.completed{background:#11271f;border-color:#3c7d63}html[data-theme="dark"] .step-head{background:linear-gradient(90deg,#1a2a37,#131f29);border-color:#354655}html[data-theme="dark"] .do-line{background:#152a3d}html[data-theme="dark"] .stop-line{background:#142c22}html[data-theme="dark"] .video-line{background:#352b17}html[data-theme="dark"] p code,html[data-theme="dark"] li code,html[data-theme="dark"] td code{background:#22313f;color:#d8e8f6}html[data-theme="dark"] .copy-code{background:#263746;color:#e7f1fa}html[data-theme="dark"] .resource-media{background:linear-gradient(145deg,#17232e,#101a23);border-color:#354655}html[data-theme="dark"] .resource-media img{background:#e9eef2}html[data-theme="dark"] .error-attach{color:#d6e1ea}html[data-theme="dark"] .footer{color:#95a5b4}.step-image-add{min-height:32px;border:1px solid #b6a8d8;border-radius:8px;background:#f2edff;color:#54378a;padding:5px 8px;font:inherit;font-size:.76rem;font-weight:800;line-height:1;cursor:pointer;white-space:nowrap}.step-image-add:hover{background:#e7ddff;border-color:#947dc3;transform:translateY(-1px)}.step-image-block{margin:18px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}.step-image-block img{display:block;max-height:720px;margin:0 auto;object-fit:contain}.step-image-block figcaption{margin-top:8px;color:var(--muted);font-size:.88rem;text-align:center}.image-tool-group{display:flex;gap:5px;flex-wrap:wrap}.image-tool-group button.active{background:#216da9;color:#fff;border-color:#216da9}@media(max-width:900px){.theme-label{display:none}.theme-toggle{padding:6px 9px}}:root{
+  --brand-navy:#17324D;
+  --brand-blue:#2F6B95;
+  --brand-blue-strong:#245578;
+  --brand-teal:#2D7D78;
+
+  --status-success:#2E7D5B;
+  --status-warning:#A15C00;
+  --status-danger:#B42318;
+
+  --page-background:#F4F7FA;
+  --surface:#FFFFFF;
+  --surface-subtle:#F7F9FB;
+  --text-primary:#243241;
+  --text-muted:#5F6F7F;
+  --border:#D7E0E8;
+
+  --link:#1E5FA8;
+  --link-visited:#6B4EA0;
+  --code-surface:#102333;
+
+  --navy:var(--brand-navy);
+  --navy2:#10283E;
+  --blue:var(--brand-blue);
+  --teal:var(--brand-teal);
+  --green:var(--status-success);
+  --amber:var(--status-warning);
+  --red:var(--status-danger);
+  --ink:var(--text-primary);
+  --muted:var(--text-muted);
+  --line:var(--border);
+  --soft:var(--surface-subtle);
+  --paper:var(--surface);
+  --editor:var(--brand-blue);
+  --editor2:var(--brand-navy);
+  --shadow:0 12px 32px rgba(23,50,77,.09);
+}html[data-theme="light"]{color-scheme:light}body{
+  color:var(--text-primary);
+  background:var(--page-background);
+}a{color:var(--link);text-decoration-thickness:.08em;text-underline-offset:.14em}a:visited{color:var(--link-visited)}a:hover{color:var(--brand-blue-strong)}a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:3px solid rgba(47,107,149,.28);
+  outline-offset:2px;
+}.topbar{
+  background:var(--brand-navy);
+  color:#FFFFFF;
+  border-bottom-color:rgba(255,255,255,.14);
+}.brand,.progress-label{color:#FFFFFF}.version{
+  color:var(--brand-navy);
+  background:#E6F0F7;
+  border:1px solid #C7DCEB;
+}.progress-track{background:rgba(255,255,255,.18)}.progress-bar{background:var(--brand-teal)}.theme-toggle{
+  color:#FFFFFF;
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.30);
+}.theme-toggle:hover{background:rgba(255,255,255,.14)}.button.secondary{
+  color:var(--brand-navy);
+  background:#FFFFFF;
+  border-color:#FFFFFF;
+}.button.ghost{
+  color:#FFFFFF;
+  border-color:rgba(255,255,255,.34);
+}.sidebar,.content{
+  color:var(--text-primary);
+  background:var(--surface);
+  border-color:var(--border);
+  box-shadow:var(--shadow);
+}.nav-title{color:var(--text-muted)}.nav a{color:#34495B}.nav a:visited{color:#34495B}.nav a:hover,.nav a.active{
+  color:var(--brand-navy);
+  background:#EAF2F8;
+  box-shadow:inset 3px 0 0 var(--brand-blue);
+}.page-kicker{color:var(--brand-teal)}.page-description,.footer{color:var(--text-muted)}.content h1,.content h2{color:var(--brand-navy)}.content h3{color:#294862}.content th{
+  color:var(--brand-navy);
+  background:#EDF3F7;
+}.content th,.content td{border-color:var(--border)}.content blockquote{
+  color:var(--text-primary);
+  background:#F0F6F8;
+  border-left-color:var(--brand-teal);
+}.callout{
+  background:#F1F6FA;
+  border-color:#C9DCE9;
+}.step-card,.resource-card{
+  background:#FFFFFF;
+  border-color:#CFD9E2;
+  box-shadow:0 7px 22px rgba(23,50,77,.07);
+}.step-card.completed{
+  background:#FBFEFC;
+  border-color:#79B99D;
+}.step-head{
+  background:linear-gradient(90deg,#EEF4F8,#FAFCFD);
+  border-bottom-color:#D8E2EA;
+}.step-check,.task-list-item input{accent-color:var(--status-success)}.do-line{
+  color:var(--text-primary);
+  background:#EEF5FA;
+  border-left-color:var(--brand-blue);
+}.stop-line{
+  color:var(--text-primary);
+  background:#EEF8F3;
+  border-left-color:var(--status-success);
+}.video-line{
+  color:var(--text-primary);
+  background:#FFF7E8;
+  border-left-color:var(--status-warning);
+}.button.video{
+  color:#714100;
+  background:#FFF7E8;
+  border-color:#E2C488;
+}.button.video:visited{color:#714100}pre{
+  color:#E7EEF5;
+  background:var(--code-surface);
+  border-color:#29445C;
+}p code,li code,td code{
+  color:#18344C;
+  background:#EDF2F5;
+}.copy-code{
+  color:var(--brand-navy);
+  background:#FFFFFF;
+  border:1px solid #CDD8E1;
+}.copy-code.copied{
+  color:#135B3D;
+  background:#E5F5EC;
+}.resource-number{
+  color:#155A58;
+  background:#E2F1F0;
+}.resource-media{
+  background:linear-gradient(145deg,#F5F8FA,#EBF1F5);
+  border-color:var(--border);
+}.error-save{
+  color:#FFFFFF;
+  background:var(--status-success);
+  border-color:#256A4D;
+}.error-save:hover{background:#256A4D}.format-tools button{
+  color:#FFFFFF;
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.30);
+}.format-tools button:hover{background:rgba(255,255,255,.16)}.step-image-add{
+  color:#28506A;
+  background:#EEF4F8;
+  border-color:#B9CBD8;
+}.step-image-add:hover{
+  color:var(--brand-navy);
+  background:#DFEBF3;
+  border-color:#88AFC9;
+}.toast{
+  color:#FFFFFF;
+  background:var(--brand-navy);
+}.toast.error{background:var(--status-danger)}.image-pending{outline-color:var(--brand-blue)!important}.image-tool-group button.active{
+  color:#FFFFFF;
+  background:var(--brand-blue);
+  border-color:var(--brand-blue-strong);
+}.image-selection-status{
+  color:var(--text-muted);
+  font-size:.80rem;
+  min-width:190px;
+}html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#E6EDF3;
+  --muted:#A7B3BE;
+  --line:#324557;
+  --soft:#192B3A;
+  --paper:#132231;
+  --shadow:0 14px 38px rgba(0,0,0,.34);
+}html[data-theme="dark"] body{
+  color:#E6EDF3;
+  background:#0C1622;
+}html[data-theme="dark"] a{color:#82B7FF}html[data-theme="dark"] a:visited{color:#C0A7FF}html[data-theme="dark"] a:hover{color:#A8CCFF}html[data-theme="dark"] .topbar{background:#0F2538}html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .content{
+  color:#E6EDF3;
+  background:#132231;
+  border-color:#324557;
+}html[data-theme="dark"] .nav-title{color:#A7B3BE}html[data-theme="dark"] .nav a{color:#C5D1DB}html[data-theme="dark"] .nav a:visited{color:#C5D1DB}html[data-theme="dark"] .nav a:hover,
+html[data-theme="dark"] .nav a.active{
+  color:#EAF4FC;
+  background:#1B3447;
+  box-shadow:inset 3px 0 0 #5CA3D8;
+}html[data-theme="dark"] .page-kicker{color:#69C3BA}html[data-theme="dark"] .page-description,
+html[data-theme="dark"] .footer{color:#A7B3BE}html[data-theme="dark"] .content h1,
+html[data-theme="dark"] .content h2,
+html[data-theme="dark"] .content h3,
+html[data-theme="dark"] .step-head h2{color:#E6EDF3}html[data-theme="dark"] .content th{
+  color:#DCE8F1;
+  background:#1A3041;
+}html[data-theme="dark"] .content th,
+html[data-theme="dark"] .content td{border-color:#324557}html[data-theme="dark"] .content blockquote,
+html[data-theme="dark"] .callout{
+  color:#E6EDF3;
+  background:#172D39;
+  border-color:#4B7C85;
+}html[data-theme="dark"] .step-card,
+html[data-theme="dark"] .resource-card{
+  color:#E6EDF3;
+  background:#152534;
+  border-color:#324557;
+}html[data-theme="dark"] .step-card.completed{
+  background:#142C25;
+  border-color:#4B8E70;
+}html[data-theme="dark"] .step-head{
+  background:linear-gradient(90deg,#1A3041,#152534);
+  border-color:#324557;
+}html[data-theme="dark"] .do-line{
+  background:#182F42;
+  border-left-color:#5CA3D8;
+}html[data-theme="dark"] .stop-line{
+  background:#173328;
+  border-left-color:#62C094;
+}html[data-theme="dark"] .video-line{
+  background:#352A17;
+  border-left-color:#E2A348;
+}html[data-theme="dark"] p code,
+html[data-theme="dark"] li code,
+html[data-theme="dark"] td code{
+  color:#E6EDF3;
+  background:#223646;
+}html[data-theme="dark"] pre{
+  color:#E6EDF3;
+  background:#091622;
+  border-color:#2E475B;
+}html[data-theme="dark"] .copy-code{
+  color:#E6EDF3;
+  background:#223646;
+  border-color:#3C5265;
+}html[data-theme="dark"] .resource-number{
+  color:#BFE8E4;
+  background:#1B3C3A;
+}html[data-theme="dark"] .resource-media{
+  background:linear-gradient(145deg,#192B3A,#101D29);
+  border-color:#324557;
+}html[data-theme="dark"] .resource-media img{background:#F4F7FA}html[data-theme="dark"] .image-tool-group button.active{
+  color:#FFFFFF;
+  background:#3E7DA7;
+  border-color:#5CA3D8;
+}html[data-theme="dark"] .image-selection-status{color:#A7B3BE}html[data-theme="light"] .do-line,
+html[data-theme="light"] .stop-line,
+html[data-theme="light"] .video-line{
+  color:#243241;
+}html[data-theme="light"] .do-line *,
+html[data-theme="light"] .stop-line *,
+html[data-theme="light"] .video-line *{
+  color:inherit;
+}html[data-theme="dark"] .do-line,
+html[data-theme="dark"] .stop-line,
+html[data-theme="dark"] .video-line{
+  color:#E6EDF3;
+}html[data-theme="dark"] .do-line *,
+html[data-theme="dark"] .stop-line *,
+html[data-theme="dark"] .video-line *{
+  color:inherit;
+}.image-tool-group button[data-image-tool="number"]{
+  min-width:84px;
+}.video-line{display:block;width:100%;height:auto;min-height:0;clear:both;position:relative;line-height:1.55;white-space:normal;overflow-wrap:anywhere;word-break:normal;margin:1rem 0}.video-line + *{clear:both}.step-video-add{min-height:32px;border:1px solid #AFC8D9;border-radius:8px;background:#EAF3F8;color:#204A67;padding:5px 8px;font:inherit;font-size:.76rem;font-weight:800;line-height:1;cursor:pointer;white-space:nowrap}.step-video-add:hover{background:#DDECF5;border-color:#7EA8C6;color:#17324D}.step-video-block{margin:1.1rem 0;border:1px solid #D7E0E8;border-radius:11px;overflow:hidden;background:#F7F9FB}.step-video-block video{display:block;width:100%;max-height:72vh;background:#000}.step-video-block figcaption{padding:.55rem .8rem;color:#5F6F7F;font-size:.88rem;font-weight:700}.video-preview-shell{display:flex;align-items:center;justify-content:center;min-height:0;border-radius:11px;background:#091622;overflow:hidden}.video-preview-shell video{width:100%;max-height:calc(96vh - 190px);background:#000}.video-seek-label{display:grid;gap:6px}.video-seek-label input{width:100%}.video-time-row{display:grid;grid-template-columns:1fr;gap:5px;padding:10px;border:1px solid #D7E0E8;border-radius:9px;background:#F7F9FB}.video-time-row em{color:#5F6F7F;font-weight:500}.video-edit-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.video-edit-buttons button,.video-cut-panel button{border:1px solid #C5D2DC;border-radius:7px;background:#F2F6F9;color:#29465E;padding:7px 9px;font:inherit;font-weight:700;cursor:pointer}.video-edit-buttons button:hover,.video-cut-panel button:hover{background:#E5EEF5}.video-cut-panel{padding:10px;border:1px solid #D7E0E8;border-radius:9px;background:#FAFBFC}.video-cut-panel ol{max-height:150px;overflow:auto;margin:.5rem 0 0;padding-left:1.5rem}.video-cut-panel li{margin:.35rem 0}.video-compression-note{font-size:.82rem;color:#5F6F7F;background:#EEF5FA;border-left:4px solid #2F6B95;padding:10px;border-radius:7px}.video-pending{outline:3px solid #2F6B95!important}html[data-theme="dark"] .step-video-add{color:#D8E8F4;background:#1A3447;border-color:#426981}html[data-theme="dark"] .step-video-block{background:#101D29;border-color:#324557}html[data-theme="dark"] .step-video-block figcaption{color:#A7B3BE}html[data-theme="dark"] .video-time-row,html[data-theme="dark"] .video-cut-panel{background:#101D29;border-color:#324557}html[data-theme="dark"] .video-edit-buttons button,html[data-theme="dark"] .video-cut-panel button{color:#D7E4EE;background:#1B3040;border-color:#40596C}@media(max-width:1000px){.video-preview-shell video{max-height:45vh}}@media(max-width:700px){.video-edit-buttons{grid-template-columns:1fr}}.step-card.step-minimized{margin:12px 0;box-shadow:none}.step-card.step-minimized .step-head{border-bottom:0;padding-block:11px}.step-card.completed .step-head h2::after{
+  content:"Completed";display:inline-block;margin-left:10px;padding:2px 7px;border-radius:999px;
+  color:#155A3E;background:#DFF1E8;font-size:.68rem;font-weight:850;vertical-align:2px
+}.step-nav-details{margin-top:8px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px 0}.step-nav-details summary{cursor:pointer;list-style:none;padding:9px 10px;color:var(--brand-navy);font-weight:800;border-radius:8px}.step-nav-details summary::-webkit-details-marker{display:none}.step-nav-details summary::before{content:"▸";display:inline-block;margin-right:7px;transition:transform .15s}.step-nav-details[open] summary::before{transform:rotate(90deg)}.step-nav-count{color:var(--text-muted);font-weight:700}.nav .build-overview-link{font-size:.82rem;color:var(--brand-blue);padding:6px 10px 6px 28px}.step-nav-list{max-height:48vh;overflow:auto;padding:2px 0 7px}.nav .step-nav-list a{display:grid;grid-template-columns:68px 1fr;gap:5px;padding:6px 8px 6px 14px;font-size:.78rem;font-weight:600;line-height:1.25}.nav .step-nav-list a span{color:var(--brand-teal);font-weight:850;font-size:.70rem}.step-nav-empty{margin:5px 10px 9px;padding:9px 10px;border-radius:8px;background:#EEF8F3;color:#235C45;font-size:.82rem;font-weight:750}html[data-theme="dark"] .step-card.completed .step-head h2::after{color:#CDECDD;background:#1B4737}html[data-theme="dark"] .step-nav-details{border-color:#324557}html[data-theme="dark"] .step-nav-details summary{color:#E6EDF3}html[data-theme="dark"] .nav .step-nav-list a span{color:#69C3BA}html[data-theme="dark"] .step-nav-empty{background:#173328;color:#CDECDD}.video-preview-frame{
+  position:relative;
+  width:100%;
+  max-height:calc(96vh - 190px);
+  overflow:hidden;
+  line-height:0;
+  background:#000;
+}.video-preview-frame>video{
+  display:block;
+  width:100%;
+  max-height:calc(96vh - 190px);
+  object-fit:contain;
+}.video-preview-frame>[data-video-effect-preview]{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:none;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  pointer-events:none;
+}.video-preview-frame>[data-video-effect-preview].active{display:block}.video-zoom-overlay{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  overflow:hidden;
+}.video-zoom-overlay.selecting{
+  pointer-events:auto;
+  cursor:crosshair;
+}.video-zoom-selection{
+  position:absolute;
+  display:none;
+  min-width:20px;
+  min-height:20px;
+  border:3px solid #FFFFFF;
+  border-radius:5px;
+  box-shadow:0 0 0 2px #2F6B95,0 0 0 9999px rgba(4,15,24,.48);
+  background:rgba(47,107,149,.08);
+}.video-zoom-overlay.has-selection .video-zoom-selection{display:block}.video-zoom-selection span{
+  position:absolute;
+  top:6px;
+  left:6px;
+  padding:3px 6px;
+  border-radius:5px;
+  color:#FFFFFF;
+  background:rgba(23,50,77,.88);
+  font-size:.74rem;
+  font-weight:800;
+  line-height:1.2;
+}.video-edit-buttons button.active{
+  color:#FFFFFF;
+  background:#2F6B95;
+  border-color:#245578;
+}.video-edit-buttons button:disabled{
+  cursor:not-allowed;
+  opacity:.52;
+}.video-zoom-panel{
+  padding:10px;
+  border:1px solid #D7E0E8;
+  border-radius:9px;
+  background:#F7FAFC;
+}.video-zoom-panel>p{
+  margin:.45rem 0;
+  color:#5F6F7F;
+  font-size:.80rem;
+  line-height:1.45;
+}.video-zoom-panel ol{
+  max-height:150px;
+  overflow:auto;
+  margin:.5rem 0 0;
+  padding-left:1.5rem;
+}.video-zoom-panel li{margin:.4rem 0;line-height:1.45}.video-zoom-panel button{
+  margin-left:5px;
+  border:1px solid #C5D2DC;
+  border-radius:6px;
+  padding:4px 7px;
+  color:#29465E;
+  background:#F2F6F9;
+  font:inherit;
+  font-size:.75rem;
+  font-weight:750;
+  cursor:pointer;
+}.video-zoom-panel button:hover{background:#E5EEF5}html[data-theme="dark"] .video-zoom-panel{
+  background:#101D29;
+  border-color:#324557;
+}html[data-theme="dark"] .video-zoom-panel>p{color:#A7B3BE}html[data-theme="dark"] .video-zoom-panel button{
+  color:#D7E4EE;
+  background:#1B3040;
+  border-color:#40596C;
+}@media(max-width:1000px){.video-preview-frame,.video-preview-frame>video{max-height:45vh}}.step-nav-list{
+  max-height:none;
+  overflow:visible;
+}.nav .step-nav-list a.completed-nav{
+  color:#687681;
+  background:#F5F8F6;
+  opacity:.78;
+  text-decoration-line:line-through;
+  text-decoration-thickness:2px;
+  text-decoration-color:#5E8F78;
+}.nav .step-nav-list a.completed-nav span{
+  color:#4E8068;
+  text-decoration-line:line-through;
+  text-decoration-thickness:2px;
+}.nav .step-nav-list a.completed-nav:hover,
+.nav .step-nav-list a.completed-nav.active{
+  color:#53616C;
+  background:#EAF3EE;
+}.nav .nav-subitem{
+  margin-top:-3px;
+  padding-left:27px;
+  color:var(--text-muted);
+  font-size:.84rem;
+}.nav .nav-subitem::before{
+  content:"↳";
+  display:inline-block;
+  margin-right:7px;
+  color:var(--brand-teal);
+  font-weight:850;
+}html[data-theme="dark"] .nav .step-nav-list a.completed-nav{
+  color:#91A09B;
+  background:#142B23;
+  text-decoration-color:#67A98A;
+}html[data-theme="dark"] .nav .step-nav-list a.completed-nav span{
+  color:#7BB99A;
+}html[data-theme="dark"] .nav .step-nav-list a.completed-nav:hover,
+html[data-theme="dark"] .nav .step-nav-list a.completed-nav.active{
+  color:#B4C2BC;
+  background:#193429;
+}html[data-theme="dark"] .nav .nav-subitem{
+  color:#A7B3BE;
+}.error-toggle-icon{
+  display:inline-block;
+  flex:0 0 auto;
+  width:9px;
+  height:9px;
+  border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;
+  transform:rotate(-45deg);
+  transition:transform .16s ease;
+}.task-list-item.task-complete{
+  color:var(--text-muted);
+}.task-list-item.task-complete > input[type="checkbox"]{
+  accent-color:var(--status-success);
+}.task-list-item input[type="checkbox"]:focus-visible{
+  outline:3px solid rgba(47,107,149,.28);
+  outline-offset:2px;
+}html[data-theme="dark"] .task-list-item.task-complete{
+  color:#9AA8B3;
+}.contains-task-list,
+ul[data-interactive-checklist="true"]{
+  margin-left:0;
+  padding-left:0;
+  list-style:none;
+}.task-list-item,
+li[data-task-list-item="true"]{
+  display:flex;
+  align-items:flex-start;
+  gap:.62rem;
+  margin:.34rem 0;
+  padding:.18rem .3rem;
+  list-style:none !important;
+  cursor:pointer;
+  border-radius:6px;
+}.task-list-item::marker,
+li[data-task-list-item="true"]::marker{
+  content:"";
+  font-size:0;
+}.task-list-item:hover,
+li[data-task-list-item="true"]:hover{
+  background:rgba(47,107,149,.07);
+}.task-list-item input[type="checkbox"],
+input[data-interactive-checklist-box="true"]{
+  position:static;
+  display:inline-block;
+  flex:0 0 auto;
+  width:18px;
+  height:18px;
+  margin:.1rem 0 0;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+  opacity:1 !important;
+  accent-color:var(--status-success);
+}.task-list-item.task-complete{
+  text-decoration-line:line-through;
+  text-decoration-thickness:1.5px;
+}html[data-theme="dark"] .task-list-item:hover,
+html[data-theme="dark"] li[data-task-list-item="true"]:hover{
+  background:rgba(130,183,255,.09);
+}.phase-heading{
+  position:relative;
+  margin:44px 0 14px;
+  padding:17px 20px 17px 104px;
+  border:1px solid #C9D7E2;
+  border-left:7px solid var(--brand-teal);
+  border-radius:11px;
+  background:linear-gradient(135deg,#EDF4F8,#FFFFFF);
+  color:var(--brand-navy);
+  box-shadow:0 8px 22px rgba(23,50,77,.08);
+}.phase-heading::before{
+  content:"PHASE " attr(data-phase);
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  padding:6px 8px;
+  border-radius:6px;
+  background:var(--brand-navy);
+  color:#FFFFFF;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}.phase-heading:first-child{
+  margin-top:18px;
+}.phase-nav-group{
+  margin:5px 0 8px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--surface);
+}.phase-nav-group>summary{
+  display:grid;
+  grid-template-columns:auto auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  padding:9px 10px;
+  cursor:pointer;
+  list-style:none;
+  color:var(--brand-navy);
+  background:#EEF4F8;
+}.phase-nav-group>summary::-webkit-details-marker{
+  display:none;
+}.phase-nav-group>summary::before{
+  content:"›";
+  font-size:1.05rem;
+  font-weight:900;
+  transform:rotate(0deg);
+  transition:transform .15s ease;
+}.phase-nav-group[open]>summary::before{
+  transform:rotate(90deg);
+}.phase-nav-label{
+  padding:3px 5px;
+  border-radius:4px;
+  background:var(--brand-navy);
+  color:#FFFFFF;
+  font-size:.59rem;
+  font-weight:900;
+  letter-spacing:.06em;
+}.phase-nav-title{
+  min-width:0;
+  overflow:hidden;
+  font-size:.78rem;
+  font-weight:800;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}.phase-nav-remaining{
+  color:var(--text-muted);
+  font-size:.66rem;
+  font-weight:750;
+  white-space:nowrap;
+}.phase-nav-links{
+  padding:5px;
+}.phase-nav-group.phase-complete>summary{
+  background:#EAF4EE;
+}.phase-nav-group.phase-complete .phase-nav-title{
+  color:#4C6D5D;
+}html[data-theme="dark"] .phase-heading{
+  border-color:#31475A;
+  background:linear-gradient(135deg,#142A3A,#132231);
+  color:#E6EDF3;
+}html[data-theme="dark"] .phase-nav-group{
+  border-color:#31475A;
+  background:#132231;
+}html[data-theme="dark"] .phase-nav-group>summary{
+  color:#E6EDF3;
+  background:#172B3B;
+}html[data-theme="dark"] .phase-nav-group.phase-complete>summary{
+  background:#173126;
+}html[data-theme="dark"] .phase-nav-group.phase-complete .phase-nav-title{
+  color:#9BC4AE;
+}@media(max-width:700px){.phase-heading{
+    padding:54px 15px 15px;
+  }.phase-heading::before{
+    left:14px;
+    top:14px;
+    transform:none;
+  }.phase-nav-group>summary{
+    grid-template-columns:auto auto minmax(0,1fr);
+  }.phase-nav-remaining{
+    grid-column:3;
+  }}.image-lock-label{white-space:nowrap}.image-tool-group button[data-image-tool="crop"],.image-tool-group button[data-image-tool="eraser"]{min-width:82px}.hardware-nav-details{
+  margin-top:8px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:7px 0;
+}.hardware-nav-details summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:9px 10px;
+  border-radius:8px;
+  color:var(--brand-navy);
+  font-weight:800;
+  cursor:pointer;
+  list-style:none;
+}.hardware-nav-details summary::-webkit-details-marker{display:none}.hardware-nav-details summary::before{
+  content:"▸";
+  display:inline-block;
+  flex:0 0 auto;
+  margin-right:2px;
+  transition:transform .15s ease;
+}.hardware-nav-details[open] summary::before{transform:rotate(90deg)}.hardware-nav-count{
+  margin-left:auto;
+  color:var(--text-muted);
+  font-size:.72rem;
+  font-weight:700;
+  white-space:nowrap;
+}.nav .hardware-overview-link,
+.nav .hardware-sources-link{
+  padding:6px 10px 6px 28px;
+  color:var(--brand-blue);
+  font-size:.82rem;
+}.nav .hardware-sources-link{
+  margin-top:4px;
+  border-top:1px solid var(--border);
+}.hardware-nav-list{
+  max-height:46vh;
+  overflow:auto;
+  padding:2px 0 7px;
+}.nav .hardware-nav-list a{
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr);
+  gap:6px;
+  padding:6px 8px 6px 14px;
+  font-size:.76rem;
+  font-weight:600;
+  line-height:1.25;
+}.nav .hardware-nav-list a span{
+  color:var(--brand-teal);
+  font-size:.69rem;
+  font-weight:850;
+}html[data-theme="dark"] .hardware-nav-details{border-color:#324557}html[data-theme="dark"] .hardware-nav-details summary{color:#E6EDF3}html[data-theme="dark"] .nav .hardware-nav-list a span{color:#69C3BA}html[data-theme="dark"] .nav .hardware-sources-link{border-top-color:#324557}ul.contains-task-list,
+ul[data-interactive-checklist="true"]{
+  margin-left:0!important;
+  padding-left:0!important;
+  list-style:none!important;
+}li.task-list-item,
+li[data-task-list-item="true"]{
+  list-style:none!important;
+}li.task-list-item::marker,
+li[data-task-list-item="true"]::marker{
+  content:""!important;
+  font-size:0!important;
+}li.task-list-item>input[type="checkbox"],
+li[data-task-list-item="true"]>input[type="checkbox"]{
+  flex:0 0 auto;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}.image-tool-group button[data-image-tool="brush"]{min-width:82px}@media(max-width:900px){.hardware-nav-list{max-height:36vh}}.step-field-block{
+  margin:16px 0;
+  padding:14px 16px;
+  border-radius:10px;
+  border-left:5px solid transparent;
+}.step-field-block>:first-child{margin-top:0}.step-field-block>:last-child{margin-bottom:0}.step-field-block .do-line,
+.step-field-block .stop-line,
+.step-field-block .video-line{
+  margin:0 0 10px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+}.do-block{
+  color:var(--text-primary);
+  background:#EEF5FA;
+  border-left-color:var(--brand-blue);
+}.stop-block{
+  color:var(--text-primary);
+  background:#EEF8F3;
+  border-left-color:var(--status-success);
+}.video-block{
+  color:var(--text-primary);
+  background:#FFF7E8;
+  border-left-color:var(--status-warning);
+}html[data-theme="dark"] .do-block{background:#152A3D}html[data-theme="dark"] .stop-block{background:#142C22}html[data-theme="dark"] .video-block{background:#352B17}html[data-theme="dark"] .do-block,
+html[data-theme="dark"] .stop-block,
+html[data-theme="dark"] .video-block {
+  color: #E6EDF3;
+}
+.user-variable-panel{margin:18px 0 22px;padding:18px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,var(--paper),var(--soft));box-shadow:var(--shadow)}
+.user-variable-panel h3{margin:0 0 5px;color:var(--navy)}.user-variable-panel>p{margin:0 0 14px;color:var(--muted)}
+.user-variable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:11px}
+.user-variable-field{display:grid;gap:5px;font-size:.82rem;font-weight:800;color:var(--ink)}
+.user-variable-field input{width:100%;min-width:0;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);font:600 .94rem/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;padding:9px 10px;box-shadow:inset 0 1px 2px rgba(17,38,62,.05)}
+.user-variable-field input:focus{outline:3px solid rgba(36,104,169,.18);border-color:var(--blue)}
+.user-variable-value{display:inline-block;max-width:100%;padding:0 .25em;border-radius:4px;background:rgba(36,104,169,.1);color:var(--blue);font-weight:800;overflow-wrap:anywhere}
+.user-variable-value[data-empty="true"]{background:rgba(157,97,0,.12);color:var(--amber)}
+
+
+/* Theme-aware phase diagrams */
+.phase-diagram{
+  margin:1.15rem 0 1.7rem;
+  padding:clamp(10px,1.6vw,18px);
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--paper);
+  box-shadow:0 8px 24px rgba(24,49,74,.07);
+}
+.phase-diagram-image{
+  display:block;
+  width:100%;
+  max-height:min(74vh,900px);
+  margin:0 auto;
+  object-fit:contain;
+  border-radius:10px;
+  background:transparent;
+}
+.phase-diagram-dark{display:none}
+.phase-diagram figcaption{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:.9rem;
+  font-weight:700;
+  text-align:center;
+}
+html[data-theme="dark"] .phase-diagram{
+  border-color:#354655;
+  background:#101820;
+  box-shadow:0 9px 28px rgba(0,0,0,.25);
+}
+html[data-theme="dark"] .phase-diagram-light{display:none}
+html[data-theme="dark"] .phase-diagram-dark{display:block}
+
+/* Reader v1.5.29 — collapsible phase content */
+.phase-collapsed-item[hidden]{display:none!important}
+.phase-heading{padding-right:68px!important}
+.phase-collapse-toggle{
+  position:absolute;
+  z-index:3;
+  top:50%;
+  right:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:36px;
+  padding:0;
+  border:1px solid #9EB8C9;
+  border-radius:8px;
+  background:#EDF5F9;
+  color:#244F69;
+  font:900 1.35rem/1 system-ui;
+  cursor:pointer;
+  transform:translateY(-50%);
+}
+.phase-collapse-toggle span{display:block;transform:rotate(90deg);transition:transform .16s ease;pointer-events:none}
+.phase-heading.phase-collapsed .phase-collapse-toggle span{transform:rotate(0deg)}
+.phase-collapse-toggle:hover{background:#DDECF4;border-color:#729CB5}
+html[data-theme="dark"] .phase-collapse-toggle{background:#17303E;border-color:#466575;color:#D7E9F3}
+html[data-theme="dark"] .phase-collapse-toggle:hover{background:#234554}
+@media(max-width:700px){.phase-heading{padding-right:58px!important}.phase-collapse-toggle{right:12px;top:28px}}
+.reader-interactive-video{position:relative;display:inline-block;max-width:100%}.reader-interactive-video>video{display:block;max-width:100%}.reader-clipboard-region{position:absolute;z-index:4;border:2px solid rgba(19,115,183,.95);background:rgba(43,150,224,.5);cursor:copy;border-radius:5px;color:#fff;font-weight:800}.reader-clipboard-region[data-copied="true"]{background:rgba(31,143,82,.8)}
+
+/* Reader troubleshooting prompt/package generator — published Docs parity */
+details.step-error-panel{border-top:1px solid var(--line);background:var(--soft);padding:0;overflow:hidden}
+details.step-error-panel>summary{list-style:none}
+details.step-error-panel>summary::-webkit-details-marker{display:none}
+.error-panel-title{display:flex;align-items:center;gap:8px;min-height:42px;margin:0;padding:11px 18px;cursor:pointer;user-select:none;border:0;color:var(--navy);font-weight:850;transition:background .15s ease,color .15s ease}
+.error-panel-title:hover{background:#e7f0f6;color:var(--navy)}
+.error-panel-title:focus-visible{outline:3px solid rgba(47,107,149,.28);outline-offset:-3px}
+.error-toggle-icon{display:inline-block;flex:0 0 auto;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .16s ease}
+details.step-error-panel[open] .error-toggle-icon{transform:rotate(45deg) translate(-2px,-2px)}
+.error-panel-content{padding:0 18px 16px;border-top:1px solid var(--line)}
+.error-panel-content .error-description{margin-top:14px}
+details.step-error-panel:not([open]) .error-panel-content{display:none}
+.troubleshoot-options{display:grid;grid-template-columns:minmax(86px,auto) repeat(3,minmax(150px,1fr));gap:8px;align-items:stretch;margin-top:12px}
+.troubleshoot-options-label{display:flex;align-items:center;font-size:.78rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.troubleshoot-mode{display:flex;gap:8px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--paper);cursor:pointer}
+.troubleshoot-mode:has(input:checked){border-color:#5d91b7;box-shadow:0 0 0 2px rgba(47,107,149,.13);background:#eef6fb}
+.troubleshoot-mode input{margin-top:3px;accent-color:#2f6b95}
+.troubleshoot-mode span{display:grid;gap:2px;line-height:1.25}
+.troubleshoot-mode strong{font-size:.84rem}
+.troubleshoot-mode small{font-size:.74rem;color:var(--muted);font-weight:500}
+.troubleshoot-smart-status{margin-top:8px;padding:8px 10px;border-left:3px solid #5d91b7;border-radius:5px;background:rgba(47,107,149,.07);font-size:.78rem;color:var(--muted);line-height:1.4}
+.troubleshoot-privacy{display:flex;gap:9px;align-items:flex-start;margin-top:10px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--paper);cursor:pointer}
+.troubleshoot-privacy input{margin-top:3px;accent-color:#2f6b95}
+.troubleshoot-privacy span{display:grid;gap:2px;line-height:1.3}
+.troubleshoot-privacy strong{font-size:.82rem}.troubleshoot-privacy small{font-size:.74rem;color:var(--muted)}
+.troubleshoot-dialog{width:min(900px,calc(100vw - 28px));max-height:88vh;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.troubleshoot-dialog::backdrop{background:rgba(5,12,18,.58)}
+.troubleshoot-dialog-card{display:grid;gap:12px;padding:18px;max-height:84vh;overflow:auto}
+.troubleshoot-dialog-card h3,.troubleshoot-dialog-card p{margin:0}.troubleshoot-dialog-card p{color:var(--muted);line-height:1.45}
+.troubleshoot-prompt-preview{width:100%;min-height:55vh;resize:vertical;padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--soft);color:inherit;font:12.5px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;tab-size:2}
+.troubleshoot-dialog-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;position:sticky;bottom:-18px;padding:10px 0 0;background:var(--paper)}
+.troubleshoot-dialog-actions button,.troubleshoot-privacy-toolbar button{border:1px solid var(--line);border-radius:8px;background:var(--soft);color:inherit;padding:8px 11px;font:inherit;font-weight:750;cursor:pointer}
+.troubleshoot-dialog-actions button.primary{background:var(--green);border-color:#256a4d;color:#fff}
+.troubleshoot-privacy-toolbar{display:flex;gap:8px;justify-content:flex-end}
+.troubleshoot-sensitive-list{display:grid;gap:7px;max-height:52vh;overflow:auto;padding:2px}
+.troubleshoot-sensitive-row{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--soft);cursor:pointer}
+.troubleshoot-sensitive-row input{margin-top:4px;accent-color:#2f6b95}.troubleshoot-sensitive-row span{display:grid;gap:3px;min-width:0}.troubleshoot-sensitive-row strong{font-size:.78rem}.troubleshoot-sensitive-row code{overflow-wrap:anywhere;white-space:pre-wrap;font-size:.76rem}
+html[data-theme="dark"] details.step-error-panel{background:#101922;border-color:#344554}
+html[data-theme="dark"] .error-panel-title{color:#e3effa}
+html[data-theme="dark"] .error-panel-title:hover{color:#e6edf3;background:#192b3a}
+html[data-theme="dark"] .error-panel-content{border-top-color:#324557}
+html[data-theme="dark"] .troubleshoot-mode:has(input:checked){background:#173149;border-color:#5d91b7}
+html[data-theme="dark"] .troubleshoot-smart-status{background:rgba(93,145,183,.13)}
+html[data-theme="dark"] .troubleshoot-dialog-actions{background:var(--paper)}
+@media(max-width:900px){.troubleshoot-options{grid-template-columns:1fr}.troubleshoot-options-label{min-height:0}.troubleshoot-dialog{width:calc(100vw - 16px)}.troubleshoot-prompt-preview{min-height:48vh}}
+
+
+/* Reader 1.5.70 — Required Hardware vertical tiles + completed troubleshooting collapse */
+.resource-card{
+  display:flex!important;
+  flex-direction:column!important;
+  grid-template-columns:none!important;
+  gap:0!important;
+  width:100%!important;
+  margin:16px 0!important;
+}
+.resource-card>.resource-body{
+  order:1!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:15px 17px!important;
+}
+.resource-card>.resource-body h2{margin:4px 0 9px!important}
+.resource-card>.resource-media{
+  order:2!important;
+  width:100%!important;
+  min-height:0!important;
+  padding:12px 17px 17px!important;
+  border-right:0!important;
+  border-top:1px solid var(--line)!important;
+  border-bottom:0!important;
+  background:var(--soft)!important;
+}
+.resource-card>.resource-media.empty{display:none!important}
+.resource-card>.resource-media img{
+  display:block!important;
+  width:auto!important;
+  max-width:min(100%,760px)!important;
+  max-height:360px!important;
+  margin:0 auto!important;
+  object-fit:contain!important;
+}
+.resource-card>.resource-body .contains-task-list{display:grid!important;gap:7px!important;margin:10px 0 0!important;padding:0!important}
+.resource-card>.resource-body .task-list-item,
+.resource-card>.resource-body li[data-task-list-item="true"]{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:6px 8px 6px 38px!important;
+  line-height:1.48!important;
+  white-space:normal!important;
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+  list-style:none!important;
+}
+.resource-card>.resource-body .task-list-item>input[type="checkbox"],
+.resource-card>.resource-body li[data-task-list-item="true"]>input[type="checkbox"]{
+  position:absolute!important;
+  left:8px!important;
+  top:8px!important;
+  width:18px!important;
+  height:18px!important;
+  margin:0!important;
+}
+.step-card.step-minimized .step-error-panel,
+.step-card.completed .step-error-panel{display:none!important}
+html[data-theme="dark"] .resource-card>.resource-media{background:#101a23!important;border-color:#354655!important}
+@media(max-width:900px){.resource-card>.resource-body{padding:14px 15px!important}.resource-card>.resource-media{padding:12px 15px 15px!important}}
+
+/* JMGRIT product mark integration */
+.brand-lockup{display:inline-flex;align-items:center;gap:9px;min-width:0;flex:0 1 auto}
+.docgen-brand-mark{display:block;flex:0 0 auto;width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 3px 9px rgba(0,0,0,.22))}
+.brand-lockup .brand{min-width:0}
+.footer{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}
+.footer-brand-mark{display:inline-block;width:18px;height:18px;object-fit:contain;vertical-align:middle}
+@media(max-width:700px){.topbar-inner{gap:12px}.brand-lockup{gap:7px}.docgen-brand-mark{width:29px;height:29px}}
+/* 1.5.70 — keep secondary navigation buttons readable after :visited in dark mode. */
+html[data-theme="dark"] .top-actions a.button.secondary,
+html[data-theme="dark"] .top-actions a.button.secondary:link,
+html[data-theme="dark"] .top-actions a.button.secondary:visited,
+html[data-theme="dark"] .top-actions a.button.secondary:hover,
+html[data-theme="dark"] .top-actions a.button.secondary:active{
+  color:#17324D!important;
+  background:#FFFFFF!important;
+  border-color:#FFFFFF!important;
+  text-decoration:none!important;
+}
+
+/* Troubleshoot dark-mode form controls — 1.5.95 */
+html[data-theme="dark"] .error-description{background:#0d1720!important;color:#e5edf5!important;border-color:#40505f!important;color-scheme:dark}
+html[data-theme="dark"] .error-description::placeholder{color:#91a2b2;opacity:1}
+html[data-theme="dark"] .error-attach{background:#0d1720!important;color:#d6e1ea!important;border-color:#40505f!important;color-scheme:dark}
+html[data-theme="dark"] .error-files{color:#c8d4df!important;color-scheme:dark}
+html[data-theme="dark"] .error-files::file-selector-button{background:#213345;color:#e5edf5;border:1px solid #506273;border-radius:5px;padding:4px 8px;margin-right:8px;font:inherit;font-size:.82rem;cursor:pointer}
+html[data-theme="dark"] .error-files::-webkit-file-upload-button{background:#213345;color:#e5edf5;border:1px solid #506273;border-radius:5px;padding:4px 8px;margin-right:8px;font:inherit;font-size:.82rem;cursor:pointer}
+html[data-theme="dark"] .error-file-status{color:#9fb0bf}
+
+
+.prior-build-context{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+.prior-build-context>strong{flex-basis:100%}
+.prior-build-context>p{flex-basis:100%;margin:.2rem 0 .35rem}
+.prior-build-import input{display:none}
+.prior-build-context [data-prior-build-state-status]{font-size:.88rem;color:var(--muted);font-weight:700}
+.prior-build-summary{flex-basis:100%;font-size:.9rem;font-weight:700;color:var(--green)}
+html[data-theme="dark"] .prior-build-summary{color:#8ed8b5}
+
+
+/* OpenWrt Step 001 discovery + validation */
+[data-openwrt-discovery-capture]{margin:16px 0 20px;padding:14px;border:1px solid var(--line,#c7d1dc);border-radius:12px;background:var(--soft,#f5f8fb)}
+[data-openwrt-discovery-capture] .command-output-actions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+[data-openwrt-discovery-capture] .command-output-actions button{appearance:none;border:1px solid var(--line,#aebdcc);border-radius:8px;background:var(--paper,#fff);color:var(--navy,#17324d);font:800 .86rem/1.2 inherit;padding:8px 11px;cursor:pointer}
+[data-openwrt-discovery-capture] .command-output-actions button:hover{border-color:var(--blue,#2468a9);box-shadow:0 0 0 3px rgba(36,104,169,.12)}
+[data-openwrt-discovery-capture] textarea{display:block;width:100%;min-height:112px;resize:vertical;box-sizing:border-box;border:1px solid var(--line,#aebdcc);border-radius:9px;background:var(--paper,#fff);color:var(--ink,#17212b);font:500 .88rem/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;padding:10px 11px}
+[data-openwrt-discovery-capture] textarea:focus{outline:3px solid rgba(36,104,169,.18);border-color:var(--blue,#2468a9)}
+[data-openwrt-discovery-capture] .command-output-status{margin:9px 0 0;color:var(--muted,#607286);font-size:.9rem}
+[data-openwrt-discovery-capture] details{margin-top:10px;border-top:1px solid var(--line,#c7d1dc);padding-top:9px}
+[data-openwrt-discovery-capture] summary{cursor:pointer;font-weight:800;color:var(--navy,#17324d)}
+[data-openwrt-discovery-capture] .command-output-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:9px}
+[data-openwrt-discovery-capture] .command-output-result{display:grid;gap:3px;padding:8px 9px;border:1px solid var(--line,#c7d1dc);border-radius:8px;background:var(--paper,#fff)}
+html[data-theme="dark"] [data-openwrt-discovery-capture]{background:#12283a;border-color:#35556e}
+html[data-theme="dark"] [data-openwrt-discovery-capture] .command-output-actions button{background:#183044;color:#f2f7fb;border-color:#64829a;text-shadow:none}
+html[data-theme="dark"] [data-openwrt-discovery-capture] .command-output-actions button:hover{background:#24455f;color:#fff;border-color:#8fc3ff;box-shadow:0 0 0 3px rgba(143,195,255,.16)}
+html[data-theme="dark"] [data-openwrt-discovery-capture] textarea{background:#0d2030;color:#f2f7fb;border-color:#64829a;caret-color:#fff}
+html[data-theme="dark"] [data-openwrt-discovery-capture] textarea::placeholder{color:#9fb4c5;opacity:1}
+html[data-theme="dark"] [data-openwrt-discovery-capture] .command-output-status{color:#b5c7d5}
+html[data-theme="dark"] [data-openwrt-discovery-capture] summary{color:#f2f7fb}
+html[data-theme="dark"] [data-openwrt-discovery-capture] .command-output-result{background:#0d2030;border-color:#35556e}
+[data-user-variable-input="PVE_TRUSTED_IP"][aria-invalid="true"]{border-color:#c43d34!important;box-shadow:0 0 0 3px rgba(196,61,52,.14)!important}
+[data-openwrt-pve-trusted-status]{display:block;margin-top:5px;font-size:.8rem;line-height:1.3;color:var(--muted,#607286)}
+[data-openwrt-pve-trusted-status][hidden]{display:none!important}
+[data-openwrt-pve-trusted-status][data-state="ok"]{color:#16794b}
+[data-openwrt-pve-trusted-status][data-state="error"]{color:#a62d26;font-weight:700}
+.stop-block.openwrt-stop-invalid{background:#fff0ef!important;border-left-color:#c43d34!important}
+html[data-theme="dark"] [data-user-variable-input="PVE_TRUSTED_IP"][aria-invalid="true"]{border-color:#ff7b72!important;box-shadow:0 0 0 3px rgba(255,123,114,.16)!important}
+html[data-theme="dark"] [data-openwrt-pve-trusted-status]{color:#b5c7d5}
+html[data-theme="dark"] [data-openwrt-pve-trusted-status][data-state="ok"]{color:#79d7a5}
+html[data-theme="dark"] [data-openwrt-pve-trusted-status][data-state="error"]{color:#ff9b94}
+html[data-theme="dark"] .stop-block.openwrt-stop-invalid{background:#351d1d!important;border-left-color:#ff7b72!important}
+[data-user-variable-input="DMZ_LXC_IP"][aria-invalid="true"]{border-color:#c43d34!important;box-shadow:0 0 0 3px rgba(196,61,52,.14)!important}
+[data-openwrt-dmz-lxc-status]{display:block;margin-top:5px;font-size:.8rem;line-height:1.3;color:var(--muted,#607286)}
+[data-openwrt-dmz-lxc-status][hidden]{display:none!important}
+[data-openwrt-dmz-lxc-status][data-state="error"]{color:#a62d26;font-weight:700}
+html[data-theme="dark"] [data-user-variable-input="DMZ_LXC_IP"][aria-invalid="true"]{border-color:#ff7b72!important;box-shadow:0 0 0 3px rgba(255,123,114,.16)!important}
+html[data-theme="dark"] [data-openwrt-dmz-lxc-status]{color:#b5c7d5}
+html[data-theme="dark"] [data-openwrt-dmz-lxc-status][data-state="error"]{color:#ff9b94}
+</style><style data-jmgrit-series="true">.jmgrit-series-nav{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 18px;padding:12px 14px;margin:0 0 24px;border:1px solid var(--line);border-radius:10px;background:var(--soft);font-size:.86rem;color:var(--ink)}.jmgrit-series-nav strong{display:block}.jmgrit-series-nav a{font-weight:700}.topbar a.guide-home-link,.topbar a.guide-home-link:visited,.topbar a.guide-home-link:hover{color:#fff;text-decoration:none}.topbar a.guide-home-link:hover{text-decoration:underline}.topbar a.guide-home-link:focus-visible{outline:3px solid #a8dfff;outline-offset:5px}</style></head>
+<body data-page-order="2" data-page-layout="default" data-video-base="">
+<header class="topbar"><div class="topbar-inner"><button class="button ghost mobile-nav" data-menu="">Menu</button><div class="brand-lockup"><a class="brand guide-home-link" href="/" aria-label="OpenWrt Virtual Router — JMGRIT homepage" title="JMGRIT homepage">OpenWrt Virtual Router</a></div><span class="version" aria-label="Version 1.2.12">v1.2.12</span><div class="progress-shell"><div class="progress-label" data-progress-text="">Progress</div><div class="progress-track"><div class="progress-bar" data-progress-bar=""></div></div></div><div class="top-actions"><button class="theme-toggle" type="button" data-theme-toggle="" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-icon" data-theme-icon="">☾</span><span class="theme-label" data-theme-label="">Dark</span></button><button class="button ghost" data-reset="">Reset</button><a class="button secondary" href="index.html">Build Steps</a><a class="button secondary" href="03-resources.html">Required Hardware</a></div></div></header>
+
+<div class="layout"><aside class="sidebar"><input id="doc-search" class="search" placeholder="Search steps and pages" aria-label="Search documentation"><div class="nav-title">Documentation</div><nav class="nav"><a class="" href="02-architecture.html">Architecture</a><details class="hardware-nav-details" data-hardware-nav-details=""><summary>Required Hardware <span class="hardware-nav-count">4 parts</span></summary><a class="hardware-overview-link" href="03-resources.html">Open required hardware</a><div class="hardware-nav-list" data-hardware-nav-list=""><a href="03-resources.html#part-01" data-hardware-part="01"><span>PART 01</span>Proxmox VE host</a><a href="03-resources.html#part-02" data-hardware-part="02"><span>PART 02</span>ISP router LAN</a><a href="03-resources.html#part-03" data-hardware-part="03"><span>PART 03</span>Windows admin VM</a><a href="03-resources.html#part-04" data-hardware-part="04"><span>PART 04</span>Out-of-band access</a></div><a class="hardware-sources-link" href="06-sources.html">Sources</a></details><details class="step-nav-details" data-step-nav-details="" open=""><summary>Build Steps <span class="step-nav-count" data-step-nav-count=""></span></summary><a class="build-overview-link" href="index.html">Open build instructions</a><div class="step-nav-list" data-step-nav-list=""><details class="phase-nav-group" data-phase-nav="1" open=""><summary><span class="phase-nav-label">PHASE 1</span><span class="phase-nav-title">Create the Internal Networks</span><span class="phase-nav-remaining" data-phase-nav-count=""></span></summary><div class="phase-nav-links"><a href="index.html#step-000" data-step-nav="000"><span>STEP 000</span>Optional: import previous P2V context</a><a href="index.html#step-001" data-step-nav="001"><span>STEP 001</span>Discover WAN and choose the internal subnets</a><a href="index.html#step-002" data-step-nav="002"><span>STEP 002</span>Back up the current PVE network</a><a href="index.html#step-003" data-step-nav="003"><span>STEP 003</span>Create the isolated Trusted and DMZ bridges</a></div></details><details class="phase-nav-group" data-phase-nav="2" open=""><summary><span class="phase-nav-label">PHASE 2</span><span class="phase-nav-title">Build OpenWrt</span><span class="phase-nav-remaining" data-phase-nav-count=""></span></summary><div class="phase-nav-links"><a href="index.html#step-004" data-step-nav="004"><span>STEP 004</span>Create the OpenWrt VM</a><a href="index.html#step-005" data-step-nav="005"><span>STEP 005</span>Add the DMZ NIC and startup order</a><a href="index.html#step-006" data-step-nav="006"><span>STEP 006</span>Connect the Windows admin VM and secure LuCI</a><a href="index.html#step-007" data-step-nav="007"><span>STEP 007</span>Configure Trusted</a><a href="index.html#step-008" data-step-nav="008"><span>STEP 008</span>Configure DMZ without DHCP</a><a href="index.html#step-009" data-step-nav="009"><span>STEP 009</span>Apply the firewall policy</a></div></details><details class="phase-nav-group" data-phase-nav="3" open=""><summary><span class="phase-nav-label">PHASE 3</span><span class="phase-nav-title">Cut Over and Verify</span><span class="phase-nav-remaining" data-phase-nav-count=""></span></summary><div class="phase-nav-links"><a href="index.html#step-010" data-step-nav="010"><span>STEP 010</span>Move PVE management fully to Trusted</a><a href="index.html#step-011" data-step-nav="011"><span>STEP 011</span>Remove PVE IPv6 exposure from WAN and DMZ</a><a href="index.html#step-012" data-step-nav="012"><span>STEP 012</span>Create a Debian 13 DMZ LXC and verify isolation</a><a href="index.html#step-013" data-step-nav="013"><span>STEP 013</span>Save the recovery state</a><a href="index.html#step-014" data-step-nav="014"><span>STEP 014</span>Optional: Temporary PVE management exception</a></div></details></div><div class="step-nav-empty" data-step-nav-empty="" hidden="">All build steps are complete.</div></details></nav></aside><main class="content"><nav class="jmgrit-series-nav" aria-label="Project series"><span><strong>Project 2 of 2 · Recommended order</strong>Windows 11 P2V → OpenWrt Virtual Router</span><a href="/guides/windows-11-to-proxmox/">Previous: Windows 11 → Proxmox</a></nav><div class="page-kicker">NETWORK FOUNDATION</div><h1>Architecture</h1><p class="page-description">One physical WAN bridge plus separate internal Trusted and DMZ bridges.</p><div class="doc-body"><h1 id="architecture">Architecture</h1>
+<div class="code-wrap"><button class="copy-code" type="button">Copy</button><pre><code class="language-text">Internet
+   │
+ISP home router / NAT / DHCP
+   │
+physical NIC
+   │
+vmbr0 — WAN only
+   │
+OpenWrt WAN
+   │
+   ├── OpenWrt Trusted {{OPENWRT_TRUSTED_IP}} ── {{TRUSTED_BRIDGE}} ── PVE + Windows admin VM
+   │                                  (no physical port)
+   │
+   └── OpenWrt DMZ     {{OPENWRT_DMZ_IP}} ── {{DMZ_BRIDGE}} ── DMZ guests
+                                      (no physical port)
+</code></pre></div>
+<h2 id="trust-boundaries">Trust boundaries</h2>
+<div class="code-wrap"><button class="copy-code" type="button">Copy</button><pre><code class="language-text">Trusted → WAN   allow
+DMZ     → WAN   allow
+Trusted ↔ DMZ   deny
+WAN → internal  deny
+</code></pre></div>
+<ul>
+<li><code>vmbr0</code> is the only bridge connected to hardware.</li>
+<li><code>{{TRUSTED_BRIDGE}}</code> = Trusted <code>{{TRUSTED_CIDR}}</code>; <code>{{DMZ_BRIDGE}}</code> = DMZ <code>{{DMZ_CIDR}}</code>. Both are host-local.</li>
+<li>PVE has an address only on Trusted.</li>
+<li>DMZ has no DHCP, RA, or DHCPv6 service.</li>
+<li>OpenWrt is the only router between WAN, Trusted, and DMZ.</li>
+<li>Double NAT is intentional.</li>
+<li>No WAN port forwards are created by default. Step 014 can add a source-restricted temporary management exception.</li>
+<li>PBS is installed only after this foundation is complete.</li>
+</ul>
+<h2 id="failure-behavior">Failure behavior</h2>
+<p>If OpenWrt stops, Trusted clients can still reach PVE on <code>{{TRUSTED_BRIDGE}}</code>, but Internet routing stops. Trusted and DMZ remain isolated.</p>
+</div></main></div>
+<footer class="footer"><span>Offline documentation. Reader progress is stored only in this browser.</span></footer>
+<script data-reader-runtime="true">(function(root){
+'use strict';
+const FORMAT='jmgrit.documentation.saved-state.encrypted';
+const VERSION=1;
+const KDF_NAME='PBKDF2';
+const KDF_HASH='SHA-256';
+const KDF_ITERATIONS=600000;
+const SALT_BYTES=32;
+const CIPHER_NAME='AES-GCM';
+const KEY_BITS=256;
+const IV_BYTES=12;
+const TAG_BITS=128;
+const MIN_PASSWORD_CODEPOINTS=16;
+const RECOMMENDED_PASSWORD_CODEPOINTS=24;
+const MAX_PASSWORD_CODEPOINTS=256;
+const KEY_CACHE_DB='jmgrit-saved-state-key-cache-v1';
+const KEY_CACHE_STORE='keys';
+const KEY_CACHE_VERSION=1;
+const COMMON_PASSWORDS=new Set([
+  'passwordpassword','password123456','password123456789','letmeinletmein','qwertyqwertyqwerty',
+  '123456789012345','1234567890123456','administratoradmin','welcome123456789','changemechangeme',
+  'correcthorsebatterystaple','iloveyouiloveyou','thisisapassword','thisismypassword',
+  'qwertyuiopasdfgh','qwertyuiopasdfghjkl','abcdefghijklmnopqrstuvwxyz','abcdefghijklmnop',
+  'passwordpasswordpassword','adminadminadminadmin','letmeinletmeinletmein','welcome1234567890'
+]);
+function webCrypto(){const value=root.crypto;if(!value?.subtle||typeof value.getRandomValues!=='function')throw new Error('Secure browser cryptography is unavailable. Open this documentation in a modern browser that supports Web Crypto.');return value}
+function normalizePassword(value){return String(value??'').normalize('NFKC')}
+function passwordLength(value){return Array.from(normalizePassword(value)).length}
+function validatePassword(value){
+  const normalized=normalizePassword(value),length=Array.from(normalized).length,lower=normalized.toLocaleLowerCase('en-US'),compact=lower.replace(/[\s._-]+/g,'');
+  const errors=[];
+  if(length<MIN_PASSWORD_CODEPOINTS)errors.push(`Use at least ${MIN_PASSWORD_CODEPOINTS} characters.`);
+  if(length>MAX_PASSWORD_CODEPOINTS)errors.push(`Use no more than ${MAX_PASSWORD_CODEPOINTS} characters.`);
+  if(COMMON_PASSWORDS.has(lower)||COMMON_PASSWORDS.has(compact))errors.push('Choose a less common passphrase.');
+  if(length>=MIN_PASSWORD_CODEPOINTS&&/^(.)(?:\1)+$/u.test(normalized))errors.push('Do not use one repeated character as the password.');
+  if(length>=MIN_PASSWORD_CODEPOINTS&&/^(.{1,8})(?:\1){2,}$/u.test(normalized))errors.push('Do not use a short repeated pattern as the password.');
+  return{ok:errors.length===0,normalized,length,errors,recommended:length>=RECOMMENDED_PASSWORD_CODEPOINTS};
+}
+function bytesToBase64Url(bytes){
+  const source=bytes instanceof Uint8Array?bytes:new Uint8Array(bytes);let binary='';const chunk=0x8000;
+  for(let index=0;index<source.length;index+=chunk)binary+=String.fromCharCode(...source.subarray(index,index+chunk));
+  return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function base64UrlToBytes(value){
+  const normalized=String(value||'').replace(/-/g,'+').replace(/_/g,'/'),padded=normalized+'='.repeat((4-normalized.length%4)%4),binary=atob(padded),out=new Uint8Array(binary.length);
+  for(let index=0;index<binary.length;index++)out[index]=binary.charCodeAt(index);return out;
+}
+function encryptedHeader(envelope){
+  return{
+    format:FORMAT,
+    version:VERSION,
+    protected:true,
+    createdAt:String(envelope.createdAt||''),
+    kdf:{name:KDF_NAME,hash:KDF_HASH,iterations:Number(envelope.kdf?.iterations||0),salt:String(envelope.kdf?.salt||'')},
+    cipher:{name:CIPHER_NAME,keyBits:KEY_BITS,iv:String(envelope.cipher?.iv||''),tagBits:TAG_BITS}
+  };
+}
+function encodeHeader(envelope){return new TextEncoder().encode(JSON.stringify(encryptedHeader(envelope)))}
+async function deriveAesKey(password,salt,iterations=KDF_ITERATIONS){
+  const cryptoApi=webCrypto(),normalized=normalizePassword(password),bytes=new TextEncoder().encode(normalized);
+  try{
+    const material=await cryptoApi.subtle.importKey('raw',bytes,{name:KDF_NAME},false,['deriveKey']);
+    return await cryptoApi.subtle.deriveKey({name:KDF_NAME,salt,iterations,hash:KDF_HASH},material,{name:CIPHER_NAME,length:KEY_BITS},false,['encrypt','decrypt']);
+  }finally{bytes.fill(0)}
+}
+function validateEnvelope(envelope){
+  if(!envelope||typeof envelope!=='object'||Array.isArray(envelope))throw new Error('Encrypted Saved State is not a valid object.');
+  if(envelope.format!==FORMAT||Number(envelope.version)!==VERSION||envelope.protected!==true)throw new Error('Unsupported encrypted Saved State format or version.');
+  if(envelope.kdf?.name!==KDF_NAME||envelope.kdf?.hash!==KDF_HASH)throw new Error(`Unsupported Saved State key derivation algorithm: ${String(envelope.kdf?.name||'unknown')}.`);
+  const iterations=Number(envelope.kdf?.iterations||0);if(!Number.isInteger(iterations)||iterations<KDF_ITERATIONS||iterations>5000000)throw new Error('Encrypted Saved State uses unsupported password-hardening parameters.');
+  if(envelope.cipher?.name!==CIPHER_NAME||Number(envelope.cipher?.keyBits)!==KEY_BITS||Number(envelope.cipher?.tagBits)!==TAG_BITS)throw new Error(`Unsupported Saved State cipher: ${String(envelope.cipher?.name||'unknown')}.`);
+  const salt=base64UrlToBytes(envelope.kdf?.salt),iv=base64UrlToBytes(envelope.cipher?.iv),ciphertext=base64UrlToBytes(envelope.ciphertext);
+  if(salt.length!==SALT_BYTES)throw new Error('Encrypted Saved State salt is invalid.');
+  if(iv.length!==IV_BYTES)throw new Error('Encrypted Saved State nonce is invalid.');
+  if(ciphertext.length<17)throw new Error('Encrypted Saved State ciphertext is invalid.');
+  return{iterations,salt,saltText:String(envelope.kdf.salt||''),iv,ciphertext};
+}
+function validateKeyContext(context){
+  if(!context||typeof context!=='object'||!context.key)throw new Error('Saved State encryption key is unavailable.');
+  const iterations=Number(context.iterations||0),saltText=String(context.salt||''),salt=base64UrlToBytes(saltText);
+  if(!Number.isInteger(iterations)||iterations<KDF_ITERATIONS||iterations>5000000||salt.length!==SALT_BYTES)throw new Error('Saved State encryption key metadata is invalid.');
+  return{key:context.key,iterations,salt,saltText};
+}
+async function createKeyContext(password,{salt='',iterations=KDF_ITERATIONS,validatePolicy=true}={}){
+  const policy=validatePassword(password);if(validatePolicy&&!policy.ok)throw new Error(policy.errors[0]);
+  const cryptoApi=webCrypto(),saltBytes=salt?base64UrlToBytes(salt):cryptoApi.getRandomValues(new Uint8Array(SALT_BYTES));
+  if(saltBytes.length!==SALT_BYTES)throw new Error('Saved State encryption salt is invalid.');
+  const count=Number(iterations||KDF_ITERATIONS);if(!Number.isInteger(count)||count<KDF_ITERATIONS||count>5000000)throw new Error('Saved State password-hardening parameters are invalid.');
+  const key=await deriveAesKey(policy.normalized,saltBytes,count);
+  return{key,salt:bytesToBase64Url(saltBytes),iterations:count};
+}
+async function keyContextForEnvelope(envelope,password){
+  const checked=validateEnvelope(envelope);
+  return createKeyContext(password,{salt:checked.saltText,iterations:checked.iterations,validatePolicy:false});
+}
+async function encryptPayloadWithKey(payload,context){
+  const checked=validateKeyContext(context),cryptoApi=webCrypto(),iv=cryptoApi.getRandomValues(new Uint8Array(IV_BYTES)),createdAt=new Date().toISOString();
+  const envelope={format:FORMAT,version:VERSION,protected:true,createdAt,kdf:{name:KDF_NAME,hash:KDF_HASH,iterations:checked.iterations,salt:checked.saltText},cipher:{name:CIPHER_NAME,keyBits:KEY_BITS,iv:bytesToBase64Url(iv),tagBits:TAG_BITS},ciphertext:''};
+  const plain=new TextEncoder().encode(JSON.stringify(payload));
+  try{
+    const encrypted=await cryptoApi.subtle.encrypt({name:CIPHER_NAME,iv,additionalData:encodeHeader(envelope),tagLength:TAG_BITS},checked.key,plain);
+    envelope.ciphertext=bytesToBase64Url(new Uint8Array(encrypted));return envelope;
+  }finally{plain.fill(0)}
+}
+async function decryptPayloadWithKey(envelope,context){
+  const checkedEnvelope=validateEnvelope(envelope),checkedContext=validateKeyContext(context),cryptoApi=webCrypto();
+  if(checkedEnvelope.iterations!==checkedContext.iterations||checkedEnvelope.saltText!==checkedContext.saltText)throw new Error('The remembered Saved State key does not match this encrypted file.');
+  try{
+    const decrypted=await cryptoApi.subtle.decrypt({name:CIPHER_NAME,iv:checkedEnvelope.iv,additionalData:encodeHeader(envelope),tagLength:TAG_BITS},checkedContext.key,checkedEnvelope.ciphertext);
+    return JSON.parse(new TextDecoder().decode(decrypted));
+  }catch(error){
+    if(error instanceof SyntaxError)throw new Error('The decrypted Saved State payload is invalid.');
+    throw new Error('The password is incorrect, or the encrypted Saved State file was modified or damaged.');
+  }
+}
+async function encryptPayload(payload,password){return encryptPayloadWithKey(payload,await createKeyContext(password))}
+async function decryptPayload(envelope,password){return decryptPayloadWithKey(envelope,await keyContextForEnvelope(envelope,password))}
+function isEncryptedEnvelope(value){return Boolean(value&&typeof value==='object'&&!Array.isArray(value)&&value.format===FORMAT&&value.protected===true)}
+function openKeyCache(){
+  if(!root.indexedDB)return Promise.resolve(null);
+  return new Promise((resolve,reject)=>{const request=root.indexedDB.open(KEY_CACHE_DB,KEY_CACHE_VERSION);request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(KEY_CACHE_STORE))db.createObjectStore(KEY_CACHE_STORE,{keyPath:'id'})};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error||new Error('Saved State key cache could not be opened.'))});
+}
+async function cacheKeyContext(cacheId,context){
+  const id=String(cacheId||'').trim();if(!id)throw new Error('Saved State key cache identifier is missing.');const checked=validateKeyContext(context),db=await openKeyCache();if(!db)return false;
+  try{return await new Promise((resolve,reject)=>{const tx=db.transaction(KEY_CACHE_STORE,'readwrite');tx.objectStore(KEY_CACHE_STORE).put({id,key:checked.key,salt:checked.saltText,iterations:checked.iterations,updatedAt:new Date().toISOString()});tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error||new Error('Saved State key could not be remembered.'));tx.onabort=()=>reject(tx.error||new Error('Saved State key could not be remembered.'))})}finally{db.close()}
+}
+async function loadCachedKeyContext(cacheId){
+  const id=String(cacheId||'').trim();if(!id)return null;let db;try{db=await openKeyCache();if(!db)return null;return await new Promise((resolve,reject)=>{const tx=db.transaction(KEY_CACHE_STORE,'readonly'),request=tx.objectStore(KEY_CACHE_STORE).get(id);request.onsuccess=()=>{const record=request.result;if(!record?.key||!record?.salt)return resolve(null);try{const checked=validateKeyContext({key:record.key,salt:record.salt,iterations:record.iterations});resolve({key:checked.key,salt:checked.saltText,iterations:checked.iterations})}catch{resolve(null)}};request.onerror=()=>reject(request.error||new Error('Saved State key cache could not be read.'))})}catch{return null}finally{db?.close()}
+}
+async function clearCachedKeyContext(cacheId){
+  const id=String(cacheId||'').trim();if(!id)return false;let db;try{db=await openKeyCache();if(!db)return false;return await new Promise((resolve,reject)=>{const tx=db.transaction(KEY_CACHE_STORE,'readwrite');tx.objectStore(KEY_CACHE_STORE).delete(id);tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error||new Error('Saved State key cache could not be cleared.'));tx.onabort=()=>reject(tx.error||new Error('Saved State key cache could not be cleared.'))})}catch{return false}finally{db?.close()}
+}
+root.DocumentationSavedStateCrypto=Object.freeze({
+  FORMAT,VERSION,KDF_NAME,KDF_HASH,KDF_ITERATIONS,SALT_BYTES,CIPHER_NAME,KEY_BITS,IV_BYTES,TAG_BITS,
+  MIN_PASSWORD_CODEPOINTS,RECOMMENDED_PASSWORD_CODEPOINTS,MAX_PASSWORD_CODEPOINTS,
+  normalizePassword,passwordLength,validatePassword,isEncryptedEnvelope,encryptPayload,decryptPayload,
+  createKeyContext,keyContextForEnvelope,encryptPayloadWithKey,decryptPayloadWithKey,
+  cacheKeyContext,loadCachedKeyContext,clearCachedKeyContext
+});
+})(globalThis);
+
+(function(root){
+'use strict';
+const DB_NAME='jmgrit-saved-state-attachments-v1';
+const DB_VERSION=1;
+const STORE='attachments';
+const PAYLOAD_SCHEMA_VERSION=1;
+const MAX_ATTACHMENTS=32;
+const MAX_ATTACHMENT_BYTES=12*1024*1024;
+const MAX_TOTAL_ATTACHMENT_BYTES=16*1024*1024;
+function secureCrypto(){const value=root.crypto;if(!value?.subtle)throw new Error('Secure browser cryptography is unavailable, so recovery attachments cannot be verified.');return value}
+function normalizedNamespace(value){const out=String(value||'').trim();if(!out||out.length>160)throw new Error('Saved State attachment namespace is invalid.');return out}
+function normalizedSlot(value){const out=String(value||'').trim();if(!out||out.length>128||!/^[A-Za-z0-9._:-]+$/.test(out))throw new Error('Saved State attachment ID is invalid.');return out}
+function recordId(namespace,slot){return `${normalizedNamespace(namespace)}\u0000${normalizedSlot(slot)}`}
+function cloneBuffer(value){if(value instanceof ArrayBuffer)return value.slice(0);if(ArrayBuffer.isView(value))return value.buffer.slice(value.byteOffset,value.byteOffset+value.byteLength);throw new Error('Saved State attachment bytes are invalid.')}
+function bytesToBase64Url(value){const source=new Uint8Array(value),chunk=0x8000;let binary='';for(let i=0;i<source.length;i+=chunk)binary+=String.fromCharCode(...source.subarray(i,i+chunk));return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function base64UrlToBytes(value){const normalized=String(value||'').replace(/-/g,'+').replace(/_/g,'/'),padded=normalized+'='.repeat((4-normalized.length%4)%4),binary=atob(padded),out=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)out[i]=binary.charCodeAt(i);return out}
+async function sha256Hex(value){const digest=await secureCrypto().subtle.digest('SHA-256',cloneBuffer(value));return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
+function openDb(){if(!root.indexedDB)return Promise.resolve(null);return new Promise((resolve,reject)=>{const request=root.indexedDB.open(DB_NAME,DB_VERSION);request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(STORE)){const store=db.createObjectStore(STORE,{keyPath:'id'});store.createIndex('namespace','namespace',{unique:false})}};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error||new Error('Recovery attachment storage could not be opened.'))})}
+async function withStore(mode,callback){const db=await openDb();if(!db)throw new Error('Recovery attachment storage requires IndexedDB in this browser.');try{return await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,mode),store=tx.objectStore(STORE);let result;try{result=callback(store,tx)}catch(error){reject(error);return}tx.onerror=()=>reject(tx.error||new Error('Recovery attachment storage failed.'));tx.onabort=()=>reject(tx.error||new Error('Recovery attachment storage was aborted.'));tx.oncomplete=()=>Promise.resolve(result).then(resolve,reject)})}finally{db.close()}}
+async function get(namespace,slot){const id=recordId(namespace,slot);return withStore('readonly',store=>new Promise((resolve,reject)=>{const request=store.get(id);request.onsuccess=()=>resolve(request.result||null);request.onerror=()=>reject(request.error||new Error('Recovery attachment could not be read.'))}))}
+async function listRecords(namespace){namespace=normalizedNamespace(namespace);return withStore('readonly',store=>new Promise((resolve,reject)=>{const index=store.index('namespace'),request=index.getAll(IDBKeyRange.only(namespace));request.onsuccess=()=>resolve((request.result||[]).sort((a,b)=>String(a.slot).localeCompare(String(b.slot))));request.onerror=()=>reject(request.error||new Error('Recovery attachments could not be listed.'))}))}
+function metadata(record){return record?{slot:String(record.slot||''),name:String(record.name||''),mediaType:String(record.mediaType||''),size:Number(record.size||0),lastModified:Number(record.lastModified||0),sha256:String(record.sha256||''),sensitive:record.sensitive!==false,purpose:String(record.purpose||''),addedAt:String(record.addedAt||''),updatedAt:String(record.updatedAt||'')}:null}
+async function list(namespace){return (await listRecords(namespace)).map(metadata)}
+async function putFile(namespace,slot,file,options={}){namespace=normalizedNamespace(namespace);slot=normalizedSlot(slot);if(!(file instanceof Blob))throw new Error('Select a recovery attachment file first.');if(file.size<=0)throw new Error('The selected recovery attachment is empty.');const max=Math.min(Number(options.maxBytes||MAX_ATTACHMENT_BYTES),MAX_ATTACHMENT_BYTES);if(file.size>max)throw new Error(`Recovery attachment exceeds the ${Math.round(max/1024/1024)} MB per-file limit.`);const existing=await listRecords(namespace),otherTotal=existing.filter(item=>item.slot!==slot).reduce((sum,item)=>sum+Number(item.size||0),0);if(otherTotal+file.size>MAX_TOTAL_ATTACHMENT_BYTES)throw new Error(`Recovery attachments exceed the ${Math.round(MAX_TOTAL_ATTACHMENT_BYTES/1024/1024)} MB per-project limit.`);const data=await file.arrayBuffer(),hash=await sha256Hex(data),now=new Date().toISOString(),record={id:recordId(namespace,slot),namespace,slot,name:String(file.name||options.name||'attachment.bin').slice(0,255),mediaType:String(file.type||options.mediaType||'application/octet-stream').slice(0,160),size:data.byteLength,lastModified:Number(file.lastModified||0),sha256:hash,sensitive:options.sensitive!==false,purpose:String(options.purpose||'').slice(0,512),addedAt:now,updatedAt:now,data};await withStore('readwrite',store=>{store.put(record)});return metadata(record)}
+async function remove(namespace,slot){const id=recordId(namespace,slot);await withStore('readwrite',store=>{store.delete(id)});return true}
+async function clear(namespace){namespace=normalizedNamespace(namespace);const records=await listRecords(namespace);if(!records.length)return 0;await withStore('readwrite',store=>{for(const record of records)store.delete(record.id)});return records.length}
+async function snapshot(namespace){return (await listRecords(namespace)).map(record=>({...record,data:cloneBuffer(record.data)}))}
+async function restoreSnapshot(namespace,records){namespace=normalizedNamespace(namespace);await clear(namespace);if(!Array.isArray(records)||!records.length)return 0;await withStore('readwrite',store=>{for(const source of records){const slot=normalizedSlot(source.slot),data=cloneBuffer(source.data);store.put({...source,id:recordId(namespace,slot),namespace,slot,data,size:data.byteLength})}});return records.length}
+async function exportPayload(namespace){const records=await listRecords(namespace),items=[];let total=0;for(const record of records){const data=cloneBuffer(record.data);total+=data.byteLength;if(data.byteLength>MAX_ATTACHMENT_BYTES||total>MAX_TOTAL_ATTACHMENT_BYTES)throw new Error('Recovery attachments exceed the Saved State export safety limit.');items.push({...metadata(record),data:bytesToBase64Url(data)})}return{schemaVersion:PAYLOAD_SCHEMA_VERSION,items}}
+function validatePayload(payload){if(payload==null)return null;if(!payload||typeof payload!=='object'||Array.isArray(payload)||Number(payload.schemaVersion)!==PAYLOAD_SCHEMA_VERSION||!Array.isArray(payload.items))throw new Error('Saved State recovery attachments are invalid or unsupported.');if(payload.items.length>MAX_ATTACHMENTS)throw new Error('Saved State contains too many recovery attachments.');let total=0;const seen=new Set();for(const item of payload.items){if(!item||typeof item!=='object'||Array.isArray(item))throw new Error('Saved State contains an invalid recovery attachment.');const slot=normalizedSlot(item.slot);if(seen.has(slot))throw new Error('Saved State contains duplicate recovery attachment IDs.');seen.add(slot);if(typeof item.name!=='string'||!item.name||item.name.length>255)throw new Error('Saved State recovery attachment filename is invalid.');if(typeof item.data!=='string')throw new Error('Saved State recovery attachment data is missing.');const size=Number(item.size||0);if(!Number.isInteger(size)||size<1||size>MAX_ATTACHMENT_BYTES)throw new Error('Saved State recovery attachment size is invalid.');total+=size;if(total>MAX_TOTAL_ATTACHMENT_BYTES)throw new Error('Saved State recovery attachments exceed the total size limit.');if(typeof item.sha256!=='string'||!/^[a-f0-9]{64}$/i.test(item.sha256))throw new Error('Saved State recovery attachment SHA-256 is invalid.')}return payload}
+async function decodedPayloadRecords(namespace,payload){const checked=validatePayload(payload);if(!checked)return null;namespace=normalizedNamespace(namespace);const records=[];for(const item of checked.items){let bytes;try{bytes=base64UrlToBytes(item.data)}catch{throw new Error(`Recovery attachment ${item.name} has invalid encoded data.`)}if(bytes.byteLength!==Number(item.size))throw new Error(`Recovery attachment ${item.name} size does not match its metadata.`);const hash=await sha256Hex(bytes);if(hash.toLowerCase()!==String(item.sha256).toLowerCase())throw new Error(`Recovery attachment ${item.name} failed SHA-256 verification.`);const slot=normalizedSlot(item.slot);records.push({id:recordId(namespace,slot),namespace,slot,name:item.name,mediaType:String(item.mediaType||'application/octet-stream').slice(0,160),size:bytes.byteLength,lastModified:Number(item.lastModified||0),sha256:hash,sensitive:item.sensitive!==false,purpose:String(item.purpose||'').slice(0,512),addedAt:String(item.addedAt||''),updatedAt:new Date().toISOString(),data:bytes.buffer})}return records}
+async function replaceFromPayload(namespace,payload){if(payload==null)return{legacy:true,imported:0};const records=await decodedPayloadRecords(namespace,payload);await clear(namespace);if(records?.length)await withStore('readwrite',store=>{for(const record of records)store.put(record)});return{legacy:false,imported:records?.length||0}}
+function hasSensitivePayload(payload){try{const checked=validatePayload(payload);return Boolean(checked?.items?.some(item=>item.sensitive!==false))}catch{return false}}
+function formatBytes(bytes){bytes=Number(bytes||0);if(bytes<1024)return `${bytes} B`;if(bytes<1024*1024)return `${(bytes/1024).toFixed(bytes<10240?1:0)} KB`;return `${(bytes/1024/1024).toFixed(1)} MB`}
+function ensureStyles(){if(document.getElementById('saved-state-attachment-styles'))return;const style=document.createElement('style');style.id='saved-state-attachment-styles';style.textContent=`.saved-state-attachment-card{display:grid;gap:10px;margin:12px 0;padding:14px;border:1px solid var(--line,#d7e0e8);border-radius:10px;background:var(--soft,#f3f7fa);color:var(--ink,#17212b)}.saved-state-attachment-head{display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.saved-state-attachment-badge{padding:3px 7px;border-radius:999px;border:1px solid #a56200;color:#8a4a00;background:#fff6df;font-size:.75rem;font-weight:700}.saved-state-attachment-card p{margin:0}.saved-state-attachment-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.saved-state-attachment-actions .button,.saved-state-attachment-actions button{font:inherit;cursor:pointer;padding:.5rem .7rem;border:1px solid var(--line,#d7e0e8);border-radius:7px;background:var(--paper,#fff);color:var(--ink,#17212b);font-weight:650}.saved-state-attachment-actions input{display:none}.saved-state-attachment-meta{display:grid;gap:5px;font-size:.86rem;color:var(--muted,#5c6977)}.saved-state-attachment-meta code{overflow-wrap:anywhere;white-space:normal;color:var(--ink,#17212b)}.saved-state-attachment-warning{font-size:.86rem;color:#8a4a00}.saved-state-attachment-status{font-weight:650}.saved-state-attachment-status[data-state="ready"]{color:#176b3a}.saved-state-attachment-status[data-state="error"]{color:#b42318}html[data-theme="dark"] .saved-state-attachment-badge{color:#ffd28a;background:#3a2a12;border-color:#a96b16}html[data-theme="dark"] .saved-state-attachment-warning{color:#ffd28a}html[data-theme="dark"] .saved-state-attachment-status[data-state="ready"]{color:#8ce0a8}`;document.head.append(style)}
+async function download(namespace,slot){const record=await get(namespace,slot);if(!record)throw new Error('That recovery attachment is no longer stored in this browser.');const blob=new Blob([record.data],{type:record.mediaType||'application/octet-stream'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=record.name;document.body.append(link);link.click();setTimeout(()=>{URL.revokeObjectURL(url);link.remove()},1500);return metadata(record)}
+function widgetOptions(node){return{slot:normalizedSlot(node.dataset.attachmentId||node.dataset.savedStateAttachment),label:String(node.dataset.attachmentLabel||'Recovery attachment'),accept:String(node.dataset.attachmentAccept||''),sensitive:node.dataset.attachmentSensitive!=='false',purpose:String(node.dataset.attachmentPurpose||''),maxBytes:Math.min(Number(node.dataset.attachmentMaxBytes||MAX_ATTACHMENT_BYTES),MAX_ATTACHMENT_BYTES)}}
+async function refreshWidget(namespace,node){const options=widgetOptions(node),record=await get(namespace,options.slot),status=node.querySelector('[data-saved-state-attachment-status]'),downloadButton=node.querySelector('[data-saved-state-attachment-download]'),removeButton=node.querySelector('[data-saved-state-attachment-remove]'),meta=node.querySelector('[data-saved-state-attachment-meta]');if(status){status.textContent=record?`Attached: ${record.name} (${formatBytes(record.size)})`:'No recovery file attached yet.';status.dataset.state=record?'ready':''}if(downloadButton)downloadButton.hidden=!record;if(removeButton)removeButton.hidden=!record;if(meta){meta.hidden=!record;meta.innerHTML=record?`<span><strong>SHA-256:</strong> <code>${record.sha256}</code></span><span><strong>Stored:</strong> ${String(record.updatedAt||record.addedAt||'')}</span>`:''}}
+async function bindWidget(namespace,node,{toast}={}){if(node.dataset.savedStateAttachmentBound==='true')return;node.dataset.savedStateAttachmentBound='true';ensureStyles();const options=widgetOptions(node);node.classList.add('saved-state-attachment-card');node.innerHTML=`<div class="saved-state-attachment-head"><strong></strong>${options.sensitive?'<span class="saved-state-attachment-badge">Sensitive recovery artifact</span>':''}</div>${options.purpose?'<p data-saved-state-attachment-purpose></p>':''}<div class="saved-state-attachment-actions"><label class="button">Attach / Replace<input type="file" data-saved-state-attachment-file></label><button type="button" data-saved-state-attachment-download hidden>Download attached file</button><button type="button" data-saved-state-attachment-remove hidden>Remove</button></div><div class="saved-state-attachment-status" data-saved-state-attachment-status>No recovery file attached yet.</div><div class="saved-state-attachment-meta" data-saved-state-attachment-meta hidden></div><p class="saved-state-attachment-warning">Stored in this browser and included in Saved State exports. Password-protected Saved States encrypt the attachment bytes; unencrypted Saved States expose them.</p>`;node.querySelector('.saved-state-attachment-head strong').textContent=options.label;const purpose=node.querySelector('[data-saved-state-attachment-purpose]');if(purpose)purpose.textContent=options.purpose;const input=node.querySelector('[data-saved-state-attachment-file]');if(options.accept)input.accept=options.accept;input.addEventListener('change',async()=>{const file=input.files?.[0];input.value='';if(!file)return;const status=node.querySelector('[data-saved-state-attachment-status]');try{if(status){status.textContent='Storing and hashing attachment…';status.dataset.state=''}await putFile(namespace,options.slot,file,options);await refreshWidget(namespace,node);toast?.(`${options.label} stored with this project's Saved State.`)}catch(error){if(status){status.textContent=error.message||String(error);status.dataset.state='error'}toast?.(error.message||String(error),true)}});node.querySelector('[data-saved-state-attachment-download]').addEventListener('click',()=>download(namespace,options.slot).catch(error=>toast?.(error.message||String(error),true)));node.querySelector('[data-saved-state-attachment-remove]').addEventListener('click',async()=>{if(!confirm(`Remove ${options.label} from this project's Saved State attachments?`))return;await remove(namespace,options.slot);await refreshWidget(namespace,node);toast?.(`${options.label} removed.`)});await refreshWidget(namespace,node)}
+async function bindWidgets(namespace,options={}){namespace=normalizedNamespace(namespace);const nodes=[...document.querySelectorAll('[data-saved-state-attachment]')];for(const node of nodes)try{await bindWidget(namespace,node,options)}catch(error){const status=node.querySelector?.('[data-saved-state-attachment-status]');if(status){status.textContent=error.message||String(error);status.dataset.state='error'}else node.textContent=error.message||String(error)}return nodes.length}
+root.DocumentationSavedStateAttachments=Object.freeze({DB_NAME,PAYLOAD_SCHEMA_VERSION,MAX_ATTACHMENTS,MAX_ATTACHMENT_BYTES,MAX_TOTAL_ATTACHMENT_BYTES,list,get,putFile,remove,clear,snapshot,restoreSnapshot,exportPayload,validatePayload,replaceFromPayload,hasSensitivePayload,download,bindWidgets,formatBytes});
+})(globalThis);
+
+(function(){
+'use strict';
+const config=window.DOCUMENTATION_READER_CONFIG||{};
+const namespace=String(config.storageNamespace||'documentation-reader');
+const progressKey=`${namespace}-progress-v2`;
+const taskPrefix=`${namespace}-task-v1:`;
+const locationPrefix=`${namespace}-location-v1:`;
+const themeKey=`${namespace}-theme`;
+const globalThemeKey='documentation-generator-theme';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const variableKey=`${namespace.replace(/-reader$/,'')}-installation-variables-v1`;
+const variablePattern=/\{\{([A-Z][A-Z0-9_]*)\}\}/g;
+let variables={};
+function readVariables(){try{const value=JSON.parse(localStorage.getItem(variableKey)||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?value:{}}catch{return{}}}
+function replaceVariableTokens(root=document){
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,input,option'))return NodeFilter.FILTER_REJECT;variablePattern.lastIndex=0;return variablePattern.test(node.nodeValue||'')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}}),nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+  for(const node of nodes){const text=node.nodeValue||'',fragment=document.createDocumentFragment();let last=0,match;variablePattern.lastIndex=0;while((match=variablePattern.exec(text))){fragment.append(document.createTextNode(text.slice(last,match.index)));const span=document.createElement('span');span.className='user-variable-value';span.dataset.userVariable=match[1];span.dataset.sourceToken=match[0];fragment.append(span);last=match.index+match[0].length}fragment.append(document.createTextNode(text.slice(last)));node.replaceWith(fragment)}
+}
+function refreshVariables(){
+  for(const input of $$('[data-user-variable-input]')){const name=input.dataset.userVariableInput||'',fallback=input.dataset.default||'';if(document.activeElement!==input)input.value=String(variables[name]??'')||fallback;input.setAttribute('autocomplete','off')}
+  for(const node of $$('[data-user-variable]')){const name=node.dataset.userVariable||'',value=String(variables[name]??'').trim()||String(node.dataset.default||'').trim();node.textContent=value||`[${name}]`;node.dataset.empty=String(!value);node.title=value?`${name} — stored only in this browser`:`Enter ${name} in an Installation values box`}
+}
+function writeVariables(){try{localStorage.setItem(variableKey,JSON.stringify(variables))}catch{}}
+function setVariables(values,{replace=false}={}){
+  if(replace)variables={};
+  for(const [name,value0] of Object.entries(values||{})){
+    const value=String(value0??'').trim();
+    if(value)variables[name]=value;else delete variables[name];
+  }
+  writeVariables();refreshVariables();return{...variables};
+}
+function initializeVariables(){variables=readVariables();replaceVariableTokens(document);refreshVariables();for(const input of $$('[data-user-variable-input]'))input.addEventListener('input',()=>{const name=input.dataset.userVariableInput||'',value=String(input.value||'').trim();if(value)variables[name]=value;else delete variables[name];writeVariables();refreshVariables()})}
+
+function applyTheme(value,persist=true){
+  const theme=value==='dark'?'dark':'light';
+  document.documentElement.dataset.theme=theme;
+  if(persist)try{localStorage.setItem(themeKey,theme);localStorage.setItem(globalThemeKey,theme)}catch{}
+  const dark=theme==='dark';
+  $$('[data-theme-toggle]').forEach(button=>{
+    button.setAttribute('aria-checked',String(dark));
+    button.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+  });
+  $$('[data-theme-icon]').forEach(node=>node.textContent=dark?'☀':'☾');
+  $$('[data-theme-label]').forEach(node=>node.textContent=dark?'Light':'Dark');
+}
+function currentPage(){return location.pathname.split('/').pop()||'index.html'}
+function phaseCollapseKey(){return `${namespace}-phase-collapse:${currentPage()}`}
+function readerPhaseContentElements(heading){const elements=[];for(let node=heading?.nextSibling;node;node=node.nextSibling){if(node.nodeType===1&&node.matches?.('.phase-heading'))break;if(node.nodeType===1)elements.push(node)}return elements}
+function createReaderPhaseCollapseButton(heading){const button=document.createElement('button');button.type='button';button.className='phase-collapse-toggle';button.dataset.phaseCollapse='';button.setAttribute('aria-expanded','true');button.innerHTML='<span aria-hidden="true">›</span>';heading.append(button);return button}
+function setReaderPhaseCollapsed(heading,collapsed,{persist=true}={}){if(!heading)return;const value=Boolean(collapsed),button=$('[data-phase-collapse]',heading)||createReaderPhaseCollapseButton(heading);heading.classList.toggle('phase-collapsed',value);readerPhaseContentElements(heading).forEach(element=>{element.classList.toggle('phase-collapsed-item',value);element.hidden=value});button.setAttribute('aria-expanded',String(!value));button.setAttribute('aria-label',`${value?'Expand':'Collapse'} phase ${heading.dataset.phase||''}`.trim());button.title=`${value?'Expand':'Collapse'} all content in this phase`;if(persist){try{localStorage.setItem(phaseCollapseKey(),JSON.stringify($$('.phase-heading.phase-collapsed').map(item=>String(item.dataset.phase||''))))}catch{}}}
+function initializePhaseCollapse(){let stored=[];try{const value=JSON.parse(localStorage.getItem(phaseCollapseKey())||'[]');if(Array.isArray(value))stored=value.map(String)}catch{}const collapsed=new Set(stored);$$('.phase-heading').forEach(heading=>setReaderPhaseCollapsed(heading,collapsed.has(String(heading.dataset.phase||'')),{persist:false}))}
+function pageLocationKey(){return locationPrefix+currentPage()}
+function saveLocation(){
+  try{localStorage.setItem(pageLocationKey(),JSON.stringify({y:Math.round(scrollY),hash:location.hash||''}))}catch{}
+}
+function restoreLocation(){
+  if(location.hash){setTimeout(()=>document.querySelector(location.hash)?.scrollIntoView({block:'start'}),40);return true}
+  try{
+    const raw=localStorage.getItem(pageLocationKey());if(!raw)return false;
+    const value=JSON.parse(raw);if(Number.isFinite(value.y)){setTimeout(()=>scrollTo(0,value.y),40);return true}
+  }catch{}
+  return false;
+}
+function getStepBoxes(){return $$('.step-check[data-step]')}
+function readProgress(){try{return JSON.parse(localStorage.getItem(progressKey)||'{}')}catch{return{}}}
+function applyStep(card,done){
+  if(!card)return;
+  card.classList.toggle('completed',done);
+  card.classList.toggle('step-minimized',done);
+  card.setAttribute('aria-expanded',String(!done));
+  const body=$('.step-body',card);if(body)body.hidden=done;
+  const panel=$('.step-error-panel',card);if(panel){if(done)panel.open=false;panel.hidden=done}
+}
+function updateProgress(){
+  const boxes=getStepBoxes(),done=boxes.filter(box=>box.checked).length,total=boxes.length;
+  const percent=total?Math.round(done/total*100):0;
+  $$('[data-progress-text]').forEach(node=>node.textContent=`${done} of ${total} steps complete (${percent}%)`);
+  $$('[data-progress-bar]').forEach(node=>node.style.width=percent+'%');
+  const saved=readProgress();
+  $$('[data-step-nav]').forEach(link=>{
+    const step=link.dataset.stepNav;
+    const complete=!!saved[step];
+
+    // completed-nav is the class used by the reader stylesheet for the
+    // left-navigation strike-through treatment. Keep completed as a
+    // compatibility class for older custom themes.
+    link.classList.toggle('completed-nav',complete);
+    link.classList.toggle('completed',complete);
+    link.setAttribute(
+      'aria-label',
+      `${complete?'Completed':'Incomplete'} STEP ${step}: ${link.textContent.replace(/^STEP\s+\d{3}/,'').trim()}`
+    );
+  });
+}
+function loadProgress(){
+  const saved=readProgress();
+  getStepBoxes().forEach(box=>{box.checked=!!saved[box.dataset.step];applyStep(box.closest('.step-card'),box.checked)});
+  updateProgress();
+}
+function saveProgress(){
+  const value={};getStepBoxes().forEach(box=>value[box.dataset.step]=box.checked);
+  try{localStorage.setItem(progressKey,JSON.stringify(value))}catch{}
+  updateProgress();
+}
+function taskKey(){return taskPrefix+(document.body.dataset.pageOrder||currentPage())}
+function prepareTasks(){
+  const boxes=$$('.task-list-item input[type="checkbox"],li input[type="checkbox"][data-interactive-checklist-box]');
+  let saved={};try{saved=JSON.parse(localStorage.getItem(taskKey())||'{}')}catch{}
+  boxes.forEach((box,index)=>{
+    box.disabled=false;box.removeAttribute('disabled');box.readOnly=false;
+    box.dataset.readerTask=String(index);
+    if(Object.prototype.hasOwnProperty.call(saved,index))box.checked=!!saved[index];
+  });
+}
+function saveTasks(){
+  const value={};$$('[data-reader-task]').forEach(box=>value[box.dataset.readerTask]=box.checked);
+  try{localStorage.setItem(taskKey(),JSON.stringify(value))}catch{}
+}
+function updateActiveNav(){
+  const file=currentPage(),hash=location.hash;
+  $$('.nav a').forEach(link=>{
+    const url=new URL(link.getAttribute('href')||'',location.href);
+    const same=(url.pathname.split('/').pop()||'index.html')===file;
+    link.classList.toggle('active',same&&(!url.hash||url.hash===hash));
+  });
+}
+async function resetReaderProgressAndFields(){
+  const baseNamespace=namespace.replace(/-reader$/,'');
+  const globalThemeKey='documentation-generator-theme';
+  const themeKeys=new Set([globalThemeKey,`${namespace}-theme`,`${baseNamespace}-theme`]);
+  const projectOwnedKey=key=>{
+    key=String(key||'');
+    if(!key||themeKeys.has(key))return false;
+    return key.startsWith(`${baseNamespace}-`)||key.startsWith(`${namespace}-`);
+  };
+  const clearProjectState=storage=>{
+    try{
+      const keys=[];
+      for(let i=0;i<storage.length;i++){const key=storage.key(i)||'';if(projectOwnedKey(key))keys.push(key)}
+      for(const key of keys)storage.removeItem(key);
+    }catch{}
+  };
+  await readerResetSavedStateSecurityMemory();
+  await readerClearSavedStateAttachments();
+  clearProjectState(localStorage);
+  clearProjectState(sessionStorage);
+  variables={};
+  for(const node of document.querySelectorAll('[data-user-variable-input],[data-command-output-text],[data-troubleshoot-issue],.error-description'))if('value' in node)node.value='';
+  for(const panel of document.querySelectorAll('[data-command-output-capture]')){
+    panel.querySelector('[data-command-output-result-grid]')?.replaceChildren();
+    const details=panel.querySelector('[data-command-output-results]');if(details)details.open=false;
+    const status=panel.querySelector('[data-command-output-status]');if(status){status.textContent='No saved command output.';status.dataset.state=''}
+  }
+  if('caches' in window){
+    try{
+      const names=await caches.keys();
+      await Promise.all(names.filter(name=>name.toLowerCase().includes(baseNamespace.toLowerCase())).map(name=>caches.delete(name)));
+    }catch{}
+  }
+}
+
+
+
+const readerTroubleshootCaptureKey=`${namespace.replace(/-reader$/,'')}-command-output-captures-v1`;
+const READER_TROUBLESHOOT_AREA_RULES=[
+  {id:'networking',label:'Networking',keywords:['network','networking','ip address','ipv4','subnet','gateway','dns','dhcp','ping','arp','route','routing','internet','connectivity','ethernet','wifi','wi-fi','adapter','nic','bridge','vmbr','firewall'],variable:/IP|IPV4|SUBNET|CIDR|NETWORK|GATEWAY|DNS|DHCP|MAC|ADAPTER|NIC|ARP|PING|FIREWALL/i,capture:/ipconfig|network|candidate-ip|ping|arp|firewall/i},
+  {id:'remote-access',label:'RDP / Remote Access',keywords:['rdp','remote desktop','remote access','mstsc','nla','login','sign in','signin','credential','session'],variable:/RDP|REMOTE|CREDENTIAL|SESSION|LOCAL_ADMIN|IDENTITY/i,capture:/rdp|remote|session/i},
+  {id:'windows',label:'Windows',keywords:['windows','powershell','win11','windows 11','registry','device manager','driver','service','update'],variable:/WINDOWS|SOURCE_COMPUTER|SOURCE_MODEL|SOURCE_MANUFACTURER|P2V_LOCAL_ADMIN/i,capture:/windows|powershell|guest/i},
+  {id:'proxmox',label:'Proxmox Host',keywords:['proxmox','pve','host','node','shell','web ui','web interface','apt','debian'],variable:/PVE|PROXMOX/i,capture:/proxmox|pve|host|df|lsblk|pvesm/i},
+  {id:'virtual-machine',label:'Virtual Machine',keywords:['vm','virtual machine','guest','qemu','qm ','virtio','guest agent','machine type','ovmf'],variable:/VM_|VMID|VM_ID|GUEST|VIRTIO|IMPORTED_VOLUME/i,capture:/qm-|qm |guest|virtio|vmid/i},
+  {id:'storage',label:'Storage / Disk',keywords:['disk','storage','vhdx','drive','partition','volume','filesystem','file system','space','capacity','resize','lvm','local-lvm','mount','usb'],variable:/DISK|STORAGE|VHDX|VOLUME|PARTITION|ROOT_|FREE|USED|SIZE|LVM|USB|FILESYSTEM|FSTYPE/i,capture:/disk|storage|vhdx|volume|partition|df|lsblk|lvm|usb|import/i},
+  {id:'boot-firmware',label:'Boot / Firmware',keywords:['boot','bios','uefi','efi','firmware','ovmf','secure boot','gpt','mbr','startup','won\'t start','will not start'],variable:/BIOS|UEFI|EFI|FIRMWARE|BOOT|GPT|MBR/i,capture:/bios|firmware|boot|system/i},
+  {id:'security',label:'Security / BitLocker',keywords:['bitlocker','encrypt','encryption','decrypt','tpm','secure boot','certificate','permission','access denied'],variable:/BITLOCKER|ENCRYPT|TPM|SECURE|CERT|PASSWORD|TOKEN|KEY/i,capture:/bitlocker|encrypt|security|tpm/i},
+  {id:'migration',label:'Migration / Import',keywords:['migration','migrate','p2v','convert','conversion','import','copy','vhdx','image','clone','transfer','sha256','hash'],variable:/P2V|VHDX|IMPORT|MIGRAT|SHA|HASH|SOURCE_/i,capture:/import|vhdx|migration|sha|hash|source/i},
+  {id:'performance',label:'Performance / Resources',keywords:['slow','performance','cpu','ram','memory','latency','freeze','frozen','hang','high usage','resource'],variable:/CPU|RAM|MEMORY|PERFORMANCE|CORE|THREAD/i,capture:/cpu|memory|performance|resource/i},
+  {id:'backup',label:'Backup / Recovery',keywords:['backup','restore','recovery','snapshot','pbs','archive'],variable:/BACKUP|RESTORE|RECOVERY|PBS|SNAPSHOT/i,capture:/backup|restore|recovery|pbs/i}
+];
+function readerTroubleshootPlainText(value){return String(value||'').toLowerCase().replace(/[_/\\.-]+/g,' ').replace(/\s+/g,' ').trim()}
+function readerTroubleshootKeywordScore(text,keywords,weight=1){let score=0;const normalized=readerTroubleshootPlainText(text);for(const keyword of keywords){const token=readerTroubleshootPlainText(keyword);if(token&&normalized.includes(token))score+=weight*(token.includes(' ')?3:1)}return score}
+function readerTroubleshootStepText(card){if(!card)return'';const body=$('.step-body',card)?.cloneNode(true);if(!body)return'';for(const node of body.querySelectorAll('.step-error-panel,script,style,[hidden]'))node.remove();return String(body.innerText||body.textContent||'').replace(/\n{3,}/g,'\n\n').trim()}
+function readerTroubleshootStepTitle(card){return String($('.step-head h2',card)?.textContent||`STEP ${card?.dataset?.stepId||'000'}`).trim()}
+function readerTroubleshootReadCaptures(){try{const value=JSON.parse(localStorage.getItem(readerTroubleshootCaptureKey)||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?value:{}}catch{return{}}}
+function readerTroubleshootCaptureStepId(key){try{return document.querySelector(`[data-command-output-capture][data-capture-key="${CSS.escape(String(key||''))}"]`)?.closest('.step-card')?.dataset?.stepId||''}catch{return''}}
+function readerTroubleshootVariableNamesInStep(card){const names=new Set();for(const node of $$('[data-user-variable],[data-user-variable-input]',card)){const name=String(node.dataset.userVariable||node.dataset.userVariableInput||'').trim();if(name)names.add(name)}const stepId=String(card?.dataset?.stepId||'');for(const [key,item] of Object.entries(readerTroubleshootReadCaptures())){if(readerTroubleshootCaptureStepId(key)!==stepId)continue;for(const name of Object.keys(item?.variables||{}))names.add(name)}return names}
+function readerTroubleshootAreaIdsForVariable(name){const result=[];for(const rule of READER_TROUBLESHOOT_AREA_RULES){rule.variable.lastIndex=0;if(rule.variable.test(String(name||'')))result.push(rule.id)}return result}
+function readerTroubleshootAreaIdsForCapture(key,item){const haystack=`${key} ${item?.profile||''} ${item?.title||''} ${Object.keys(item?.variables||{}).join(' ')}`,result=[];for(const rule of READER_TROUBLESHOOT_AREA_RULES){rule.capture.lastIndex=0;if(rule.capture.test(haystack)){result.push(rule.id);continue}if(Object.keys(item?.variables||{}).some(name=>{rule.variable.lastIndex=0;return rule.variable.test(name)}))result.push(rule.id)}return result}
+function readerTroubleshootRelevantAreas(card,issue=''){const title=readerTroubleshootStepTitle(card),body=readerTroubleshootStepText(card),scores=[];for(const rule of READER_TROUBLESHOOT_AREA_RULES){let score=readerTroubleshootKeywordScore(issue,rule.keywords,7)+readerTroubleshootKeywordScore(title,rule.keywords,4)+readerTroubleshootKeywordScore(body,rule.keywords,1);const stepVars=readerTroubleshootVariableNamesInStep(card);if([...stepVars].some(name=>{rule.variable.lastIndex=0;return rule.variable.test(name)}))score+=4;scores.push({id:rule.id,label:rule.label,score})}const positive=scores.filter(item=>item.score>0).sort((a,b)=>b.score-a.score);if(!positive.length)return[{id:'general',label:'Current Step',score:1}];const top=Math.max(1,positive[0].score);return positive.filter((item,index)=>index<4&&(item.score>=Math.max(2,top*.28)||index<2)).slice(0,4)}
+function readerTroubleshootContextMode(card){return String($('[data-troubleshoot-mode]:checked',card)?.value||'smart')}
+function readerTroubleshootSelectedContext(card,issue,mode){const captures=readerTroubleshootReadCaptures(),areas=readerTroubleshootRelevantAreas(card,issue),areaIds=new Set(areas.map(item=>item.id)),stepVars=readerTroubleshootVariableNamesInStep(card),stepId=String(card?.dataset?.stepId||''),selectedVariables={},selectedCaptures={};for(const [name,value] of Object.entries(variables)){if(mode!=='smart'||stepVars.has(name)||readerTroubleshootAreaIdsForVariable(name).some(id=>areaIds.has(id)))selectedVariables[name]=value}for(const [key,item] of Object.entries(captures)){const currentStep=readerTroubleshootCaptureStepId(key)===stepId,relevant=readerTroubleshootAreaIdsForCapture(key,item).some(id=>areaIds.has(id));if(mode!=='smart'||currentStep||relevant)selectedCaptures[key]=item}return{areas,variables:selectedVariables,captures:selectedCaptures,allVariableCount:Object.keys(variables).length,allCaptureCount:Object.keys(captures).length}}
+function updateReaderTroubleshootStatus(card){if(!card)return;const status=$('[data-troubleshoot-smart-status]',card);if(!status)return;const mode=readerTroubleshootContextMode(card),issue=$('[data-troubleshoot-issue],.error-description',card)?.value||'',context=readerTroubleshootSelectedContext(card,issue,mode);if(mode==='smart')status.textContent=`Smart detected: ${context.areas.map(item=>item.label).join(' · ')}. ${Object.keys(context.variables).length} saved value(s) and ${Object.keys(context.captures).length} evidence capture(s) are currently relevant.`;else if(mode==='full')status.textContent=`Full context: all ${context.allVariableCount} saved value(s) and ${context.allCaptureCount} evidence capture summary(s) will be included.`;else status.textContent=`Diagnostics: all ${context.allVariableCount} saved value(s), ${context.allCaptureCount} capture summary(s), raw saved command output, and readable attached text/log files will be included.`}
+function readerTroubleshootWorkflowState(card){const cards=$$('.step-card'),index=Math.max(0,cards.indexOf(card)),completed=cards.filter(item=>$('.step-check',item)?.checked),recent=cards.slice(0,index).filter(item=>$('.step-check',item)?.checked).slice(-8).map(item=>readerTroubleshootStepTitle(item));return{index:index+1,total:cards.length,completed:completed.length,recent}}
+function readerTroubleshootCaptureSummary(key,item){const lines=[`### ${item?.title||key}`,`- Capture key: \`${key}\``,item?.profile?`- Parser/profile: \`${item.profile}\``:'',item?.savedAt?`- Saved: ${item.savedAt}`:'',item?.status?`- Result: ${item.status}`:''].filter(Boolean);const detected=Object.entries(item?.detected||{});if(detected.length){lines.push('- Detected values:');for(const [name,value] of detected)lines.push(`  - ${name}: ${String(value??'—')}`)}return lines.join('\n')}
+function readerTroubleshootMarkdownValue(value){const text=String(value??'').replace(/\r/g,'').trim();return text.includes('\n')?`\n\n${text.split('\n').map(line=>`    ${line}`).join('\n')}`:text||'—'}
+function readerTroubleshootIsReadableAttachment(file){return /^text\//i.test(String(file?.type||''))||/\.(?:txt|log|md|json|xml|csv|ya?ml|ini|cfg|conf|ps1|sh|cmd|bat)$/i.test(String(file?.name||''))}
+async function readerTroubleshootAttachmentSections(card,mode){const files=[...($('.error-files',card)?.files||[])];if(!files.length)return{summary:'- None',details:''};const summary=files.map(file=>`- ${file.name} — ${file.size} bytes${readerTroubleshootIsReadableAttachment(file)?' — readable text':' — binary/non-text; name only'}`).join('\n');if(mode!=='diagnostics')return{summary,details:''};let remaining=512*1024;const sections=[];for(const file of files){if(!readerTroubleshootIsReadableAttachment(file)||remaining<=0)continue;const limit=Math.min(file.size,remaining,192*1024);let value='';try{value=await file.slice(0,limit).text()}catch{continue}remaining-=limit;sections.push(`### ${file.name}\n\n~~~~text\n${value}${file.size>limit?'\n[Attachment truncated by prompt generator.]':''}\n~~~~`)}return{summary,details:sections.join('\n\n')}}
+function readerSiteTitle(){return String($('.brand')?.textContent||$('h1')?.textContent||document.title||'Documentation').trim()}
+async function readerTroubleshootSavedStateRecoveryAttachmentSummary(){try{const items=await window.DocumentationSavedState?.listAttachments?.();if(!items?.length)return'- None';return items.map(item=>`- ${item.name||item.slot} — ${item.size||0} bytes${item.sensitive!==false?' — sensitive':''} — contents excluded from troubleshooting by default`).join('\n')}catch{return'- Unavailable (recovery attachment storage could not be read).'}}
+function readerTroubleshootSecretVariable(name,value){const upper=String(name||'').toUpperCase(),text=String(value??'').trim();if(/(?:^|_)(?:PATH|FILE|FILENAME)(?:_|$)/.test(upper))return false;if(/(?:^|_)(?:PASSWORD|PASSCODE|PASSPHRASE|TOKEN|SECRET|PRIVATE_KEY|PRIVATEKEY|API_KEY|APIKEY|CLIENT_SECRET|RECOVERY_CODE|RECOVERY_CODES|TOTP_SECRET|OTP_SECRET|ENCRYPTION_KEY|AUTH_KEY|BEARER_TOKEN|SESSION_SECRET)(?:_|$)/.test(upper)){if(/(?:^|_)(?:STATUS|ENABLED|CONFIGURED|PRESENT|STORED|SAVED)(?:_|$)/.test(upper)&&/^(?:true|false|yes|no|enabled|disabled|configured|not configured|present|absent|stored|saved)$/i.test(text))return false;return true}return false}
+function readerTroubleshootVariableReviewItems(){return Object.entries(variables).sort(([a],[b])=>a.localeCompare(b)).map(([name,value])=>({name,value:String(value??''),secret:readerTroubleshootSecretVariable(name,value)}))}
+function readerTroubleshootVariableSelectionDefault(){return new Set(readerTroubleshootVariableReviewItems().filter(item=>!item.secret).map(item=>item.name))}
+function showReaderTroubleshootingVariableReview(){return new Promise(resolve=>{const items=readerTroubleshootVariableReviewItems();if(!items.length){resolve(readerTroubleshootVariableSelectionDefault());return}const dialog=readerTroubleshootDialog();dialog.replaceChildren();const wrap=document.createElement('div');wrap.className='troubleshoot-dialog-card troubleshoot-privacy-review';const h=document.createElement('h3');h.textContent='Review variables sent with the prompt';const p=document.createElement('p');p.textContent='All saved variables are listed. Non-secret values are included by default. Secret-like values are excluded by default; include them only if you intentionally want to share them.';const toolbar=document.createElement('div');toolbar.className='troubleshoot-privacy-toolbar';const safe=document.createElement('button');safe.type='button';safe.textContent='Include non-secrets';const all=document.createElement('button');all.type='button';all.textContent='Include all';const none=document.createElement('button');none.type='button';none.textContent='Exclude all';toolbar.append(safe,all,none);const list=document.createElement('div');list.className='troubleshoot-sensitive-list';const rows=items.map(item=>{const label=document.createElement('label');label.className='troubleshoot-sensitive-row';const box=document.createElement('input');box.type='checkbox';box.checked=!item.secret;const body=document.createElement('span');const strong=document.createElement('strong');strong.textContent=`${item.name}${item.secret?' · SECRET':''}`;const code=document.createElement('code');code.textContent=item.value.length>160?item.value.slice(0,157)+'…':item.value||'—';body.append(strong,code);label.append(box,body);list.append(label);return{item,box}});const actions=document.createElement('div');actions.className='troubleshoot-dialog-actions';const cancel=document.createElement('button');cancel.type='button';cancel.textContent='Cancel';const generate=document.createElement('button');generate.type='button';generate.className='primary';generate.textContent='Continue';actions.append(cancel,generate);wrap.append(h,p,toolbar,list,actions);dialog.append(wrap);safe.addEventListener('click',()=>rows.forEach(row=>row.box.checked=!row.item.secret));all.addEventListener('click',()=>rows.forEach(row=>row.box.checked=true));none.addEventListener('click',()=>rows.forEach(row=>row.box.checked=false));cancel.addEventListener('click',()=>{closeReaderTroubleshootDialog(dialog);resolve(null)},{once:true});generate.addEventListener('click',()=>{const selected=new Set(rows.filter(row=>row.box.checked).map(row=>row.item.name));closeReaderTroubleshootDialog(dialog);resolve(selected)},{once:true});dialog.addEventListener('cancel',event=>{event.preventDefault();closeReaderTroubleshootDialog(dialog);resolve(null)},{once:true});dialog.showModal()})}
+async function buildReaderTroubleshootingPrompt(card,{variableNames=null}={}){const issue=String($('[data-troubleshoot-issue],.error-description',card)?.value||'').trim();if(!issue)throw new Error('Describe the problem first so the troubleshooting prompt can select the right context.');const mode=readerTroubleshootContextMode(card),context=readerTroubleshootSelectedContext(card,issue,mode),selectedNames=variableNames instanceof Set?variableNames:readerTroubleshootVariableSelectionDefault();context.variables=Object.fromEntries(Object.entries(variables).filter(([name])=>selectedNames.has(name)));const workflow=readerTroubleshootWorkflowState(card),step=String(card.dataset.stepId||'000'),title=readerTroubleshootStepTitle(card),stepText=readerTroubleshootStepText(card),attachments=await readerTroubleshootAttachmentSections(card,mode),savedStateAttachments=await readerTroubleshootSavedStateRecoveryAttachmentSummary(),lines=[];lines.push('# Troubleshooting Request','',`- **Project:** ${readerSiteTitle()}`,`- **Documentation version:** ${String(config.version||'unknown')}`,`- **Page:** ${currentPage()}`,`- **Current step:** ${title}`,`- **Context mode:** ${mode==='smart'?'Smart':mode==='full'?'Full':'Diagnostics'}`,`- **Generated:** ${new Date().toISOString()}`,'','## Problem','',issue,'','## Current documentation step','',stepText||title,'','## Relevant troubleshooting areas','',context.areas.map(item=>`- ${item.label}`).join('\n'),'','## Workflow state','',`- Step ${workflow.index} of ${workflow.total}`,`- ${workflow.completed} step(s) currently marked complete`,workflow.recent.length?'- Most recent completed steps:\n'+workflow.recent.map(value=>`  - ${value}`).join('\n'):'- No earlier steps are currently marked complete.','','## Known configuration','');const variableEntries=Object.entries(context.variables).sort(([a],[b])=>a.localeCompare(b));if(variableEntries.length)for(const [name,value] of variableEntries)lines.push(`- \`${name}\`: ${readerTroubleshootMarkdownValue(value)}`);else lines.push('- No saved configuration values matched this context yet.');lines.push('','## Saved evidence summaries','');const captureEntries=Object.entries(context.captures);if(captureEntries.length)for(const [key,item] of captureEntries)lines.push(readerTroubleshootCaptureSummary(key,item),'');else lines.push('- No saved command-output captures matched this context yet.','');lines.push('## User-supplied attachments','',attachments.summary,'','## Saved State recovery attachments','',savedStateAttachments,'','Recovery attachment contents are not included in troubleshooting prompts by default.','');if(mode==='diagnostics'){lines.push('## Raw saved diagnostics','');if(captureEntries.length)for(const [key,item] of captureEntries)lines.push(`### ${item?.title||key}`,'',`~~~~text\n${String(item?.raw||'').trim()||'[No raw output saved.]'}\n~~~~`,'');else lines.push('- No raw saved command output is available.','');if(attachments.details)lines.push('## Readable attachment contents','',attachments.details,'')}lines.push('## Instructions to the troubleshooting AI','','Use the environment and evidence above as already-established context. Do not begin by asking me to rediscover information that is already supplied.','','Analyze this exact configuration and symptom, then:','1. Rank the most likely causes in priority order.','2. Explain briefly why each cause fits or conflicts with the supplied evidence.','3. Ask for additional discovery commands only when their result will materially distinguish between remaining causes.','4. Prefer the minimum necessary diagnostic command(s), and explain what each result will confirm or eliminate.','5. Do not invent configuration values that are not present above.','6. When a change could affect system state, give the change and its verification step clearly.');return{prompt:lines.join('\n'),mode,context,step,title}}
+function readerTroubleshootSensitivityCandidate(map,value,type,label,priority=1){const text=String(value||'').trim();if(!text||text.length<2||text.length>500)return;const key=`${type}:${text}`;const current=map.get(key);if(!current||priority>current.priority)map.set(key,{value:text,type,label,priority})}
+function readerTroubleshootSensitiveValues(prompt){const map=new Map();for(const match of String(prompt).matchAll(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g)){const parts=match[0].split('.').map(Number);if(parts.every(value=>value>=0&&value<=255))readerTroubleshootSensitivityCandidate(map,match[0],'ip','IP address',3)}for(const match of String(prompt).matchAll(/\b(?:[0-9A-F]{2}[:-]){5}[0-9A-F]{2}\b/gi))readerTroubleshootSensitivityCandidate(map,match[0],'mac','MAC address',7);for(const match of String(prompt).matchAll(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi))readerTroubleshootSensitivityCandidate(map,match[0],'email','Email address',8);for(const match of String(prompt).matchAll(/\b[A-Za-z]:\\[^\r\n<>|"?*]+/g))readerTroubleshootSensitivityCandidate(map,match[0].trim(),'path','Windows path',4);return[...map.values()].sort((a,b)=>b.priority-a.priority||a.label.localeCompare(b.label)).slice(0,120)}
+function readerTroubleshootMaskedPrompt(prompt,items){let result=String(prompt),counters={};for(const item of [...items].filter(item=>item.mask).sort((a,b)=>b.value.length-a.value.length)){const type=String(item.type||'value').toUpperCase().replace(/[^A-Z0-9]+/g,'-');counters[type]=(counters[type]||0)+1;result=result.split(item.value).join(`[${type}-${counters[type]}]`)}return result}
+function readerTroubleshootDialog(){let dialog=document.querySelector('[data-troubleshoot-dialog]');if(dialog)return dialog;dialog=document.createElement('dialog');dialog.className='troubleshoot-dialog';dialog.dataset.troubleshootDialog='';document.body.append(dialog);return dialog}
+function closeReaderTroubleshootDialog(dialog){if(dialog?.open)dialog.close();dialog?.replaceChildren()}
+function readerDownloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+function readerSafeFilePart(value){return String(value||'documentation').replace(/[<>:"/\\|?*\x00-\x1F]/g,'-').replace(/\s+/g,' ').trim().slice(0,90)||'documentation'}
+function readerToast(message,isError=false){let node=$('[data-toast]');if(!node){node=document.createElement('div');node.className='toast';node.dataset.toast='';document.body.append(node)}node.textContent=message;node.classList.toggle('error',!!isError);node.classList.add('show');clearTimeout(readerToast.timer);readerToast.timer=setTimeout(()=>node.classList.remove('show'),2400)}
+function showReaderTroubleshootingPromptPreview(prompt,meta={}){const dialog=readerTroubleshootDialog();dialog.replaceChildren();const wrap=document.createElement('div');wrap.className='troubleshoot-dialog-card';const h=document.createElement('h3');h.textContent=`Troubleshooting Prompt — STEP ${meta.step||''}`;const p=document.createElement('p');p.textContent='This prompt already includes the current step, saved documentation values, progress context, and any diagnostics you attached.';const area=document.createElement('textarea');area.className='troubleshoot-prompt-preview';area.value=prompt;area.spellcheck=false;const actions=document.createElement('div');actions.className='troubleshoot-dialog-actions';const close=document.createElement('button');close.type='button';close.textContent='Close';const download=document.createElement('button');download.type='button';download.textContent='Download Package .md';const copy=document.createElement('button');copy.type='button';copy.className='primary';copy.textContent='Copy Prompt';actions.append(close,download,copy);wrap.append(h,p,area,actions);dialog.append(wrap);close.addEventListener('click',()=>closeReaderTroubleshootDialog(dialog));copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(area.value);copy.textContent='Copied';readerToast('Troubleshooting prompt copied.');setTimeout(()=>copy.textContent='Copy Prompt',1200)}catch{area.focus();area.select();document.execCommand('copy');readerToast('Troubleshooting prompt copied.')}});download.addEventListener('click',()=>{const blob=new Blob([area.value+'\n'],{type:'text/markdown;charset=utf-8'}),stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');readerDownloadBlob(blob,`${readerSafeFilePart(readerSiteTitle())}-Step-${meta.step||'000'}-Troubleshoot-${stamp}.md`)});dialog.addEventListener('cancel',event=>{event.preventDefault();closeReaderTroubleshootDialog(dialog)},{once:true});dialog.showModal()}
+function showReaderTroubleshootingPrivacyReview(prompt,meta,items){const dialog=readerTroubleshootDialog();dialog.replaceChildren();const wrap=document.createElement('div');wrap.className='troubleshoot-dialog-card troubleshoot-privacy-review';const h=document.createElement('h3');h.textContent='Review potentially sensitive values';const p=document.createElement('p');p.textContent='Checked values will be replaced with stable placeholders before the prompt/package is shown.';const toolbar=document.createElement('div');toolbar.className='troubleshoot-privacy-toolbar';const all=document.createElement('button');all.type='button';all.textContent='Mask all';const none=document.createElement('button');none.type='button';none.textContent='Keep all';toolbar.append(all,none);const list=document.createElement('div');list.className='troubleshoot-sensitive-list';const rows=items.map((item,index)=>{const label=document.createElement('label');label.className='troubleshoot-sensitive-row';const box=document.createElement('input');box.type='checkbox';box.checked=item.type==='secret';box.dataset.sensitiveIndex=String(index);const body=document.createElement('span');const strong=document.createElement('strong');strong.textContent=item.label;const code=document.createElement('code');code.textContent=item.value.length>120?item.value.slice(0,117)+'…':item.value;body.append(strong,code);label.append(box,body);list.append(label);return{item,box}});const actions=document.createElement('div');actions.className='troubleshoot-dialog-actions';const cancel=document.createElement('button');cancel.type='button';cancel.textContent='Cancel';const generate=document.createElement('button');generate.type='button';generate.className='primary';generate.textContent='Generate Prompt';actions.append(cancel,generate);wrap.append(h,p,toolbar,list,actions);dialog.append(wrap);all.addEventListener('click',()=>rows.forEach(row=>row.box.checked=true));none.addEventListener('click',()=>rows.forEach(row=>row.box.checked=false));cancel.addEventListener('click',()=>closeReaderTroubleshootDialog(dialog));generate.addEventListener('click',()=>{const masked=readerTroubleshootMaskedPrompt(prompt,rows.map(row=>({...row.item,mask:row.box.checked})));closeReaderTroubleshootDialog(dialog);showReaderTroubleshootingPromptPreview(masked,meta)});dialog.addEventListener('cancel',event=>{event.preventDefault();closeReaderTroubleshootDialog(dialog)},{once:true});dialog.showModal()}
+async function generateReaderTroubleshootingPrompt(card){const privacy=$('[data-troubleshoot-privacy]',card)?.checked!==false,variableNames=privacy?await showReaderTroubleshootingVariableReview():readerTroubleshootVariableSelectionDefault();if(variableNames==null)return null;const result=await buildReaderTroubleshootingPrompt(card,{variableNames}),sensitive=privacy?readerTroubleshootSensitiveValues(result.prompt):[];if(privacy&&sensitive.length)showReaderTroubleshootingPrivacyReview(result.prompt,result,sensitive);else showReaderTroubleshootingPromptPreview(result.prompt,result);const status=$('[data-error-file-status]',card);if(status)status.textContent=`Prompt/package ready in ${result.mode==='smart'?'Smart':result.mode==='full'?'Full':'Diagnostics'} mode. ${Object.keys(result.context.variables).length} variable(s) included. ${sensitive.length?`${sensitive.length} additional sensitive value(s) available for optional masking.`:'No additional reviewable sensitive values detected.'}`;return result}
+function initializeReaderTroubleshootPanels(){for(const panel of $$('.step-error-panel')){const card=panel.closest('.step-card'),step=String(card?.dataset?.stepId||$('[data-error-step]',panel)?.textContent||'000').padStart(3,'0');panel.dataset.troubleshootPanel='true';const summary=$('.error-panel-title',panel);if(summary)summary.setAttribute('aria-label',`Toggle troubleshooting for step ${step}`);for(const radio of $$('[data-troubleshoot-mode]',panel))radio.name=`reader-troubleshoot-mode-${step}`;const issue=$('[data-troubleshoot-issue],.error-description',panel);issue?.addEventListener('input',()=>updateReaderTroubleshootStatus(card));for(const radio of $$('[data-troubleshoot-mode]',panel))radio.addEventListener('change',()=>updateReaderTroubleshootStatus(card));const files=$('.error-files',panel),fileStatus=$('[data-error-file-status]',panel);files?.addEventListener('change',()=>{const selected=[...(files.files||[])];if(fileStatus)fileStatus.textContent=selected.length?`${selected.length} file(s) attached. Diagnostics mode can include readable text/log contents.`:'No files attached. Diagnostics can include readable text/log files; other files are listed by name.'});updateReaderTroubleshootStatus(card)}}
+
+const READER_SAVED_STATE_FORMAT='jmgrit.documentation.saved-state';
+const READER_SAVED_STATE_VERSION=1;
+const READER_SAVED_STATE_MAX_FILE_BYTES=48*1024*1024;
+const READER_SAVED_STATE_MAX_RECORDS=5000;
+const READER_SAVED_STATE_MAX_VALUE_BYTES=8*1024*1024;
+const READER_SAVED_STATE_TOTAL_VALUE_BYTES=24*1024*1024;
+function readerSavedStateBaseNamespace(){return namespace.replace(/-reader$/,'')}
+function readerSavedStateCrypto(){const api=window.DocumentationSavedStateCrypto;if(!api)throw new Error('Saved State encryption is unavailable because the cryptography runtime did not load.');return api}
+function readerSavedStateAttachmentStore(){const api=window.DocumentationSavedStateAttachments;if(!api)throw new Error('Saved State recovery attachment storage is unavailable because its runtime did not load.');return api}
+function readerSavedStateAttachmentCount(payload){return Number(payload?.state?.attachments?.items?.length||0)}
+function readerSavedStateSensitiveAttachmentCount(payload){return (payload?.state?.attachments?.items||[]).filter(item=>item?.sensitive!==false).length}
+function readerConfirmUnencryptedSavedStateAttachments(payload){const count=readerSavedStateSensitiveAttachmentCount(payload);if(!count)return true;return confirm(`This Saved State contains ${count} sensitive recovery attachment${count===1?'':'s'}.\n\nSaving without a password leaves the attachment bytes readable to anyone who gets the file.\n\nExport unencrypted anyway?`)}
+async function readerClearSavedStateAttachments(){try{return await readerSavedStateAttachmentStore().clear(readerSavedStateBaseNamespace())}catch{return 0}}
+function readerSavedStateProjectExtensionKey(key){
+  const base=readerSavedStateBaseNamespace(),suffix=String(key||'').startsWith(`${base}-`)?String(key).slice(base.length):'';
+  if(!suffix||key===readerSavedStateSecurityPreferenceKey()||key===`${namespace}-theme`||key===`${base}-theme`)return false;
+  return /(?:variable|command-output|capture|context|answer|field|state)/i.test(suffix);
+}
+function readerSavedStateRecordForKey(key,value){
+  const runtime=namespace,base=readerSavedStateBaseNamespace();
+  if(key===progressKey)return{scope:'runtime',suffix:'-progress-v2',value};
+  if(key===variableKey)return{scope:'project',suffix:'-installation-variables-v1',value};
+  if(key===`${base}-command-output-captures-v1`)return{scope:'project',suffix:'-command-output-captures-v1',value};
+  for(const suffix of ['-task-v1:','-location-v1:','-phase-collapse:']){const prefix=runtime+suffix;if(key.startsWith(prefix))return{scope:'runtime',suffix:key.slice(runtime.length),value}}
+  const escapedBase=base.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  if(new RegExp(`^${escapedBase}(?:-reader)?-v\\d+\\.\\d+\\.\\d+-progress$`).test(key))return{scope:'legacy',key,value};
+  if(readerSavedStateProjectExtensionKey(key))return{scope:'project',suffix:key.slice(base.length),value};
+  return null;
+}
+function readerCollectSavedStateRecords(){const records=[];try{for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i)||'',value=localStorage.getItem(key);if(value==null)continue;const record=readerSavedStateRecordForKey(key,value);if(record)records.push(record)}}catch(error){throw new Error(`Could not read this documentation's Saved State: ${error.message||String(error)}`)}return records.sort((a,b)=>String(a.scope+a.suffix+(a.key||'')).localeCompare(String(b.scope+b.suffix+(b.key||''))))}
+async function readerCreateSavedStatePayload(){return{format:READER_SAVED_STATE_FORMAT,version:READER_SAVED_STATE_VERSION,exportedAt:new Date().toISOString(),project:{title:readerSiteTitle(),documentationVersion:String(config.version||'unknown'),engineVersion:String(config.engineVersion||'unknown'),storageNamespace:readerSavedStateBaseNamespace(),runtime:'reader'},state:{records:readerCollectSavedStateRecords(),attachments:await readerSavedStateAttachmentStore().exportPayload(readerSavedStateBaseNamespace())}}}
+function readerValidateSavedStatePayload(payload){
+  if(!payload||typeof payload!=='object'||Array.isArray(payload)||payload.format!==READER_SAVED_STATE_FORMAT||Number(payload.version)!==READER_SAVED_STATE_VERSION)throw new Error('This file is not a supported Documentation Generator Saved State.');
+  const records=payload.state?.records;if(!Array.isArray(records))throw new Error('Saved State records are missing.');readerSavedStateAttachmentStore().validatePayload(payload.state?.attachments);if(records.length>READER_SAVED_STATE_MAX_RECORDS)throw new Error('Saved State contains too many records to import safely.');let total=0;
+  for(const record of records){if(!record||typeof record!=='object'||!['runtime','project','legacy'].includes(record.scope))throw new Error('Saved State contains an invalid record.');if(typeof record.value!=='string')throw new Error('Saved State contains a non-text browser-storage record.');const bytes=new TextEncoder().encode(record.value).byteLength;total+=bytes;if(bytes>READER_SAVED_STATE_MAX_VALUE_BYTES||total>READER_SAVED_STATE_TOTAL_VALUE_BYTES)throw new Error('Saved State exceeds the safe browser-storage import limit.');if(record.scope==='legacy'){if(typeof record.key!=='string'||record.key.length>256)throw new Error('Saved State contains an invalid legacy key.')}else if(typeof record.suffix!=='string'||record.suffix.length>512||!record.suffix.startsWith('-'))throw new Error('Saved State contains an invalid storage suffix.')}
+  return payload;
+}
+function readerSavedStateCurrentKeys(){const keys=[],base=readerSavedStateBaseNamespace(),escapedBase=base.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),patterns=[new RegExp(`^${escapedBase}(?:-reader)?-progress-v\\d+$`),new RegExp(`^${escapedBase}(?:-reader)?-v\\d+\\.\\d+\\.\\d+-progress$`),new RegExp(`^${escapedBase}(?:-reader)?-task(?:-checklist)?-v1:`),new RegExp(`^${escapedBase}(?:-reader)?-(?:page-)?location-v1:`),new RegExp(`^${escapedBase}(?:-reader)?-phase-collapse:`)];try{for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i)||'';if(key===`${base}-installation-variables-v1`||key===`${base}-command-output-captures-v1`||patterns.some(pattern=>pattern.test(key))||readerSavedStateProjectExtensionKey(key))keys.push(key)}}catch{}return keys}
+function readerSavedStateDestinationKey(record,sourceRuntime){const runtime=namespace,base=readerSavedStateBaseNamespace();if(record.scope==='project')return base+record.suffix;if(record.scope==='legacy')return `${runtime}-progress-v2`;let suffix=record.suffix;if(sourceRuntime==='author'&&suffix.startsWith('-task-checklist-v1:'))return null;if(sourceRuntime==='author'&&suffix.startsWith('-page-location-v1:'))suffix='-location-v1:'+suffix.slice('-page-location-v1:'.length);return runtime+suffix}
+async function readerApplySavedStatePayload(payload){readerValidateSavedStatePayload(payload);const sourceNamespace=String(payload.project?.storageNamespace||'').trim(),currentNamespace=readerSavedStateBaseNamespace();if(sourceNamespace&&sourceNamespace!==currentNamespace&&!confirm(`This Saved State was exported from a different project namespace (${sourceNamespace}).\n\nImport it into ${currentNamespace} anyway?`))return{cancelled:true,imported:0,skipped:0,attachmentsImported:0};const attachmentStore=readerSavedStateAttachmentStore(),attachmentBackup=await attachmentStore.snapshot(currentNamespace),currentKeys=readerSavedStateCurrentKeys(),backup=currentKeys.map(key=>[key,localStorage.getItem(key)]);for(const key of currentKeys)try{localStorage.removeItem(key)}catch{}let imported=0,skipped=0,attachmentsImported=0;const sourceRuntime=String(payload.project?.runtime||'reader');try{for(const record of payload.state.records){const key=readerSavedStateDestinationKey(record,sourceRuntime);if(!key){skipped++;continue}localStorage.setItem(key,record.value);imported++}const attachmentResult=await attachmentStore.replaceFromPayload(currentNamespace,payload.state?.attachments);attachmentsImported=attachmentResult.imported||0}catch(error){for(const key of readerSavedStateCurrentKeys())try{localStorage.removeItem(key)}catch{}for(const [key,value] of backup)if(value!=null)try{localStorage.setItem(key,value)}catch{}try{await attachmentStore.restoreSnapshot(currentNamespace,attachmentBackup)}catch{}throw new Error(`Saved State could not be written to browser storage; the previous state was restored. ${error.message||String(error)}`)}return{cancelled:false,imported,skipped,attachmentsImported}}
+function readerSavedStateSafeFilePart(value){return String(value||'documentation').normalize('NFKD').replace(/[^a-zA-Z0-9_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)||'documentation'}
+function readerSavedStateDownload(value,protectedFile){const text=JSON.stringify(value,null,2)+'\n',blob=new Blob([text],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a'),stamp=new Date().toISOString().replace(/[:.]/g,'-');link.href=url;link.download=`${readerSavedStateSafeFilePart(readerSiteTitle())}-Saved-State-${stamp}${protectedFile?'.encrypted.dgstate':'.json'}`;document.body.append(link);link.click();setTimeout(()=>{URL.revokeObjectURL(url);link.remove()},1800)}
+const READER_SAVED_STATE_SECURITY_PREF_VERSION=1;
+function readerSavedStateSecurityPreferenceKey(){return `${readerSavedStateBaseNamespace()}-saved-state-security-v1`}
+function readerSavedStateKeyCacheId(){return readerSavedStateBaseNamespace()}
+function readerReadSavedStateSecurityPreference(){try{const value=JSON.parse(localStorage.getItem(readerSavedStateSecurityPreferenceKey())||'null');return value&&value.version===READER_SAVED_STATE_SECURITY_PREF_VERSION&&['protected','plain'].includes(value.mode)?value:null}catch{return null}}
+function readerWriteSavedStateSecurityPreference(mode){const value={version:READER_SAVED_STATE_SECURITY_PREF_VERSION,mode,updatedAt:new Date().toISOString()};localStorage.setItem(readerSavedStateSecurityPreferenceKey(),JSON.stringify(value));return value}
+async function readerClearSavedStateRememberedKey(){try{return await readerSavedStateCrypto().clearCachedKeyContext(readerSavedStateKeyCacheId())}catch{return false}}
+async function readerRememberSavedStateKey(context){let remembered=false;try{remembered=await readerSavedStateCrypto().cacheKeyContext(readerSavedStateKeyCacheId(),context)}catch{}readerWriteSavedStateSecurityPreference('protected');return remembered}
+function readerEnsureSavedStateStyles(){if(document.getElementById('saved-state-styles'))return;const style=document.createElement('style');style.id='saved-state-styles';style.textContent=`.saved-state-actions{position:relative;display:inline-flex}.saved-state-actions>summary{list-style:none;cursor:pointer}.saved-state-actions>summary::-webkit-details-marker{display:none}.saved-state-popover{position:absolute;right:0;top:calc(100% + 8px);z-index:80;display:grid;gap:6px;min-width:205px;padding:8px;border:1px solid var(--line,#d7e0e8);border-radius:10px;background:var(--paper,#fff);color:var(--ink,#17212b);box-shadow:0 12px 32px rgba(0,0,0,.22)}.saved-state-popover .button{width:100%;justify-content:flex-start;color:var(--ink,#17212b);border-color:var(--line,#d7e0e8);background:var(--soft,#f3f7fa)}.saved-state-dialog{border:1px solid var(--line,#d7e0e8);border-radius:14px;padding:0;max-width:min(580px,calc(100vw - 28px));width:100%;background:var(--paper,#fff);color:var(--ink,#17212b);box-shadow:0 24px 70px rgba(0,0,0,.35)}.saved-state-dialog::backdrop{background:rgba(0,0,0,.58)}.saved-state-dialog form{display:grid;gap:14px;padding:22px}.saved-state-dialog h2{margin:0;color:var(--ink,#17212b)}.saved-state-dialog p{margin:0;line-height:1.45;color:var(--muted,#5c6977)}.saved-state-dialog label{display:grid;gap:6px;font-weight:650;color:var(--ink,#17212b)}.saved-state-dialog input[type=password],.saved-state-dialog input[type=text]{box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--line,#d7e0e8);border-radius:8px;background:var(--soft,#f3f7fa);color:var(--ink,#17212b);caret-color:var(--ink,#17212b)}.saved-state-dialog input[type=password]:focus,.saved-state-dialog input[type=text]:focus{outline:3px solid color-mix(in srgb,var(--blue,#2468a9) 24%,transparent);border-color:var(--blue,#2468a9)}.saved-state-dialog .saved-state-check,.saved-state-dialog .saved-state-choice{display:flex;align-items:flex-start;gap:9px;font-weight:650;color:var(--ink,#17212b)}.saved-state-dialog .saved-state-check input,.saved-state-dialog .saved-state-choice input{margin-top:.25em;accent-color:var(--blue,#2468a9)}.saved-state-choice-box{display:grid;gap:10px;padding:12px;border:1px solid var(--line,#d7e0e8);border-radius:10px;background:var(--paper,#fff);color:var(--ink,#17212b)}.saved-state-choice-box:has(input:checked){border-color:var(--blue,#2468a9);background:color-mix(in srgb,var(--blue,#2468a9) 10%,var(--paper,#fff))}.saved-state-choice-box>span:last-child{color:var(--muted,#5c6977)}.saved-state-security{padding:11px 12px;border:1px solid color-mix(in srgb,var(--blue,#2468a9) 28%,var(--line,#d7e0e8));border-radius:9px;background:color-mix(in srgb,var(--blue,#2468a9) 10%,var(--paper,#fff));color:var(--ink,#17212b);font-size:.92rem}.saved-state-warning{color:#9a4b00;font-weight:650}.saved-state-status{min-height:1.2em;font-size:.9rem;color:var(--muted,#5c6977)}.saved-state-status.error{color:#c62828}.saved-state-dialog .button.ghost{color:var(--ink,#17212b);border-color:var(--line,#d7e0e8);background:var(--soft,#f3f7fa)}.saved-state-dialog .button.ghost:hover{background:color-mix(in srgb,var(--blue,#2468a9) 8%,var(--soft,#f3f7fa))}.saved-state-dialog-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.saved-state-dialog-actions .button:not(.ghost){background:var(--blue,#2468a9);border-color:var(--blue,#2468a9);color:#fff}.saved-state-dialog-actions .button:not(.ghost):hover{filter:brightness(1.08)}html[data-theme="dark"] .saved-state-warning{color:#ffbd73}html[data-theme="dark"] .saved-state-status.error{color:#ff8a80}`;document.head.append(style)}
+function readerSavedStateDialogBase(title){readerEnsureSavedStateStyles();const dialog=document.createElement('dialog');dialog.className='saved-state-dialog';dialog.innerHTML='<form method="dialog"><h2></h2><div data-saved-state-dialog-body></div><div class="saved-state-status" data-saved-state-status role="status" aria-live="polite"></div><div class="saved-state-dialog-actions"><button type="button" class="button ghost" data-saved-state-cancel>Cancel</button><button type="submit" class="button" data-saved-state-submit>Continue</button></div></form>';dialog.querySelector('h2').textContent=title;document.body.append(dialog);dialog.querySelector('[data-saved-state-cancel]').addEventListener('click',()=>dialog.close('cancel'));dialog.addEventListener('close',()=>setTimeout(()=>dialog.remove(),0),{once:true});return dialog}
+function readerSavedStateSetDialogError(dialog,message){const status=dialog.querySelector('[data-saved-state-status]');status.textContent=String(message||'');status.classList.toggle('error',Boolean(message))}
+function readerRequestSavedStateSecurityChoice({title='Saved State security',submitText='Save & continue'}={}){
+  return new Promise(resolve=>{let settled=false;const finish=value=>{if(settled)return;settled=true;resolve(value)},cryptoApi=readerSavedStateCrypto(),dialog=readerSavedStateDialogBase(title),body=dialog.querySelector('[data-saved-state-dialog-body]'),submit=dialog.querySelector('[data-saved-state-submit]');submit.textContent=submitText;
+    body.innerHTML=`<div style="display:grid;gap:12px"><p>Choose once for this browser. The choice is reused for future exports until browser data is cleared or you change Saved State Security.</p><label class="saved-state-choice-box"><span class="saved-state-choice"><input type="radio" name="saved-state-security-mode" value="protected" checked><span>Password protect and encrypt <strong>(recommended)</strong></span></span><span style="font-weight:400">Enter the password once. This browser remembers a non-exportable derived key, not the password.</span></label><div data-saved-state-password-fields style="display:grid;gap:10px"><label>Password<input type="password" autocomplete="new-password" data-saved-state-password></label><label>Confirm password<input type="password" autocomplete="new-password" data-saved-state-confirm></label><label class="saved-state-check"><input type="checkbox" data-saved-state-show-password><span>Show password</span></label><div class="saved-state-security">Use at least <strong>${cryptoApi.MIN_PASSWORD_CODEPOINTS} characters</strong>; <strong>${cryptoApi.RECOMMENDED_PASSWORD_CODEPOINTS}+ characters</strong> is recommended. Spaces and Unicode are allowed.</div></div><label class="saved-state-choice-box"><span class="saved-state-choice"><input type="radio" name="saved-state-security-mode" value="plain"><span>Save without a password</span></span><span style="font-weight:400">Future exports from this browser remain unencrypted until you change this setting.</span></label><p class="saved-state-warning" data-saved-state-plain-warning hidden>Unencrypted Saved State files can be read by anyone who gets the file.</p></div>`;
+    const password=body.querySelector('[data-saved-state-password]'),confirmPassword=body.querySelector('[data-saved-state-confirm]'),show=body.querySelector('[data-saved-state-show-password]'),fields=body.querySelector('[data-saved-state-password-fields]'),plainWarning=body.querySelector('[data-saved-state-plain-warning]');const mode=()=>String(body.querySelector('input[name="saved-state-security-mode"]:checked')?.value||'protected');const refresh=()=>{const protect=mode()==='protected';fields.hidden=!protect;plainWarning.hidden=protect;password.required=confirmPassword.required=protect};body.addEventListener('change',event=>{if(event.target?.name==='saved-state-security-mode')refresh()});show.addEventListener('change',()=>{const type=show.checked?'text':'password';password.type=confirmPassword.type=type});refresh();
+    dialog.querySelector('[data-saved-state-cancel]').addEventListener('click',()=>finish(null),{once:true});dialog.addEventListener('cancel',()=>finish(null),{once:true});dialog.querySelector('form').addEventListener('submit',event=>{event.preventDefault();readerSavedStateSetDialogError(dialog,'');if(mode()==='plain'){finish({mode:'plain'});dialog.close('selected');return}const policy=cryptoApi.validatePassword(password.value);if(!policy.ok)return readerSavedStateSetDialogError(dialog,policy.errors.join(' '));if(policy.normalized!==cryptoApi.normalizePassword(confirmPassword.value))return readerSavedStateSetDialogError(dialog,'The two passwords do not match.');const value=password.value;password.value=confirmPassword.value='';finish({mode:'protected',password:value});dialog.close('selected')});dialog.showModal();setTimeout(()=>password.focus(),0);
+  });
+}
+function readerRequestSavedStatePassword({title='Unlock encrypted Saved State',submitText='Unlock & Import',confirmNew=false,message='Enter the password used when this Saved State was exported.'}={}){
+  return new Promise(resolve=>{let settled=false;const finish=value=>{if(settled)return;settled=true;resolve(value)},dialog=readerSavedStateDialogBase(title),body=dialog.querySelector('[data-saved-state-dialog-body]'),submit=dialog.querySelector('[data-saved-state-submit]');submit.textContent=submitText;body.innerHTML=`<div style="display:grid;gap:12px"><p></p><label>Password<input type="password" autocomplete="${confirmNew?'new-password':'current-password'}" data-saved-state-password></label>${confirmNew?'<label>Confirm password<input type="password" autocomplete="new-password" data-saved-state-confirm></label>':''}<label class="saved-state-check"><input type="checkbox" data-saved-state-show-password><span>Show password</span></label></div>`;body.querySelector('p').textContent=message;const input=body.querySelector('[data-saved-state-password]'),confirmInput=body.querySelector('[data-saved-state-confirm]'),show=body.querySelector('[data-saved-state-show-password]');show.addEventListener('change',()=>{const type=show.checked?'text':'password';input.type=type;if(confirmInput)confirmInput.type=type});dialog.querySelector('[data-saved-state-cancel]').addEventListener('click',()=>finish(null),{once:true});dialog.addEventListener('cancel',()=>finish(null),{once:true});dialog.querySelector('form').addEventListener('submit',event=>{event.preventDefault();if(!input.value)return readerSavedStateSetDialogError(dialog,'Enter the Saved State password.');if(confirmNew){const policy=readerSavedStateCrypto().validatePassword(input.value);if(!policy.ok)return readerSavedStateSetDialogError(dialog,policy.errors.join(' '));if(policy.normalized!==readerSavedStateCrypto().normalizePassword(confirmInput?.value||''))return readerSavedStateSetDialogError(dialog,'The two passwords do not match.')}const value=input.value;input.value='';if(confirmInput)confirmInput.value='';finish(value);dialog.close('password')});dialog.showModal();setTimeout(()=>input.focus(),0)});
+}
+async function readerConfigureSavedStateSecurity(){
+  const choice=await readerRequestSavedStateSecurityChoice({title:'Saved State Security',submitText:'Save security setting'});if(!choice)return false;
+  if(choice.mode==='plain'){await readerClearSavedStateRememberedKey();readerWriteSavedStateSecurityPreference('plain');readerToast('Saved State exports will be unencrypted until you change this setting.');return true}
+  const context=await readerSavedStateCrypto().createKeyContext(choice.password),remembered=await readerRememberSavedStateKey(context);readerToast(remembered?'Saved State password protection is enabled. The derived key is remembered in this browser.':'Saved State password protection is enabled, but this browser could not remember the derived key. You may be asked again.');return true;
+}
+async function readerProtectedSavedStateContextForExport(){
+  const cryptoApi=readerSavedStateCrypto(),cached=await cryptoApi.loadCachedKeyContext(readerSavedStateKeyCacheId());if(cached)return cached;
+  const password=await readerRequestSavedStatePassword({title:'Set Saved State password',submitText:'Remember & Export',confirmNew:true,message:'The remembered encryption key is unavailable. Enter a password for future encrypted exports from this browser.'});if(password==null)return null;
+  const context=await cryptoApi.createKeyContext(password),remembered=await readerRememberSavedStateKey(context);if(!remembered)readerToast('This browser could not remember the derived key. This export is encrypted, but you may be asked for the password again.',true);return context;
+}
+async function readerExportSavedState(){
+  const cryptoApi=readerSavedStateCrypto(),payload=await readerCreateSavedStatePayload(),attachmentCount=readerSavedStateAttachmentCount(payload);let preference=readerReadSavedStateSecurityPreference();
+  if(!preference){const choice=await readerRequestSavedStateSecurityChoice({title:'First Saved State export',submitText:'Export Saved State'});if(!choice)return;if(choice.mode==='plain'){if(!readerConfirmUnencryptedSavedStateAttachments(payload))return;await readerClearSavedStateRememberedKey();readerWriteSavedStateSecurityPreference('plain');readerSavedStateDownload(payload,false);readerToast(`Unencrypted Saved State exported${attachmentCount?` with ${attachmentCount} recovery attachment${attachmentCount===1?'':'s'}`:''}. Future exports from this browser will stay unencrypted.`);return}const context=await cryptoApi.createKeyContext(choice.password),remembered=await readerRememberSavedStateKey(context);readerSavedStateDownload(await cryptoApi.encryptPayloadWithKey(payload,context),true);readerToast(remembered?`Encrypted Saved State exported${attachmentCount?` with ${attachmentCount} encrypted recovery attachment${attachmentCount===1?'':'s'}`:''}. Future exports from this browser will not ask for the password.`:`Encrypted Saved State exported${attachmentCount?` with ${attachmentCount} encrypted recovery attachment${attachmentCount===1?'':'s'}`:''}. This browser could not remember the derived key, so a future export may ask again.`);return}
+  if(preference.mode==='plain'){if(!readerConfirmUnencryptedSavedStateAttachments(payload))return;readerSavedStateDownload(payload,false);readerToast(`Unencrypted Saved State exported${attachmentCount?` with ${attachmentCount} recovery attachment${attachmentCount===1?'':'s'}`:''}.`);return}
+  const context=await readerProtectedSavedStateContextForExport();if(!context)return;readerSavedStateDownload(await cryptoApi.encryptPayloadWithKey(payload,context),true);readerToast(`Encrypted Saved State exported using the remembered browser key${attachmentCount?`; ${attachmentCount} recovery attachment${attachmentCount===1?' is':'s are'} inside the encrypted payload`:''}.`);
+}
+async function readerImportSavedStateFile(file){
+  if(!file)return;if(file.size>READER_SAVED_STATE_MAX_FILE_BYTES)throw new Error('Saved State file is larger than the 48 MB safety limit.');let parsed;try{parsed=JSON.parse(await file.text())}catch{throw new Error('Saved State file is not valid JSON.')}
+  const cryptoApi=readerSavedStateCrypto();let payload=parsed;
+  if(cryptoApi.isEncryptedEnvelope(parsed)){
+    let context=await cryptoApi.loadCachedKeyContext(readerSavedStateKeyCacheId()),usedRemembered=false;
+    if(context)try{payload=await cryptoApi.decryptPayloadWithKey(parsed,context);usedRemembered=true}catch{context=null}
+    if(!context){const password=await readerRequestSavedStatePassword();if(password==null)return;context=await cryptoApi.keyContextForEnvelope(parsed,password);payload=await cryptoApi.decryptPayloadWithKey(parsed,context);const remembered=await readerRememberSavedStateKey(context);if(!remembered)readerToast('Saved State unlocked, but this browser could not remember the derived key.',true)}else readerWriteSavedStateSecurityPreference('protected');
+    if(usedRemembered)readerWriteSavedStateSecurityPreference('protected');
+  }else if(!readerReadSavedStateSecurityPreference())readerWriteSavedStateSecurityPreference('plain');
+  readerValidateSavedStatePayload(payload);const result=await readerApplySavedStatePayload(payload);if(result.cancelled)return;readerToast(`Saved State imported (${result.imported} record${result.imported===1?'':'s'}${result.attachmentsImported?`, ${result.attachmentsImported} recovery attachment${result.attachmentsImported===1?'':'s'}`:''}). Reloading…`);setTimeout(()=>location.reload(),350)
+}
+async function readerResetSavedStateSecurityMemory(){try{localStorage.removeItem(readerSavedStateSecurityPreferenceKey())}catch{}await readerClearSavedStateRememberedKey();return true}
+function exposeReaderSavedStateApi(){window.DocumentationSavedState=Object.freeze({export:readerExportSavedState,importFile:readerImportSavedStateFile,configureSecurity:readerConfigureSavedStateSecurity,resetSecurity:readerResetSavedStateSecurityMemory,clearAttachments:readerClearSavedStateAttachments,listAttachments:()=>readerSavedStateAttachmentStore().list(readerSavedStateBaseNamespace()),getSecurityMode:()=>readerReadSavedStateSecurityPreference()?.mode||''})}
+function bindReaderLegacySavedStateExportBridge(){
+  if(document.documentElement.dataset.savedStateLegacyExportBridge==='true')return;
+  document.documentElement.dataset.savedStateLegacyExportBridge='true';
+  document.addEventListener('click',event=>{
+    const trigger=event.target.closest?.('[data-state-export]');
+    if(!trigger||trigger.closest('[data-saved-state-actions]'))return;
+    event.preventDefault();event.stopImmediatePropagation();
+    readerExportSavedState().catch(error=>readerToast(error.message||String(error),true));
+  },true);
+}
+function ensureReaderSavedStateControls(){exposeReaderSavedStateApi();bindReaderLegacySavedStateExportBridge();readerSavedStateAttachmentStore().bindWidgets(readerSavedStateBaseNamespace(),{toast:readerToast}).catch(error=>readerToast(error.message||String(error),true));if(document.querySelector('[data-saved-state-actions]'))return;readerEnsureSavedStateStyles();const actions=$('.top-actions');if(!actions)return;const details=document.createElement('details');details.className='saved-state-actions';details.dataset.savedStateActions='';details.innerHTML='<summary class="button ghost" role="button" aria-label="Saved State options">Saved State</summary><div class="saved-state-popover"><button type="button" class="button ghost" data-saved-state-export>Export Saved State</button><button type="button" class="button ghost" data-saved-state-import>Import Saved State</button><button type="button" class="button ghost" data-saved-state-security>Saved State Security…</button><input type="file" accept=".dgstate,.json,application/json" data-saved-state-file hidden></div>';const reset=actions.querySelector('[data-reset]');if(reset){reset.textContent='Reset';reset.setAttribute('aria-label','Reset documentation state')}actions.insertBefore(details,reset||actions.firstChild);const picker=details.querySelector('[data-saved-state-file]');details.querySelector('[data-saved-state-export]').addEventListener('click',()=>{details.open=false;readerExportSavedState().catch(error=>readerToast(error.message||String(error),true))});details.querySelector('[data-saved-state-import]').addEventListener('click',()=>{details.open=false;picker.click()});details.querySelector('[data-saved-state-security]').addEventListener('click',()=>{details.open=false;readerConfigureSavedStateSecurity().catch(error=>readerToast(error.message||String(error),true))});picker.addEventListener('change',async()=>{const file=picker.files?.[0];picker.value='';try{await readerImportSavedStateFile(file)}catch(error){readerToast(error.message||String(error),true)}});document.addEventListener('click',event=>{if(details.open&&!details.contains(event.target))details.open=false})}
+
+function bind(){
+  document.addEventListener('click',async event=>{
+    const task=event.target.closest('.task-list-item');
+    if(task&&!event.target.closest('input,a,button,label,select,textarea')){
+      const box=$('input[type="checkbox"]',task);if(box&&!box.disabled){event.preventDefault();box.click();return}
+    }
+    const troubleshoot=event.target.closest('[data-troubleshoot-generate]');
+    if(troubleshoot){
+      event.preventDefault();
+      const card=troubleshoot.closest('.step-card');
+      if(card)try{await generateReaderTroubleshootingPrompt(card)}catch(error){readerToast(error?.message||String(error),true)}
+      return;
+    }
+    const copy=event.target.closest('.copy-code');
+    if(copy){
+      const code=copy.parentElement.querySelector('code')?.innerText||'';
+      navigator.clipboard?.writeText(code).then(()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy',1200)}).catch(()=>prompt('Copy this command:',code));
+      return;
+    }
+    const phaseToggle=event.target.closest('[data-phase-collapse]');
+    if(phaseToggle){event.preventDefault();event.stopPropagation();const heading=phaseToggle.closest('.phase-heading');setReaderPhaseCollapsed(heading,!heading.classList.contains('phase-collapsed'));return}
+    if(event.target.closest('[data-theme-toggle]')){
+      applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');return;
+    }
+    if(event.target.closest('[data-menu]')){$('.sidebar')?.classList.toggle('open');return}
+    if(event.target.closest('[data-reset]')){
+      if(confirm("Reset this documentation?\n\nThis clears completed steps, checklist state, saved installation values, navigation state, this documentation's browser cache, recovery attachments, and the remembered Saved State encryption key/security choice. Theme is kept.")){
+        await resetReaderProgressAndFields();
+        location.reload();
+      }
+      return;
+    }
+    const link=event.target.closest('a[href]');
+    if(link&&!link.hasAttribute('download')&&(link.closest('.nav,.topbar'))){saveLocation()}
+  });
+  document.addEventListener('change',event=>{
+    if(event.target.matches('.step-check')){applyStep(event.target.closest('.step-card'),event.target.checked);saveProgress()}
+    if(event.target.matches('[data-reader-task]'))saveTasks();
+  });
+  const search=$('#doc-search');
+  search?.addEventListener('input',()=>{
+    const term=search.value.trim().toLowerCase();
+    $$('.step-card,.resource-card').forEach(card=>card.classList.toggle('search-hidden',!!term&&!card.innerText.toLowerCase().includes(term)));
+    $$('.nav a').forEach(link=>link.classList.toggle('search-hidden',!!term&&!link.innerText.toLowerCase().includes(term)));
+  });
+  window.addEventListener('scroll',()=>{clearTimeout(window.__readerLocationTimer);window.__readerLocationTimer=setTimeout(saveLocation,180)},{passive:true});
+  window.addEventListener('pagehide',saveLocation);
+  window.addEventListener('storage',event=>{if(event.key===globalThemeKey&&(event.newValue==='dark'||event.newValue==='light'))applyTheme(event.newValue,false)});
+  window.addEventListener('hashchange',()=>{updateActiveNav();saveLocation()});
+}
+
+function decodeVideoEditMetadata(value){try{const normalized=String(value||'').replace(/-/g,'+').replace(/_/g,'/'),padded=normalized+'='.repeat((4-normalized.length%4)%4),binary=atob(padded),bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes))}catch{return null}}
+function readerEditedBeforeSource(metadata,source){let edited=Math.max(0,Number(source)||0);for(const cut of metadata?.timeline?.cuts||[]){const start=Number(cut?.[0]||0),end=Number(cut?.[1]||0);if(source>=end)edited-=Math.max(0,end-start);else if(source>start)edited-=source-start}return Math.max(0,edited)}
+function readerZoomCrop(metadata,time){const full={x:0,y:0,width:1,height:1},transition=.5;for(const zoom of metadata?.timeline?.zooms||[]){if(zoom.end==null)continue;const start=readerEditedBeforeSource(metadata,Number(zoom.start||0)),end=readerEditedBeforeSource(metadata,Number(zoom.end||zoom.start||0)),rect=zoom.rect||{x:Number(zoom.x)||0,y:Number(zoom.y)||0,width:Number(zoom.width)||1,height:Number(zoom.height)||1};if(time<start||time>end+transition)continue;let amount=1;if(time<start+transition)amount=Math.max(0,Math.min(1,(time-start)/transition));else if(time>end)amount=Math.max(0,1-(time-end)/transition);return{x:rect.x*amount,y:rect.y*amount,width:1-(1-rect.width)*amount,height:1-(1-rect.height)*amount}}return full}
+function initializeInteractiveClipboardVideos(){for(const video of $$('video[data-video-edit-meta]')){const metadata=decodeVideoEditMetadata(video.dataset.videoEditMeta),items=(metadata?.tracks?.clipboard||[]).filter(item=>item.enabled!==false&&item.contentStored&&item.content&&item.bounds);if(!items.length||video.dataset.clipboardInteractive==='true')continue;video.dataset.clipboardInteractive='true';const parent=video.parentElement,holder=document.createElement('div');holder.className='reader-interactive-video';parent.insertBefore(holder,video);holder.append(video);const button=document.createElement('button');button.type='button';button.className='reader-clipboard-region';button.hidden=true;holder.append(button);let active=null;const refresh=()=>{const time=Number(video.currentTime||0);active=items.find(item=>time>=Number(item.startEditedTime||0)&&time<=Number(item.endEditedTime??item.startEditedTime??0))||null;if(!active){button.hidden=true;return}const b=active.bounds,crop=readerZoomCrop(metadata,time),display={x:(Number(b.x||0)-crop.x)/Math.max(.001,crop.width),y:(Number(b.y||0)-crop.y)/Math.max(.001,crop.height),width:Number(b.width||.05)/Math.max(.001,crop.width),height:Number(b.height||.03)/Math.max(.001,crop.height)};button.hidden=display.x+display.width<=0||display.y+display.height<=0||display.x>=1||display.y>=1;if(button.hidden)return;button.style.left=`${Math.max(0,Math.min(1,display.x))*100}%`;button.style.top=`${Math.max(0,Math.min(1,display.y))*100}%`;button.style.width=`${Math.max(.005,Math.min(1-Math.max(0,display.x),display.width))*100}%`;button.style.height=`${Math.max(.005,Math.min(1-Math.max(0,display.y),display.height))*100}%`;button.title=`Click to copy: ${active.content}`;button.setAttribute('aria-label',`Copy ${active.operation||'clipboard'} text`)};video.addEventListener('timeupdate',refresh);video.addEventListener('seeking',refresh);video.addEventListener('loadedmetadata',refresh);button.addEventListener('click',async()=>{if(!active)return;try{await navigator.clipboard.writeText(String(active.content));button.dataset.copied='true';button.textContent='Copied';setTimeout(()=>{button.dataset.copied='false';button.textContent=''},900)}catch{prompt('Copy this text:',String(active.content))}});refresh()}}
+
+window.DocumentationReader=Object.assign(window.DocumentationReader||{}, {
+  namespace,progressKey,taskPrefix,variableKey,currentPage,
+  getVariables:()=>({...variables}),setVariables,refreshVariables,
+  readProgress,loadProgress,saveProgress,prepareTasks,saveTasks
+});
+
+function init(){
+  let theme='light';try{const requested=new URLSearchParams(location.search).get('theme');const inherited=window.DOCUMENTATION_GENERATOR_ORCHESTRATOR_THEME;theme=(requested==='dark'||requested==='light')?requested:((inherited==='dark'||inherited==='light')?inherited:(localStorage.getItem(globalThemeKey)||localStorage.getItem(themeKey)||((matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')))}catch{}
+  applyTheme(theme,false);initializeVariables();initializeInteractiveClipboardVideos();initializePhaseCollapse();prepareTasks();loadProgress();initializeReaderTroubleshootPanels();ensureReaderSavedStateControls();updateActiveNav();bind();restoreLocation();
+}
+init();
+})();
+
+;(function(){
+'use strict';
+const config=window.DOCUMENTATION_GENERATOR_CONFIG||window.DOCUMENTATION_READER_CONFIG||{};
+const base=String(config.storageNamespace||'openwrt-virtual-router').replace(/-reader$/,'');
+const variableKey=`${base}-installation-variables-v1`;
+const captureKey=`${base}-command-output-captures-v1`;
+const contextKey=`${base}-previous-build-context-v1`;
+const read=(key,fallback={})=>{try{const v=JSON.parse(localStorage.getItem(key)||'null');return v&&typeof v==='object'?v:fallback}catch{return fallback}};
+const write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
+const cleanValues=values=>Object.fromEntries(Object.entries(values||{}).map(([k,v])=>[k,String(v??'').trim()]).filter(([,v])=>v));
+(function migrateNetworkVariables(){const vars=read(variableKey,{});let changed=false;if(vars.PVE_VLAN2_IP&&!vars.PVE_TRUSTED_IP){vars.PVE_TRUSTED_IP=vars.PVE_VLAN2_IP;changed=true}if(changed)write(variableKey,vars)})();
+const importedCaptures=state=>Object.fromEntries(Object.entries(state.captures||{}).map(([key,item])=>[`previous-p2v::${key}`,{
+  raw:String(item?.text??item?.raw??''),profile:`imported-p2v${item?.parser?` · ${item.parser}`:''}`,title:String(item?.title||key),savedAt:String(item?.updatedAt||state.savedAt||''),status:'Imported from Windows 11 → Proxmox saved state',importedFrom:'p2v-windows-11-state'
+}]));
+function refresh(){
+  const status=document.querySelector('[data-prior-build-state-status]'),summary=document.querySelector('[data-prior-build-summary]'),meta=read(contextKey,null),vars=read(variableKey,{});
+  if(!status||!summary)return;
+  if(!meta){status.textContent='Optional — skip if unavailable.';summary.hidden=true;summary.textContent='';return}
+  status.textContent=`Previous context loaded · ${meta.variableCount||0} values · ${meta.captureCount||0} evidence captures`;
+  const bits=[];
+  if(vars.PROXMOX_HOSTNAME)bits.push(`Host: ${vars.PROXMOX_HOSTNAME}`);
+  if(vars.PROXMOX_IP)bits.push(`Current PVE: ${vars.PROXMOX_IP}`);
+  if(vars.VM_ID||vars.VM_NAME)bits.push(`VM: ${[vars.VM_ID,vars.VM_NAME].filter(Boolean).join(' · ')}`);
+  summary.textContent=bits.join(' · ')||'Previous build context is available to this guide and Troubleshoot prompts.';
+  summary.hidden=false;
+}
+function bind(){
+  refresh();
+  const input=document.querySelector('[data-prior-build-state-import]');
+  if(!input||input.__openwrtPreviousBuildImportBound)return;
+  input.__openwrtPreviousBuildImportBound=true;
+  input.addEventListener('change',async()=>{
+    const file=input.files?.[0];input.value='';if(!file)return;
+    const status=document.querySelector('[data-prior-build-state-status]');
+    try{
+      const state=JSON.parse(await file.text());
+      if(state?.format!=='p2v-windows-11-state')throw new Error('Select p2v-windows-11-state.json from the Windows 11 → Proxmox guide.');
+      const prior=cleanValues(state.variables);
+      if(prior.VM_ID&&!prior.WINDOWS_VM_VMID)prior.WINDOWS_VM_VMID=prior.VM_ID;
+      const current=read(variableKey,{}),merged={...prior,...current};
+      write(variableKey,merged);
+      const imported=importedCaptures(state),captures=read(captureKey,{}),kept=Object.fromEntries(Object.entries(captures).filter(([key])=>!key.startsWith('previous-p2v::')));
+      write(captureKey,{...kept,...imported});
+      write(contextKey,{format:state.format,sourceVersion:String(state.version||''),sourceSavedAt:String(state.savedAt||''),importedAt:new Date().toISOString(),variableCount:Object.keys(prior).length,captureCount:Object.keys(imported).length});
+      if(status)status.textContent='Previous context imported. Reloading…';
+      location.reload();
+    }catch(error){if(status)status.textContent=error?.message||'That saved-state file could not be imported.'}
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+
+;(function(){
+if(window.__OPENWRT_STEP001_RUNTIME_V125)return;
+window.__OPENWRT_STEP001_RUNTIME_V125=true;
+'use strict';
+const config=window.DOCUMENTATION_GENERATOR_CONFIG||window.DOCUMENTATION_READER_CONFIG||{};
+const base=String(config.storageNamespace||'openwrt-virtual-router').replace(/-reader$/,'');
+const variableKey=`${base}-installation-variables-v1`;
+const captureKey=`${base}-command-output-captures-v1`;
+const read=(key,fallback={})=>{try{const value=JSON.parse(localStorage.getItem(key)||'null');return value&&typeof value==='object'&&!Array.isArray(value)?value:fallback}catch{return fallback}};
+const write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
+const escapeName=value=>window.CSS?.escape?CSS.escape(String(value)):String(value).replace(/(["\\])/g,'\\$1');
+function variableInput(name){return document.querySelector(`[data-user-variable-input="${escapeName(name)}"]`)}
+function updateVariableNodes(name,value){
+  const next=String(value??'').trim();
+  document.querySelectorAll(`[data-user-variable="${escapeName(name)}"]`).forEach(node=>{node.textContent=next||`[${name}]`;node.dataset.empty=String(!next)});
+}
+function setVariable(name,value){
+  const next=String(value??'').trim(),vars=read(variableKey,{}),input=variableInput(name);
+  if(next)vars[name]=next;else delete vars[name];
+  write(variableKey,vars);
+  if(input&&String(input.value||'')!==next){input.value=next;input.dispatchEvent(new Event('input',{bubbles:true}))}
+  updateVariableNodes(name,next);
+}
+function ipv4ToInt(value){const p=String(value||'').trim().split('.').map(Number);if(p.length!==4||p.some(n=>!Number.isInteger(n)||n<0||n>255))return null;return((((p[0]<<24)>>>0)+(p[1]<<16)+(p[2]<<8)+p[3])>>>0)}
+function intToIpv4(value){const n=Number(value)>>>0;return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.')}
+function cidrInfo(value){
+  const match=String(value||'').trim().match(/^(\d{1,3}(?:\.\d{1,3}){3})\/(\d|[12]\d|3[0-2])$/);if(!match)return null;
+  const ip=ipv4ToInt(match[1]),prefix=Number(match[2]);if(ip===null)return null;
+  const mask=prefix===0?0:((0xffffffff<<(32-prefix))>>>0),network=(ip&mask)>>>0,broadcast=(network|((~mask)>>>0))>>>0;
+  const first=prefix<=30?((network+1)>>>0):network;
+  return{prefix,network,broadcast,firstUsableInt:first,firstUsable:intToIpv4(first),networkAddress:intToIpv4(network),broadcastAddress:intToIpv4(broadcast)};
+}
+let deriving=false;
+function setPveValidation(state,message=''){
+  const input=variableInput('PVE_TRUSTED_IP'),status=document.querySelector('[data-openwrt-pve-trusted-status]'),invalid=state==='error';
+  if(input){input.setAttribute('aria-invalid',invalid?'true':'false');input.setCustomValidity(invalid?message:'')}
+  if(status){status.hidden=!invalid;status.textContent=invalid?message:'';status.dataset.state=invalid?'error':''}
+}
+function setDmzLxcValidation(state,message=''){
+  const input=variableInput('DMZ_LXC_IP'),status=document.querySelector('[data-openwrt-dmz-lxc-status]'),invalid=state==='error';
+  if(input){input.setAttribute('aria-invalid',invalid?'true':'false');input.setCustomValidity(invalid?message:'')}
+  if(status){status.hidden=!invalid;status.textContent=invalid?message:'';status.dataset.state=invalid?'error':''}
+}
+function cidrsOverlap(a,b){return Boolean(a&&b&&a.network<=b.broadcast&&b.network<=a.broadcast)}
+function deriveNetworkValues(){
+  if(deriving)return;deriving=true;
+  try{
+    const vars=read(variableKey,{}),trusted=String(variableInput('TRUSTED_CIDR')?.value||vars.TRUSTED_CIDR||'').trim(),dmz=String(variableInput('DMZ_CIDR')?.value||vars.DMZ_CIDR||'').trim(),pve=String(variableInput('PVE_TRUSTED_IP')?.value||vars.PVE_TRUSTED_IP||'').trim(),dmzLxc=String(variableInput('DMZ_LXC_IP')?.value||vars.DMZ_LXC_IP||'').trim(),isp=String(vars.ISP_SUBNET_CIDR||'').trim();
+    const t=cidrInfo(trusted),d=cidrInfo(dmz),i=cidrInfo(isp),pveInt=ipv4ToInt(pve),dmzLxcInt=ipv4ToInt(dmzLxc);
+    setVariable('TRUSTED_PREFIX',t?String(t.prefix):'');
+    setVariable('DMZ_PREFIX',d?String(d.prefix):'');
+    setVariable('OPENWRT_TRUSTED_IP',t?t.firstUsable:'');
+    setVariable('OPENWRT_DMZ_IP',d?d.firstUsable:'');
+    setVariable('OPENWRT_TRUSTED_CIDR',t?`${t.firstUsable}/${t.prefix}`:'');
+    setVariable('OPENWRT_DMZ_CIDR',d?`${d.firstUsable}/${d.prefix}`:'');
+    const trustedOctet=t?((t.network>>>8)&255):null,dmzOctet=d?((d.network>>>8)&255):null;
+    const trustedBridge=t?`vmbr${trustedOctet}`:'',dmzBridge=d?`vmbr${dmzOctet}`:'';
+    setVariable('TRUSTED_BRIDGE',trustedBridge);
+    setVariable('DMZ_BRIDGE',dmzBridge);
+
+    let pveOk=false,pveMessage='';
+    if(pve){
+      if(!t)pveMessage='Enter a valid Trusted subnet CIDR first.';
+      else if(pveInt===null)pveMessage='Enter a valid IPv4 address.';
+      else if(pveInt===t.network)pveMessage=`${pve} is the network address for ${trusted}.`;
+      else if(t.prefix<=30&&pveInt===t.broadcast)pveMessage=`${pve} is the broadcast address for ${trusted}.`;
+      else if(pveInt<t.network||pveInt>t.broadcast)pveMessage=`${pve} is outside Trusted ${trusted}.`;
+      else if(pveInt===t.firstUsableInt)pveMessage=`${pve} is reserved for OpenWrt. Choose another Trusted IP.`;
+      else pveOk=true;
+    }
+    setPveValidation(pve&&!pveOk?'error':'',pveMessage);
+    setVariable('PVE_TRUSTED_CIDR',t&&pveOk?`${pve}/${t.prefix}`:'');
+
+    let dmzLxcOk=false,dmzLxcMessage='';
+    if(dmzLxc){
+      if(!d)dmzLxcMessage='Enter a valid DMZ subnet CIDR first.';
+      else if(dmzLxcInt===null)dmzLxcMessage='Enter a valid IPv4 address.';
+      else if(dmzLxcInt===d.network)dmzLxcMessage=`${dmzLxc} is the network address for ${dmz}.`;
+      else if(d.prefix<=30&&dmzLxcInt===d.broadcast)dmzLxcMessage=`${dmzLxc} is the broadcast address for ${dmz}.`;
+      else if(dmzLxcInt<d.network||dmzLxcInt>d.broadcast)dmzLxcMessage=`${dmzLxc} is outside DMZ ${dmz}.`;
+      else if(dmzLxcInt===d.firstUsableInt)dmzLxcMessage=`${dmzLxc} is reserved for OpenWrt. Choose another DMZ IP.`;
+      else dmzLxcOk=true;
+    }
+    setDmzLxcValidation(dmzLxc&&!dmzLxcOk?'error':'',dmzLxcMessage);
+
+    const overlaps=[];
+    if(t&&d&&cidrsOverlap(t,d))overlaps.push('Trusted overlaps DMZ');
+    if(t&&i&&cidrsOverlap(t,i))overlaps.push('Trusted overlaps ISP');
+    if(d&&i&&cidrsOverlap(d,i))overlaps.push('DMZ overlaps ISP');
+    const bridgeErrors=[];
+    if(t&&trustedOctet===0)bridgeErrors.push('Trusted third octet 0 would use vmbr0, reserved for WAN');
+    if(d&&dmzOctet===0)bridgeErrors.push('DMZ third octet 0 would use vmbr0, reserved for WAN');
+    if(t&&d&&trustedOctet===dmzOctet)bridgeErrors.push(`Trusted and DMZ would both use vmbr${trustedOctet}; choose different third octets`);
+    const stopStatus=document.querySelector('[data-openwrt-network-stop-status]'),stopBlock=stopStatus?.closest('.stop-block');
+    const stopOk=Boolean(t&&d&&pveOk&&!overlaps.length&&!bridgeErrors.length);
+    let stopMessage='Enter valid Trusted, PVE and DMZ values.';
+    if(pve&&!pveOk)stopMessage=pveMessage;
+    else if(overlaps.length)stopMessage=`FIX: ${overlaps.join('; ')}.`;
+    else if(bridgeErrors.length)stopMessage=`FIX: ${bridgeErrors.join('; ')}.`;
+    else if(stopOk)stopMessage=`Valid. Trusted uses ${trustedBridge}; DMZ uses ${dmzBridge}. OpenWrt Trusted is ${t.firstUsable}.`;
+    if(stopStatus)stopStatus.textContent=stopMessage;
+    if(stopBlock)stopBlock.classList.toggle('openwrt-stop-invalid',!stopOk);
+  }finally{deriving=false}
+}
+function discoveryValues(raw){
+  const source=String(raw||''),get=name=>{const m=source.match(new RegExp(`^${name}=([^\\r\\n]*)$`,'mi'));return m?m[1].trim():''};
+  const values={PVE_CURRENT_CIDR:get('PVE_CURRENT_CIDR'),ISP_SUBNET_CIDR:get('ISP_SUBNET_CIDR'),PVE_PHYSICAL_NIC:get('PVE_PHYSICAL_NIC')};
+  const ok=Boolean(values.ISP_SUBNET_CIDR&&values.PVE_PHYSICAL_NIC);
+  return{ok,values,status:ok?'WAN subnet and physical NIC detected.':'Could not detect the ISP subnet and physical NIC. Paste all three output lines.'};
+}
+function renderDiscovery(panel,result){
+  const status=panel.querySelector('[data-openwrt-discovery-status]'),grid=panel.querySelector('[data-openwrt-discovery-result-grid]'),details=panel.querySelector('[data-openwrt-discovery-results]');
+  if(status){status.textContent=result.status;status.dataset.state=result.ok?'ok':'warning'}
+  if(grid){grid.replaceChildren();for(const [label,value] of [['Current PVE address',result.values.PVE_CURRENT_CIDR],['ISP subnet',result.values.ISP_SUBNET_CIDR],['Physical NIC',result.values.PVE_PHYSICAL_NIC]]){const item=document.createElement('div');item.className='command-output-result';const strong=document.createElement('strong');strong.textContent=label;const code=document.createElement('code');code.textContent=value||'Not detected';item.append(strong,code);grid.append(item)}}
+  if(details)details.open=true;
+}
+function analyzeDiscovery(panel,{save=true}={}){
+  const area=panel.querySelector('[data-openwrt-discovery-text]'),raw=String(area?.value||'').trim(),result=discoveryValues(raw);
+  for(const [name,value] of Object.entries(result.values))setVariable(name,value);
+  renderDiscovery(panel,result);
+  if(save){const captures=read(captureKey,{}),key=String(panel.dataset.captureKey||'step-001-pve-discovery');captures[key]={profile:'openwrt-pve-discovery',title:String(panel.dataset.captureTitle||'PVE WAN discovery'),raw,detected:{'Current PVE address':result.values.PVE_CURRENT_CIDR,'ISP subnet':result.values.ISP_SUBNET_CIDR,'Physical NIC':result.values.PVE_PHYSICAL_NIC},variables:{...result.values},status:result.status,ok:result.ok,savedAt:new Date().toISOString()};write(captureKey,captures)}
+  deriveNetworkValues();
+  return result;
+}
+function bindDiscovery(){
+  const panel=document.querySelector('[data-openwrt-discovery-capture]');if(!panel||panel.dataset.openwrtBound==='1')return;panel.dataset.openwrtBound='1';
+  const area=panel.querySelector('[data-openwrt-discovery-text]'),key=String(panel.dataset.captureKey||'step-001-pve-discovery'),saved=read(captureKey,{})[key];
+  if(saved?.raw&&area&&!area.value){area.value=String(saved.raw);analyzeDiscovery(panel,{save:false})}
+  panel.querySelector('[data-openwrt-discovery-analyze]')?.addEventListener('click',()=>analyzeDiscovery(panel));
+  panel.querySelector('[data-openwrt-discovery-clear]')?.addEventListener('click',()=>{if(area)area.value='';const captures=read(captureKey,{});delete captures[key];write(captureKey,captures);for(const name of ['PVE_CURRENT_CIDR','ISP_SUBNET_CIDR','PVE_PHYSICAL_NIC'])setVariable(name,'');renderDiscovery(panel,{ok:false,values:{PVE_CURRENT_CIDR:'',ISP_SUBNET_CIDR:'',PVE_PHYSICAL_NIC:''},status:'Saved discovery output cleared.'});deriveNetworkValues()});
+  area?.addEventListener('paste',event=>{
+    const clip=String(event.clipboardData?.getData('text/plain')||'');
+    if(clip){event.preventDefault();area.value=clip}
+    const status=panel.querySelector('[data-openwrt-discovery-status]');
+    if(status){status.textContent='Analyzing pasted output…';status.dataset.state=''}
+    setTimeout(()=>analyzeDiscovery(panel),0);
+  });
+}
+function bindDerived(){
+  document.addEventListener('input',event=>{const name=String(event.target?.dataset?.userVariableInput||'');if(['TRUSTED_CIDR','DMZ_CIDR','PVE_TRUSTED_IP','DMZ_LXC_IP'].includes(name))setTimeout(deriveNetworkValues,0)});
+  setTimeout(deriveNetworkValues,0);
+  setTimeout(deriveNetworkValues,100);
+  window.addEventListener('load',()=>setTimeout(deriveNetworkValues,0),{once:true});
+}
+function init(){bindDiscovery();bindDerived()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script></body></html>

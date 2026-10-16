@@ -1,9 +1,33 @@
 {
-  "siteVersion": "0.15",
+  "siteVersion": "0.16",
   "currentGuide": {
     "slug": "windows-11-to-proxmox",
     "version": "1.2.29",
     "steps": 36,
     "phases": 7
-  }
+  },
+  "guides": [
+    {
+      "order": 1,
+      "slug": "windows-11-to-proxmox",
+      "title": "Windows 11 \u2192 Proxmox",
+      "version": "1.2.29",
+      "steps": 36,
+      "phases": 7,
+      "download": "p2v-windows-11-offline-v1.2.29.zip"
+    },
+    {
+      "order": 2,
+      "slug": "openwrt-virtual-router",
+      "title": "OpenWrt Virtual Router",
+      "version": "1.2.12",
+      "steps": 15,
+      "phases": 3,
+      "download": "openwrt-virtual-router-offline-v1.2.12.zip"
+    }
+  ],
+  "recommendedOrder": [
+    "windows-11-to-proxmox",
+    "openwrt-virtual-router"
+  ]
 }

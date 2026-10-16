@@ -130,3 +130,11 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--teal);outline-offse
 @media(max-width:600px){.home-intro{gap:12px}.home-intro .homepage-spinner{grid-column:1/-1;grid-row:1;justify-self:end}.home-intro-copy{grid-column:1/-1;grid-row:2}}
 
 @media(min-width:601px) and (max-width:850px){.home-intro .homepage-spinner{grid-column:1/-1;grid-row:1;justify-self:end}.home-intro-copy{grid-column:1/-1;grid-row:2}}
+
+/* Ordered project series */
+.series-intro{max-width:900px;color:var(--muted);margin:18px 0 24px}
+.series-intro strong{color:var(--ink)}
+.series-list{display:grid;gap:20px;list-style:none;margin:0;padding:0}
+.series-list>li{min-width:0}
+.series-number{color:var(--teal);font-size:.8rem;font-weight:850;text-transform:uppercase;letter-spacing:.05em}
+.series-list code{overflow-wrap:anywhere}

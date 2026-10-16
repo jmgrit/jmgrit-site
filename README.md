@@ -1,23 +1,23 @@
-# JMGRIT site v0.15
+# JMGRIT site v0.16
 
-Static website for jmgrit.com.
+Static site for jmgrit.com.
 
-## Current guide
+## Recommended project order
 
-- Windows 11 → Proxmox: v1.2.29 only
-- 36 steps, 7 phases
-- Published reader: public/guides/windows-11-to-proxmox/
-- Offline ZIP: public/downloads/files/p2v-windows-11-offline-v1.2.29.zip
-- Offline ZIP is the supplied Docs ZIP, byte for byte. Extract it and open P2VWindows11-v1.2.29/index.html.
+1. Windows 11 → Proxmox (P2V), v1.2.29 — 36 steps, 7 phases.
+2. OpenWrt Virtual Router, v1.2.12 — 15 steps, 3 phases.
 
-## Saved state
+These projects are best completed in this order. Readers with an existing Proxmox foundation may continue at project 2. Other projects remain listed separately as work in progress; no further sequence is assigned yet.
 
-Progress and collected values remain in the reader's browser. The existing reader namespace is retained. The first saved-state export offers password-protected or unencrypted output. Saved State → Saved State Security… changes this preference. The guide's supplied encryption/import/reset runtime is preserved without modifications. This option protects exported files; it does not imply that every browser-stored value is encrypted.
+## Published guides and downloads
 
-## Website features
+- /guides/windows-11-to-proxmox/
+- /guides/openwrt-virtual-router/
+- /downloads/files/p2v-windows-11-offline-v1.2.29.zip
+- /downloads/files/openwrt-virtual-router-offline-v1.2.12.zip
 
-Provider-independent troubleshooting context messaging, theme synchronisation, updated trefoil branding, and the 218.4px homepage fidget spinner remain in place. All four online guide titles return to the website homepage.
+Offline ZIPs preserve their source packages. The online guides add a homepage title link and series navigation; their embedded reader scripts are unchanged. OpenWrt's bundled favicon assets are included. Each guide retains its own saved-state namespace and shares the website theme preference.
 
-## Replace and push
+## Update
 
-Extract jmgrit-site-v0.15.zip into Downloads. In the existing repository, remove public/guides/windows-11-to-proxmox and older p2v-windows-11-offline-v*.zip downloads before copying the new public directory. Stage with git add -A -- README.md public to include deletions, then commit and push origin main. Keep the repository's .git directory and hosting configuration.
+Extract the release ZIP and copy the contents of jmgrit-site-v0.16 into the existing repository root. Keep .git and the existing hosting configuration. Stage README.md and public with git add -A, review the staged summary, commit, and push origin main. Only the current P2V and OpenWrt ZIPs are included in this release.
